@@ -8,7 +8,7 @@ import autoprefixer from 'autoprefixer'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	base: '/nutritiolntime/',
+	base: '/NutritionTime_Dev-test/',
 	server: {
 		port: 9090
 	},
