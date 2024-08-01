@@ -1,14 +1,7 @@
 import { ref } from 'vue'
+import { Recipe } from '../types/recipe'
 
-export interface Comment {
-    author: string;
-    text: string;
-    likes: number;
-    image: string | null;
-    authorImage?: string | null;
-}
-
-export const mockRecipe = ref({
+export const mockRecipe = ref<Recipe>({
     id: '1',
     title: 'Вкуснейший домашний бургер',
     description: 'Это рецепт вкуснейшего домашнего бургера, который очень просто приготовить',

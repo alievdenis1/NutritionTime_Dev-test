@@ -57,7 +57,7 @@ const onButtonClicked = () => {
     }
 
     &--white {
-        @apply bg-white border-[#3636364D] text-forestGreen shadow-[0_3px_2px_rgba(237,216,194,0.35)];
+        @apply bg-white border-forestGreen text-forestGreen shadow-[0_3px_2px_rgba(237,216,194,0.35)];
     }
     &--red {
         @apply bg-red  text-white shadow-[0_3px_2px_rgba(237,216,194,0.35)];

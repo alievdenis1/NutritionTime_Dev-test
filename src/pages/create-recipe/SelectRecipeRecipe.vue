@@ -5,7 +5,7 @@
 			<div class="flex justify-between items-center mb-[16px]">
 				<button
 					class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
-					@click="$router.go(-1)"
+					@click="router.go(-1)"
 				>
 					<IconArrowRight icon-color="#1C1C1C" />
 				</button>

@@ -5,8 +5,8 @@
 			class="w-full h-[361px]"
 		>
 			<img
-				:src="recipe.image"
-				:alt="recipe.title"
+				:src="recipe?.image ?? ''"
+				:alt="recipe?.title ?? ''"
 				class="w-full h-[365px] object-cover absolute top-0 left-0"
 			>
 		</div>
@@ -20,7 +20,7 @@
 			<div class="flex justify-between items-center p-[16px]">
 				<button
 					class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
-					@click="$router.go(-1)"
+					@click="router.go(-1)"
 				>
 					<IconArrowRight icon-color="#1C1C1C" />
 				</button>
@@ -44,30 +44,32 @@
 		<div class="mx-auto p-[16px]">
 			<div class="flex items-center mb-[16px] mt-[24px]">
 				<img
-					:src="recipe.author.image"
-					:alt="recipe.author.name"
+					:src="recipe?.author.image"
+					:alt="recipe?.author.name"
 					class="w-8 h-8 rounded-full mr-2"
 				>
-				<span class="text-sm text-slateGray">{{ recipe.author.name }}</span>
-				<div class="ml-auto flex items-center">
-					<IconStar class="w-4 h-4 text-yellow" />
+				<span class="text-sm text-slateGray">{{ recipe?.author.name }}</span>
+				<div
+					v-if="recipe?.comments.length > 0"
+					class="ml-auto flex items-center"
+				>
 					<span class="text-xs text-slateGray mr-[8px]">
-						{{ recipe.reviewsCount }}
+						{{ recipe?.reviewsCount }}
 						{{ t('reviewsCount') }}
 					</span>
 					<span
 						class="text-sm text-white w-[32px] h-[32px] rounded-[50%] bg-forestGreen flex items-center justify-center"
 					>
-						{{ recipe.rating }}
+						{{ recipe?.rating }}
 					</span>
 				</div>
 			</div>
 
 			<h2 class="text-xl font-bold text-darkGray mb-[8px]">
-				{{ recipe.title }}
+				{{ recipe?.title }}
 			</h2>
 			<p class="text-sm text-slateGray mb-[24px]">
-				{{ recipe.description }}
+				{{ recipe?.description }}
 			</p>
 
 			<h3 class="text-lg font-semibold text-darkGray mb-[16px]">
@@ -78,32 +80,38 @@
 				:key="index"
 				class="flex items-center justify-between bg-lightGray px-[12px] py-[20px] rounded-[16px] mb-[16px]"
 			>
-				<span class="text-[12px]">{{ ingredient.name }}</span>
-				<span class="text-[#535353] text-xs">{{ ingredient.amount }}</span>
+				<span class="text-[12px]">{{ ingredient?.name }}</span>
+				<span class="text-[#535353] text-xs">{{ ingredient?.amount }}</span>
 			</div>
 			<div class="mt-4 text-sm text-slateGray">
 				{{ t('totalWeight') }}
-				{{ recipe.totalWeight }}
+				{{ recipe?.totalWeight }}
 				{{ t('totalWeightGram') }}
 			</div>
 
 			<RecipeDetailsTabs
-				:cooking-steps="recipe.cookingSteps"
-				:recipe-info="recipe.recipeInfo"
-				:nutrition-info="recipe.nutritionInfo"
-				:kitchenware="recipe.kitchenware"
-				:tags="recipe.tags"
+				:cooking-steps="recipe?.cookingSteps"
+				:recipe-info="recipe?.recipeInfo"
+				:nutrition-info="recipe?.nutritionInfo"
+				:kitchenware="recipe?.kitchenware"
+				:tags="recipe?.tags"
 			/>
 
 			<div class="shadow-custom mt-[40px] p-[16px] rounded-[12px] flex items-center justify-between">
-				<div>
+				<div v-if="recipe?.comments.length > 0">
 					<span
 						class="text-sm text-white w-[32px] h-[32px] rounded-[50%] bg-forestGreen flex items-center justify-center mb-[12px]"
 					>
-						{{ recipe.rating }}
+						{{ recipe?.rating }}
 					</span>
-					{{ recipe.reviewsCount }}
+					{{ recipe?.reviewsCount }}
 					{{ t('reviewsCount') }}
+				</div>
+				<div
+					v-if="recipe?.comments.length < 1"
+					class="text-sm text-darkGray"
+				>
+					Отзывов пока нет
 				</div>
 				<div class="w-max">
 					<VButton
@@ -171,11 +179,11 @@
 					</div>
 					<div class="flex items-center gap-[8px] mt-[12px]">
 						<img
-							:src="recipe.author.image"
-							:alt="recipe.author.name"
+							:src="recipe?.author.image"
+							:alt="recipe?.author.name"
 						>
 						<div class="text-xs text-darkGray">
-							{{ recipe.author.name }}
+							{{ recipe?.author.name }}
 						</div>
 					</div>
 				</div>
@@ -190,11 +198,11 @@
 					</div>
 					<div class="flex items-center gap-[8px] mt-[12px]">
 						<img
-							:src="recipe.nftOwner.image"
-							:alt="recipe.nftOwner.name"
+							:src="recipe?.nftOwner.image"
+							:alt="recipe?.nftOwner.name"
 						>
 						<div class="text-xs text-darkGray">
-							{{ recipe.nftOwner.name }}
+							{{ recipe?.nftOwner.name }}
 						</div>
 					</div>
 				</div>
@@ -292,7 +300,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed, Ref } from 'vue'
 import { IconArrowRight, IconHeart, IconShare, IconFavorites, IconLoad, IconClose, IconPhoto } from '@/shared/components/Icon'
 import { RecipeDetailsTabs } from 'entities/Recipe/DetailedCardRecipe'
 import { VButton, ButtonColors } from 'shared/components/Button'
@@ -302,9 +310,10 @@ import { VModal } from 'shared/components/Modal'
 import { mockRecipe } from './mocks/mock-recipes-item'
 import { VAddPhoto } from 'shared/components/AddPhoto'
 import { useRouter } from 'vue-router'
+import { Recipe } from './types/recipe'
 
 const router = useRouter()
-const recipe = ref(mockRecipe)
+const recipe: Ref<Recipe> = ref(mockRecipe)
 
 const { t } = useTranslation(Localization)
 
@@ -432,6 +441,7 @@ const allCommentPage = () => {
 .border {
 	border: 1px solid #E1E1E1;
 }
+
 .truncate {
 	white-space: nowrap;
 	overflow: hidden;

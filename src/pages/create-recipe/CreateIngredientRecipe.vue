@@ -3,7 +3,7 @@
 		<div class="flex justify-between items-center">
 			<button
 				class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
-				@click="$router.go(-1)"
+				@click="router.go(-1)"
 			>
 				<IconArrowRight icon-color="#1C1C1C" />
 			</button>
@@ -81,14 +81,13 @@ import { IconArrowRight, IconPhoto, IconAi } from 'shared/components/Icon'
 import { VAddPhoto } from 'shared/components/AddPhoto'
 import { VButton, ButtonColors } from 'shared/components/Button'
 const useOnlyTheseIngredients = ref(false)
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 import { useTranslation } from '@/shared/lib/i18n'
 import localizations from './CreateIngredientRecipe.localization.json'
 
 const { t } = useTranslation(localizations)
-
-import { useRouter } from 'vue-router'
-const router = useRouter()
 
 const TagChangedRoute = () => {
 	router.push('/tag-recipe')

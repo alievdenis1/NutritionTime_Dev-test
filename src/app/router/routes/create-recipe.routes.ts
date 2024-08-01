@@ -71,7 +71,7 @@ export default [
 		path: '/all-comment',
 		meta: {
 			title: 'All Comment',
-			layout: DefaultLayout
+			layout: MainLayout
 		}
 	},
 ] as RouteRecordRaw[]
