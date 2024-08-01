@@ -192,9 +192,6 @@ const selectCategory = (category: string) => {
 textarea {
 	border: 1px solid #d1d5db;
 }
-.border {
-	border: 1px solid #E1E1E1;
-}
 
 .modal-content {
 	height: 90vh;

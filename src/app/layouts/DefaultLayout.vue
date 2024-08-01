@@ -1,5 +1,5 @@
 <template>
-	<main class="layout p-[16px]">
+	<main class="layout">
 		<slot />
 	</main>
 </template>

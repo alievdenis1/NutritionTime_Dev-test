@@ -42,10 +42,11 @@ import RecipesList from 'entities/Recipe/ui/RecipesList.vue'
 import { VContentBlock } from 'shared/components/ContentBlock'
 import { mockRecipes, addPrefix } from '../mocks/mock-recipes'
 import { useTranslation } from '@/shared/lib/i18n'
+import { TabsMain, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import Localization from './Collection.localization.json'
 import { VDragAndDrop } from 'shared/components/DragAndDrop'
 import { DragTypes } from 'shared/components/DragAndDrop/types'
-import { TabsMain, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+
 import { IconArrowRight, IconPlus } from 'shared/components/Icon'
 
 const { t } = useTranslation(Localization)
