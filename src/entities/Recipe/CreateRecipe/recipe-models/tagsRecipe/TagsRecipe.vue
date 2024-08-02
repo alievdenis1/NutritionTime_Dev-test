@@ -70,14 +70,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { VAccordion } from '@/shared/components/Accordion'
 import { VModal } from '@/shared/components/Modal'
 import { useTranslation } from '@/shared/lib/i18n'
 import localizations from './TagsRecipe.localization.json'
 import { IconArrowRight, IconClose } from 'shared/components/Icon'
 import TagsCollectionsItem from './TagsCollectionsItem.vue'
+import { useRecipeStore } from '../../../DetailedCardRecipe/stores/recipeStore'
+import { useRoute } from 'vue-router'
+
 const { t } = useTranslation(localizations)
+const store = useRecipeStore()
+const route = useRoute()
 
 const showModal = ref(false)
 const selectedTags = ref<string[]>([])
@@ -90,6 +95,19 @@ const categories = ref([
 	{ name: 'Категория 4', tags: ['#тег36', '#тег37', '#тег38', '#тег39', '#тег40', '#тег41', '#тег42', '#тег43', '#тег44', '#тег45', '#тег46', '#тег47'] },
 	{ name: 'Категория 5', tags: ['#тег48', '#тег49', '#тег50', '#тег51', '#тег52', '#тег53', '#тег54', '#тег55', '#тег56', '#тег57', '#тег58', '#тег59'] },
 ])
+
+onMounted(() => {
+	loadTags()
+})
+
+const loadTags = () => {
+	const recipeId = route.params.id as string
+	const currentRecipe = store.recipes.find(recipe => recipe.id === recipeId)
+	if (currentRecipe && currentRecipe.tags) {
+		selectedTags.value = [...currentRecipe.tags]
+		modalSelectedTags.value = [...currentRecipe.tags]
+	}
+}
 
 const handleTagChanged = (updatedTags: string[]) => {
 	modalSelectedTags.value = updatedTags
@@ -106,17 +124,31 @@ const closeModal = () => {
 
 const removeTag = (tag: string) => {
 	selectedTags.value = selectedTags.value.filter(t => t !== tag)
+	updateRecipeTags()
 }
 
 const saveTags = () => {
 	selectedTags.value = [...modalSelectedTags.value]
+	updateRecipeTags()
 	closeModal()
+}
+
+const updateRecipeTags = () => {
+	const recipeId = route.params.id as string
+	const currentRecipe = store.recipes.find(recipe => recipe.id === recipeId)
+	if (currentRecipe) {
+		currentRecipe.tags = [...selectedTags.value]
+	}
 }
 
 const isButtonDisabled = computed(() => modalSelectedTags.value.length === 0)
 
 const buttonClass = computed(() => {
 	return modalSelectedTags.value.length > 0 ? 'bg-forestGreen' : 'bg-disabled cursor-not-allowed'
+})
+
+watch(() => route.params.id, () => {
+	loadTags()
 })
 </script>
 

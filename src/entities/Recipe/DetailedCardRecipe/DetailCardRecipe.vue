@@ -40,6 +40,25 @@
 				</div>
 			</div>
 		</div>
+		<div class="p-[16px] shadow-custom mx-[16px] mt-[24px] mb-[16px] rounded-[16px]">
+			<div class="text-slateGray text-lg mb-[12px]">
+				{{ t('yourRecipe') }}
+			</div>
+			<div class="text-xs text-slateGray mb-[12px]">
+				{{ t('editInstructions') }}
+			</div>
+			<VButton
+				:color="ButtonColors.White"
+				@click="editingRecipe"
+			>
+				<div class="flex items-center justify-center gap-[12px]">
+					<div>{{ t('editButton') }}</div>
+					<div>
+						<IconArrowRight icon-color="#319A6E" />
+					</div>
+				</div>
+			</VButton>
+		</div>
 
 		<div class="mx-auto p-[16px]">
 			<div class="flex items-center mb-[16px] mt-[24px]">
@@ -50,7 +69,7 @@
 				>
 				<span class="text-sm text-slateGray">{{ recipe?.author.name }}</span>
 				<div
-					v-if="recipe?.comments.length > 0"
+					v-if="recipe?.comments?.length ?? 0 > 0"
 					class="ml-auto flex items-center"
 				>
 					<span class="text-xs text-slateGray mr-[8px]">
@@ -76,7 +95,7 @@
 				{{ t('ingredients') }}
 			</h3>
 			<div
-				v-for="(ingredient, index) in recipe.ingredients"
+				v-for="(ingredient, index) in recipe?.ingredients ?? []"
 				:key="index"
 				class="flex items-center justify-between bg-lightGray px-[12px] py-[20px] rounded-[16px] mb-[16px]"
 			>
@@ -90,15 +109,15 @@
 			</div>
 
 			<RecipeDetailsTabs
-				:cooking-steps="recipe?.cookingSteps"
-				:recipe-info="recipe?.recipeInfo"
-				:nutrition-info="recipe?.nutritionInfo"
-				:kitchenware="recipe?.kitchenware"
-				:tags="recipe?.tags"
+				:cooking-steps="recipe?.cookingSteps ?? []"
+				:recipe-info="recipe?.recipeInfo ?? {}"
+				:nutrition-info="recipe?.nutritionInfo ?? {}"
+				:kitchenware="recipe?.kitchenware ?? []"
+				:tags="recipe?.tags ?? []"
 			/>
 
 			<div class="shadow-custom mt-[40px] p-[16px] rounded-[12px] flex items-center justify-between">
-				<div v-if="recipe?.comments.length > 0">
+				<div v-if="recipe?.comments?.length ?? 0 > 0">
 					<span
 						class="text-sm text-white w-[32px] h-[32px] rounded-[50%] bg-forestGreen flex items-center justify-center mb-[12px]"
 					>
@@ -108,7 +127,7 @@
 					{{ t('reviewsCount') }}
 				</div>
 				<div
-					v-if="recipe?.comments.length < 1"
+					v-if="recipe?.comments?.length ?? 0 > 0"
 					class="text-sm text-darkGray"
 				>
 					Отзывов пока нет
@@ -181,6 +200,7 @@
 						<img
 							:src="recipe?.author.image"
 							:alt="recipe?.author.name"
+							class="w-[20px] h-[20px]"
 						>
 						<div class="text-xs text-darkGray">
 							{{ recipe?.author.name }}
@@ -200,6 +220,7 @@
 						<img
 							:src="recipe?.nftOwner.image"
 							:alt="recipe?.nftOwner.name"
+							class="w-[20px] h-[20px]"
 						>
 						<div class="text-xs text-darkGray">
 							{{ recipe?.nftOwner.name }}
@@ -307,13 +328,14 @@ import { VButton, ButtonColors } from 'shared/components/Button'
 import Localization from './DetailCardRecipe.localization.json'
 import { useTranslation } from 'shared/lib/i18n'
 import { VModal } from 'shared/components/Modal'
-import { mockRecipe } from './mocks/mock-recipes-item'
+import { useRecipeStore } from '../DetailedCardRecipe/stores/recipeStore'
 import { VAddPhoto } from 'shared/components/AddPhoto'
 import { useRouter } from 'vue-router'
 import { Recipe } from './types/recipe'
 
+const store = useRecipeStore()
 const router = useRouter()
-const recipe: Ref<Recipe> = ref(mockRecipe)
+const recipe: Ref<Recipe | undefined> = ref(store.currentRecipe)
 
 const { t } = useTranslation(Localization)
 
@@ -357,7 +379,7 @@ const icons = [
 ]
 
 const latestComments = computed(() => {
-	return recipe.value.comments.slice(0, 3)
+	return (recipe.value?.comments ?? []).slice(0, 3)
 })
 
 const exportToPDF = () => {
@@ -410,7 +432,9 @@ const submitReview = () => {
 		authorImage: '/image/denis.svg'
 	}
 
-	recipe.value.comments.unshift(newComment)
+	if (recipe.value) {
+		recipe.value.comments.unshift(newComment)
+	}
 
 	closeReviewModal()
 }
@@ -433,7 +457,15 @@ const resetReviewForm = () => {
 }
 
 const allCommentPage = () => {
-	router.push('/all-comment')
+	if (recipe.value) {
+		router.push(`/all-comment/${recipe.value.id}`)
+	}
+}
+
+const editingRecipe = () => {
+	if (recipe.value) {
+		router.push(`/recipe/${recipe.value.id}/edit`)
+	}
 }
 </script>
 

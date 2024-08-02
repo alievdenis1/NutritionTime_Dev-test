@@ -53,7 +53,7 @@
 	</div>
 
 	<div
-		v-for="(comment, index) in recipe.comments"
+		v-for="(comment, index) in recipe?.comments ?? []"
 		:key="index"
 		class="rounded-lg mt-[24px] flex flex-col gap-[12px] mb-[24px]"
 	>
@@ -149,7 +149,6 @@
 import { ref, computed, Ref } from 'vue'
 import { IconArrowRight, IconHeart, IconClose, IconPhoto } from 'shared/components/Icon'
 import { VButton, ButtonColors } from 'shared/components/Button'
-import { mockRecipe } from '../../entities/Recipe/DetailedCardRecipe/mocks/mock-recipes-item'
 import { VModal } from 'shared/components/Modal'
 import { VAddPhoto } from 'shared/components/AddPhoto'
 import Localization from './AllComment.localization.json'
@@ -157,7 +156,9 @@ import { useTranslation } from 'shared/lib/i18n'
 const { t } = useTranslation(Localization)
 import { useRouter } from 'vue-router'
 import { Recipe } from '../../entities/Recipe/DetailedCardRecipe/types/recipe'
-const recipe: Ref<Recipe> = ref(mockRecipe)
+import { useRecipeStore } from '../../entities/Recipe/DetailedCardRecipe/stores/recipeStore'
+const store = useRecipeStore()
+const recipe: Ref<Recipe | undefined> = ref(store.currentRecipe)
 
 const router = useRouter()
 const isReviewModalOpen = ref(false)
@@ -205,7 +206,9 @@ const submitReview = () => {
 		authorImage: '/image/denis.svg'
 	}
 
-	recipe.value.comments.unshift(newComment)
+	if (recipe.value) {
+		recipe.value.comments.unshift(newComment)
+	}
 
 	closeReviewModal()
 }

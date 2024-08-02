@@ -45,20 +45,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { IconClose, IconPhoto } from 'shared/components/Icon'
 import { AddPhoto } from './type.ts'
 
 const props = withDefaults(defineProps<AddPhoto & {
-	onImageUploaded?: (imageUrl: string | null) => void
+	initialImage?: string | null;
+	onImageUploaded?: (imageUrl: string | null) => void;
 }>(), {
 	icon: IconPhoto,
 	iconColor: '#9F9FA0',
 	textColor: '#1C1C1C',
+	initialImage: null,
 	onImageUploaded: undefined
 })
 
-const uploadedImage = ref<string | null>(null)
+const uploadedImage = ref<string | null>(props.initialImage)
+
+watch(() => props.initialImage, (newValue) => {
+	uploadedImage.value = newValue
+})
 
 const handleFileUpload = (event: Event) => {
 	const target = event.target as HTMLInputElement

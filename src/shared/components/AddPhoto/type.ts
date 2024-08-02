@@ -1,12 +1,14 @@
 import { Component } from 'vue'
 
 export interface AddPhoto {
-    title: string;
     widthImage: number;
     heightImage: number;
     heightMain: number;
-    backgrounds: string;
+    title: string;
     icon?: Component;
     iconColor?: string;
     textColor?: string;
+    backgrounds?: string;
+    initialImage?: string | null;
+    onImageUploaded?: (imageUrl: string | null) => void;
 }
