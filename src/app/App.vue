@@ -11,7 +11,7 @@ import { DefaultLayout } from './layouts'
 import { useLocaleStore } from '@/shared/lib/i18n'
 
 const localeStore = useLocaleStore()
-localeStore.initializeLocale('ru')
+localeStore.initializeLocale()
 
 const route = useRoute()
 
