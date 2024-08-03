@@ -26,7 +26,7 @@
 					<DropdownMenuTrigger>
 						<IconKebab
 							v-if="tab.isActiveEdit && tab.id === selectedTab.id"
-							class="mr-[6px] cursor-pointer"
+							class="mr-[6px] cursor-pointer text-[#1C1C1C]"
 						/>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
