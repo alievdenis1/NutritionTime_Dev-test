@@ -51,7 +51,7 @@
 					class="w-[22px]"
 				/>
 				<div>{{ tab.label }}</div>
-				<div class="ml-[6px] text-gray">
+				<div class="ml-[6px]">
 					{{ tab.count }}
 				</div>
 			</div>
@@ -231,6 +231,7 @@ const onTouchEnd = (event: TouchEvent) => {
   position: relative;
   align-items: center;
   -webkit-overflow-scrolling: touch;
+  color: #9f9fa0;
 
   &.draggable-tab {
     width: 100%;
