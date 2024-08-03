@@ -40,7 +40,7 @@
 							{{ t('move') }}
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>
+						<DropdownMenuItem class="text-[#F04F4F]">
 							<IconBin class="icon" />
 							{{ t('delete') }}
 						</DropdownMenuItem>
