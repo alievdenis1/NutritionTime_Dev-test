@@ -19,7 +19,8 @@ export const mockRecipes: RecipesList = [
         },
         'comments': 0,
         'bookmarked': false,
-        'liked': false
+        'liked': false,
+        'likes': 2
     },
     {
         'id': 2,
@@ -34,7 +35,8 @@ export const mockRecipes: RecipesList = [
         },
         'comments': 0,
         'bookmarked': false,
-        'liked': false
+        'liked': false,
+        'likes': 2
     },
     {
         'id': 3,
@@ -49,7 +51,8 @@ export const mockRecipes: RecipesList = [
         },
         'comments': 0,
         'bookmarked': false,
-        'liked': false
+        'liked': false,
+        'likes': 2
     },
     {
         'id': 4,
@@ -64,6 +67,7 @@ export const mockRecipes: RecipesList = [
         },
         'comments': 0,
         'bookmarked': false,
-        'liked': false
+        'liked': false,
+        'likes': 2
     },
 ]
