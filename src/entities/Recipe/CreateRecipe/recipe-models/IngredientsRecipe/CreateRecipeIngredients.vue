@@ -16,7 +16,7 @@
 				<div>
 					<span class="text-[#535353] text-xs">
 						{{ ingredient.quantity }}
-						{{ ingredient.type === 'weight' ?
+						{{ ingredient.type === QuantityType.WEIGHT ?
 							t('unitGrams') : t('unitPieces') }}</span>
 					<button
 						class="text-forestGreen ml-[14px] cursor-pointer"
@@ -107,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useTranslation } from '@/shared/lib/i18n'
 import { VAccordion } from '@/shared/components/Accordion'
 import { VModal } from '@/shared/components/Modal'
@@ -115,23 +115,38 @@ import { IconClose, IconPlus } from 'shared/components/Icon'
 import localization from './CreateRecipeIngredients.localization.json'
 import { TabsMain, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { QuantityType } from '../types/enum'
+import { useRecipeStore } from '../../../DetailedCardRecipe/stores/recipeStore'
+import { useRoute } from 'vue-router'
 
 interface Props {
 	title: string;
-	desc: string
+	desc: string;
 }
 
 defineProps<Props>()
 
 const { t } = useTranslation(localization)
+const store = useRecipeStore()
+const route = useRoute()
 
 const showModal = ref(false)
 const ingredientName = ref<string>('')
 const ingredientQuantity = ref<string>('')
-const ingredients = ref<{ name: string, quantity: string, type: QuantityType }[]>([])
+const ingredients = ref<{ name: string; quantity: string; type: QuantityType }[]>([])
 const tryToSave = ref(false)
 const activeTab = ref<QuantityType>(QuantityType.WEIGHT)
 const ingredientNameInput = ref<HTMLInputElement | null>(null)
+
+onMounted(() => {
+	const isCreateRoute = route.name === 'CreateRecipe'
+	if (!isCreateRoute && store.currentRecipe) {
+		ingredients.value = store.currentRecipe.ingredients.map(ingredient => ({
+			name: ingredient.name,
+			quantity: ingredient.amount.split(' ')[0],
+			type: ingredient.amount.includes('г.') ? QuantityType.WEIGHT : QuantityType.QUANTITY
+		}))
+	}
+})
 
 const openModal = () => {
 	showModal.value = true
@@ -171,13 +186,22 @@ const notEmptyIngredientName = computed(() => ingredientName.value.length !== 0)
 const activeInputQuantity = computed(() => tryToSave.value && !ingredientQuantity.value)
 const notEmptyIngredientQuantity = computed(() => ingredientQuantity.value.length !== 0)
 
+watch(ingredients, () => {
+	if (store.currentRecipe) {
+		store.currentRecipe.ingredients = ingredients.value.map(ingredient => ({
+			name: ingredient.name,
+			amount: `${ingredient.quantity} ${ingredient.type === QuantityType.WEIGHT ? 'г.' : 'шт.'}`
+		}))
+	}
+}, { deep: true })
+
 watch(showModal, (newVal) => {
 	if (newVal) {
-		nextTick(() => {
+		setTimeout(() => {
 			if (ingredientNameInput.value) {
 				ingredientNameInput.value.focus()
 			}
-		})
+		}, 0)
 	}
 })
 </script>
@@ -203,13 +227,10 @@ watch(showModal, (newVal) => {
 
 .no-scrollbar {
 	-ms-overflow-style: none;
-	/* IE and Edge */
 	scrollbar-width: none;
-	/* Firefox */
 }
 
 .no-scrollbar::-webkit-scrollbar {
 	display: none;
-	/* Safari and Chrome */
 }
 </style>

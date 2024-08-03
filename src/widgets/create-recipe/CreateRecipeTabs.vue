@@ -3,7 +3,7 @@
 		<div class="flex justify-between items-center mb-[16px]">
 			<button
 				class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
-				@click="$router.go(-1)"
+				@click="router.go(-1)"
 			>
 				<IconArrowRight icon-color="#1C1C1C" />
 			</button>
@@ -45,6 +45,8 @@ import localizations from './CreateRecipeTabs.localization.json'
 import { IconAi, IconArrowRight } from 'shared/components/Icon'
 const store = useModalCreateStore()
 const { t } = useTranslation(localizations)
+import { useRouter } from 'vue-router'
+const router = useRouter()
 </script>
 
-<style scoped></style>@/entities/Recipe/ui/CreateRecipe/modal-create/model/model-store
+<style scoped></style>

@@ -8,6 +8,8 @@
 				:height-main="66"
 				backgrounds="#F3F3F3"
 				:icon="IconPhoto"
+				:initial-image="recipeImage"
+				:on-image-uploaded="handleImageUpload"
 			/>
 			<p class="text-xs text-gray max-w-xs mb-[24px]">
 				{{ t('additionalPhotosInfo') }}
@@ -28,37 +30,15 @@
 
 			<div class="category-selection flex flex-col gap-[12px] mt-[12px]">
 				<div
-					class="border rounded px-2 py-4 cursor-pointer flex justify-between items-center text-gray"
-					@click="openCategoryModal('dishCategory')"
+					v-for="category in categoryTypes"
+					:key="category"
+					class="border rounded px-2 py-4 cursor-pointer flex justify-between items-center text-darkGray"
+					@click="openCategoryModal(category)"
 				>
 					<input
-						v-model="selectedCategory.dishCategory"
+						v-model="selectedCategory[category]"
 						type="text"
-						:placeholder="t('dishCategory')"
-						readonly
-					>
-					<IconArrowRight icon-color="#1C1C1C" />
-				</div>
-				<div
-					class="border rounded px-2 py-4 cursor-pointer flex justify-between items-center text-gray"
-					@click="openCategoryModal('cuisine')"
-				>
-					<input
-						v-model="selectedCategory.cuisine"
-						type="text"
-						:placeholder="t('cuisineNationality')"
-						readonly
-					>
-					<IconArrowRight icon-color="#1C1C1C" />
-				</div>
-				<div
-					class="border rounded px-2 py-4 cursor-pointer flex justify-between items-center text-gray"
-					@click="openCategoryModal('diet')"
-				>
-					<input
-						v-model="selectedCategory.diet"
-						type="text"
-						:placeholder="t('dietType')"
+						:placeholder="t(category)"
 						readonly
 					>
 					<IconArrowRight icon-color="#1C1C1C" />
@@ -111,13 +91,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useTranslation } from '@/shared/lib/i18n'
 import { IconArrowRight, IconSearch, IconClose, IconRadio, IconPhoto } from 'shared/components/Icon'
 import { VAccordion } from '@/shared/components/Accordion'
 import { VAddPhoto } from '@/shared/components/AddPhoto'
 import { VModal } from '@/shared/components/Modal'
 import localization from './CreateRecipeBasicInfo.localization.json'
+import { useRecipeStore } from '../../../DetailedCardRecipe/stores/recipeStore'
+import { useRoute } from 'vue-router'
+
+const store = useRecipeStore()
+const route = useRoute()
+
+const { t } = useTranslation(localization)
 
 interface Category {
 	dishCategory: string;
@@ -125,15 +112,22 @@ interface Category {
 	diet: string;
 }
 
-const { t } = useTranslation(localization)
 const show = ref(false)
 const searchQuery = ref('')
 const selectedType = ref<keyof Category | null>(null)
-const selectedCategory = ref({
+
+const recipeTitle = ref('')
+const recipeDescription = ref('')
+const recipeImage = ref('')
+
+const selectedCategory = ref<Category>({
 	dishCategory: '',
 	cuisine: '',
 	diet: ''
 })
+
+const categoryTypes: (keyof Category)[] = ['dishCategory', 'cuisine', 'diet']
+
 const categories = ref([
 	'Категория 1',
 	'Категория 2',
@@ -157,8 +151,29 @@ const categories = ref([
 	'Категория 20'
 ])
 
-const recipeTitle = ref('')
-const recipeDescription = ref('')
+onMounted(() => {
+	const isCreateRoute = route.name === 'CreateRecipe'
+	if (!isCreateRoute && store.currentRecipe) {
+		recipeTitle.value = store.currentRecipe.title
+		recipeDescription.value = store.currentRecipe.description
+		recipeImage.value = store.currentRecipe.image
+		if (store.currentRecipe.recipeInfo) {
+			selectedCategory.value = {
+				dishCategory: store.currentRecipe.recipeInfo['Категория'] || '',
+				cuisine: store.currentRecipe.recipeInfo['Кухня'] || '',
+				diet: store.currentRecipe.recipeInfo['Тип диеты'] || ''
+			}
+		}
+	}
+})
+
+const handleImageUpload = (imageUrl: string | null) => {
+	if (imageUrl !== null) {
+		recipeImage.value = imageUrl
+	} else {
+		recipeImage.value = ''
+	}
+}
 
 const filteredCategories = computed(() => {
 	return categories.value.filter(category => category.toLowerCase().includes(searchQuery.value.toLowerCase()))
@@ -186,12 +201,26 @@ const selectCategory = (category: string) => {
 	}
 }
 
+// Watch for changes and update store
+watch([recipeTitle, recipeDescription, recipeImage, selectedCategory], () => {
+	if (store.currentRecipe) {
+		store.currentRecipe.title = recipeTitle.value
+		store.currentRecipe.description = recipeDescription.value
+		store.currentRecipe.image = recipeImage.value
+		if (store.currentRecipe.recipeInfo) {
+			store.currentRecipe.recipeInfo['Категория'] = selectedCategory.value.dishCategory
+			store.currentRecipe.recipeInfo['Кухня'] = selectedCategory.value.cuisine
+			store.currentRecipe.recipeInfo['Тип диеты'] = selectedCategory.value.diet
+		}
+	}
+}, { deep: true })
 </script>
 
 <style scoped>
 textarea {
 	border: 1px solid #d1d5db;
 }
+
 .border {
 	border: 1px solid #E1E1E1;
 }

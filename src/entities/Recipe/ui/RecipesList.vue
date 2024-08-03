@@ -6,7 +6,8 @@
 		<div
 			v-for="recipe in recipesData"
 			:key="recipe.id"
-			class="max-w-md mx-auto rounded-[20px] overflow-hidden md:max-w-2xl mb-4 px-[2px] py-[2px]"
+			class="max-w-md mx-auto rounded-[20px] overflow-hidden md:max-w-2xl mb-4 px-[2px] py-[2px] cursor-pointer"
+			@click="router.push(`/recipe/${recipe.id}`)"
 		>
 			<div class="flex  border-custom">
 				<div class="relative">
@@ -73,6 +74,8 @@
 <script setup lang="ts">
 import { IconComment, IconFavorites, IconFire, IconHeart, IconTime } from 'shared/components/Icon'
 import { RecipesItem } from './type'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 withDefaults(defineProps<{
 	recipesData: Array<RecipesItem>

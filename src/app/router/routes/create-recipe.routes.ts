@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
-import { MainLayout } from 'app/layouts'
+import { MainLayout, DefaultLayout } from 'app/layouts'
 
 export default [
 	{
@@ -54,6 +54,33 @@ export default [
 		meta: {
 			title: 'Select Recipe',
 			layout: MainLayout
+		}
+	},
+	{
+		name: 'details-recipe',
+		component: () => import('pages/create-recipe/CardRecipe.vue'),
+		path: '/recipe/:id',
+		meta: {
+			title: 'Card Recipe',
+			layout: DefaultLayout
+		}
+	},
+	{
+		name: 'all-comment',
+		component: () => import('pages/create-recipe/AllComment.vue'),
+		path: '/all-comment/:id',
+		meta: {
+			title: 'All Comment',
+			layout: MainLayout
+		}
+	},
+	{
+		name: 'recipe-edit',
+		component: () => import('pages/create-recipe/EditingRecipe.vue'),
+		path: '/recipe/:id/edit',
+		meta: {
+			title: 'Editing Recipe',
+			layout: DefaultLayout
 		}
 	},
 ] as RouteRecordRaw[]

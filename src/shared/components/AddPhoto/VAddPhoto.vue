@@ -45,17 +45,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { IconClose, IconPhoto } from 'shared/components/Icon'
 import { AddPhoto } from './type.ts'
 
-withDefaults(defineProps<AddPhoto>(), {
+const props = withDefaults(defineProps<AddPhoto & {
+	initialImage?: string | null;
+	onImageUploaded?: (imageUrl: string | null) => void;
+}>(), {
 	icon: IconPhoto,
 	iconColor: '#9F9FA0',
-	textColor: '#1C1C1C'
+	textColor: '#1C1C1C',
+	initialImage: null,
+	onImageUploaded: undefined
 })
 
-const uploadedImage = ref<string | null>(null)
+const uploadedImage = ref<string | null>(props.initialImage)
+
+watch(() => props.initialImage, (newValue) => {
+	uploadedImage.value = newValue
+})
 
 const handleFileUpload = (event: Event) => {
 	const target = event.target as HTMLInputElement
@@ -64,6 +73,9 @@ const handleFileUpload = (event: Event) => {
 		const reader = new FileReader()
 		reader.onload = (e: ProgressEvent<FileReader>) => {
 			uploadedImage.value = e.target?.result as string
+			if (props.onImageUploaded) {
+				props.onImageUploaded(uploadedImage.value)
+			}
 		}
 		reader.readAsDataURL(files[0])
 	}
@@ -71,6 +83,9 @@ const handleFileUpload = (event: Event) => {
 
 const removeImage = () => {
 	uploadedImage.value = null
+	if (props.onImageUploaded) {
+		props.onImageUploaded(null)
+	}
 }
 </script>
 
