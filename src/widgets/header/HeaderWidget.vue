@@ -39,13 +39,13 @@
 							:class="{ 'active': localeStore.currentLocale === 'ru' }"
 							@click="localeStore.setLocale('ru')"
 						>
-							RUS
+							Rus
 						</button>
 						<button
 							:class="{ 'active': localeStore.currentLocale === 'en' }"
 							@click="localeStore.setLocale('en')"
 						>
-							ENG
+							Eng
 						</button>
 					</div>
 				</button>
