@@ -30,7 +30,7 @@
 						/>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
-						<DropdownMenuItem>
+						<DropdownMenuItem @click="editCollection(tab)">
 							<IconEdit class="icon" />
 							{{ t('edit') }}
 						</DropdownMenuItem>
@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import { ref, toRefs } from 'vue'
-import { DragTypes } from './types'
+import { DragTypes, type VDragAndDropEmits } from './types'
 import { IconPlus, IconKebab, IconBin, IconMove, IconEdit } from 'shared/components/Icon'
 import {
   DropdownMenu,
@@ -84,6 +84,7 @@ const props = defineProps({
     required: true
   }
 })
+const emits = defineEmits<VDragAndDropEmits>()
 
 const { items } = toRefs(props)
 
@@ -197,6 +198,10 @@ const onTouchEnd = (event: TouchEvent) => {
     }
   }
   draggedTab.value = null
+}
+
+const editCollection = (tab: DragTypes): void => {
+  emits('edit', tab)
 }
 </script>
 

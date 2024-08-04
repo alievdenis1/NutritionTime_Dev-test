@@ -15,6 +15,12 @@
 					class="bg-white p-4 rounded-t-xl width-custom max-w-md relative z-50"
 					@click.stop
 				>
+					<button
+						class="absolute right-4 top-4 cursor-pointer px-[13px] py-[13px] rounded-[100px] bg-lightGray ml-[8px]"
+						@click="closeModal"
+					>
+						<IconClose :icon-color="'#000000'" />
+					</button>
 					<slot />
 				</div>
 			</transition>
@@ -23,6 +29,8 @@
 </template>
 
 <script setup lang="ts">
+import { IconClose } from 'shared/components/Icon'
+
 import { ref, watch } from 'vue'
 const props = defineProps<{ show: boolean }>()
 const emit = defineEmits(['close'])
