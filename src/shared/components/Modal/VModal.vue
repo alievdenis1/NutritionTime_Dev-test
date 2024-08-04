@@ -16,6 +16,7 @@
 					@click.stop
 				>
 					<button
+						v-if="!props.hideCloseIcon"
 						class="absolute right-4 top-4 cursor-pointer px-[13px] py-[13px] rounded-[100px] bg-lightGray ml-[8px]"
 						@click="closeModal"
 					>
@@ -32,7 +33,7 @@
 import { IconClose } from 'shared/components/Icon'
 
 import { ref, watch } from 'vue'
-const props = defineProps<{ show: boolean }>()
+const props = defineProps<{ show: boolean; hideCloseIcon?: boolean }>()
 const emit = defineEmits(['close'])
 
 const isVisible = ref(props.show)

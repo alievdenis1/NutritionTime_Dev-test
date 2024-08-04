@@ -1,4 +1,6 @@
 <template>
+	<VConfirm />
+
 	<component :is="layout">
 		<router-view />
 	</component>
@@ -9,6 +11,8 @@ import { shallowRef, watch, type Component } from 'vue'
 import { useRoute } from 'vue-router'
 import { DefaultLayout } from './layouts'
 import { useLocaleStore } from '@/shared/lib/i18n'
+
+import { VConfirm } from '@/shared/components/Confirm'
 
 const localeStore = useLocaleStore()
 localeStore.initializeLocale()

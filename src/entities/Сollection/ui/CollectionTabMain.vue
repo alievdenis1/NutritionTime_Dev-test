@@ -13,6 +13,7 @@
 				:items="dragAndDropItems"
 				class="mt-[16px]"
 				@edit="onEdit"
+				@delete="onDelete"
 			/>
 			<RecipesList :recipes-data="mockRecipes" />
 			<VContentBlock
@@ -55,6 +56,7 @@ import Localization from './Collection.localization.json'
 import { VDragAndDrop } from 'shared/components/DragAndDrop'
 import { DragTypes } from 'shared/components/DragAndDrop/types'
 import { VModal } from 'shared/components/Modal'
+import { openConfirm } from 'shared/components/Confirm'
 import { CollectionForm } from 'widgets/collection-form'
 
 import type { CollectionFormType } from 'features/collection-form'
@@ -85,6 +87,17 @@ const openModal = (): void => {
 const onEdit = (tab: DragTypes): void => {
 	modalType.value = 'edit'
 	openModal()
+}
+const onDelete = async (tab: DragTypes): Promise<void> => {
+	const isConfirmed = await openConfirm({
+		title: t('confirmTitle'),
+		description: t('confirmDescription'),
+		confirmButtonText: t('confirmButton'),
+	})
+
+	if (isConfirmed) {
+		//TODO: here will be removing logic
+	}
 }
 </script>
 

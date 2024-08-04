@@ -40,7 +40,7 @@
 							{{ t('move') }}
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem class="text-[#F04F4F]">
+						<DropdownMenuItem class="text-[#F04F4F]" @click="deleteCollection(tab)">
 							<IconBin class="icon" />
 							{{ t('delete') }}
 						</DropdownMenuItem>
@@ -202,6 +202,9 @@ const onTouchEnd = (event: TouchEvent) => {
 
 const editCollection = (tab: DragTypes): void => {
   emits('edit', tab)
+}
+const deleteCollection = (tab: DragTypes): void => {
+  emits('delete', tab)
 }
 </script>
 

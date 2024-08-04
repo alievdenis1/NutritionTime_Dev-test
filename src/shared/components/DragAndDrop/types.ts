@@ -7,4 +7,5 @@ export interface DragTypes  {
 
 export type VDragAndDropEmits = {
     edit: [value: DragTypes]
+    delete: [value: DragTypes]
 }
