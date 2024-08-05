@@ -12,6 +12,8 @@
 			<VDragAndDrop
 				:items="dragAndDropItems"
 				class="mt-[16px]"
+				@edit="onEdit"
+				@delete="onDelete"
 			/>
 			<RecipesList :recipes-data="mockRecipes" />
 			<VContentBlock
@@ -33,6 +35,13 @@
 				:button-icon="IconPlus"
 			/>
 		</TabsContent>
+
+		<VModal
+			:show="isOpen"
+			@close="closeModal"
+		>
+			<CollectionForm :type="modalType" />
+		</VModal>
 	</TabsMain>
 </template>
 
@@ -46,6 +55,11 @@ import { TabsMain, TabsContent, TabsList, TabsTrigger } from '@/shared/component
 import Localization from './Collection.localization.json'
 import { VDragAndDrop } from 'shared/components/DragAndDrop'
 import { DragTypes } from 'shared/components/DragAndDrop/types'
+import { VModal } from 'shared/components/Modal'
+import { openConfirm } from 'shared/components/Confirm'
+import { CollectionForm } from 'widgets/collection-form'
+
+import type { CollectionFormType } from 'features/collection-form'
 
 import { IconArrowRight, IconPlus } from 'shared/components/Icon'
 
@@ -59,6 +73,34 @@ const dragAndDropItems = ref<DragTypes[]>([
     { id: 5, label: 'Красивое', isActiveEdit: true, count: 5 },
     { id: 6, label: 'Красивое', isActiveEdit: true, count: 5 },
 ])
+
+const isOpen = ref<boolean>(false)
+const modalType = ref<CollectionFormType>('create')
+
+// methods
+const closeModal = (): void => {
+	isOpen.value = false
+}
+const openModal = (): void => {
+	isOpen.value = true
+}
+const onEdit = (tab: DragTypes): void => {
+	console.log(tab)
+	modalType.value = 'edit'
+	openModal()
+}
+const onDelete = async (tab: DragTypes): Promise<void> => {
+	console.log(tab)
+	const isConfirmed = await openConfirm({
+		title: t('confirmTitle'),
+		description: t('confirmDescription'),
+		confirmButtonText: t('confirmButton'),
+	})
+
+	if (isConfirmed) {
+		//TODO: here will be removing logic
+	}
+}
 </script>
 
 <style lang="scss" scoped></style>

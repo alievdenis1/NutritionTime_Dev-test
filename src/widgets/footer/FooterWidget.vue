@@ -1,5 +1,7 @@
 <template>
-	<div class="grid w-full px-4 mb-2.5">
+	<div
+		class="grid w-full px-4 mb-2.5"
+	>
 		<footer class="flex py-2 px-4 items-center gap-4 justify-between rounded-full bg-white shadow-custom">
 			<button
 				:class="{ 'active': isCurrentRoute('/') }"
@@ -96,4 +98,3 @@ const searchIconColor = computed(() => {
 	opacity: 0.5;
 }
 </style>
-@/entities/Recipe/ui/CreateRecipe/modal-create/ui@/entities/Recipe/ui/CreateRecipe/modal-create/model/model-store

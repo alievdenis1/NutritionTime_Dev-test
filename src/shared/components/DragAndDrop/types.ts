@@ -4,3 +4,8 @@ export interface DragTypes  {
     isActiveEdit: boolean
     count: number
 }
+
+export type VDragAndDropEmits = {
+    edit: [value: DragTypes]
+    delete: [value: DragTypes]
+}

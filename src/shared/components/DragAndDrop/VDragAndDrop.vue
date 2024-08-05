@@ -26,11 +26,11 @@
 					<DropdownMenuTrigger>
 						<IconKebab
 							v-if="tab.isActiveEdit && tab.id === selectedTab.id"
-							class="mr-[6px] cursor-pointer"
+							class="mr-[6px] cursor-pointer text-[#1C1C1C]"
 						/>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
-						<DropdownMenuItem>
+						<DropdownMenuItem @click="editCollection(tab)">
 							<IconEdit class="icon" />
 							{{ t('edit') }}
 						</DropdownMenuItem>
@@ -40,7 +40,10 @@
 							{{ t('move') }}
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>
+						<DropdownMenuItem
+							class="text-[#F04F4F]"
+							@click="deleteCollection(tab)"
+						>
 							<IconBin class="icon" />
 							{{ t('delete') }}
 						</DropdownMenuItem>
@@ -64,7 +67,7 @@
 
 <script setup lang="ts">
 import { ref, toRefs } from 'vue'
-import { DragTypes } from './types'
+import { DragTypes, type VDragAndDropEmits } from './types'
 import { IconPlus, IconKebab, IconBin, IconMove, IconEdit } from 'shared/components/Icon'
 import {
   DropdownMenu,
@@ -84,6 +87,7 @@ const props = defineProps({
     required: true
   }
 })
+const emits = defineEmits<VDragAndDropEmits>()
 
 const { items } = toRefs(props)
 
@@ -197,6 +201,13 @@ const onTouchEnd = (event: TouchEvent) => {
     }
   }
   draggedTab.value = null
+}
+
+const editCollection = (tab: DragTypes): void => {
+  emits('edit', tab)
+}
+const deleteCollection = (tab: DragTypes): void => {
+  emits('delete', tab)
 }
 </script>
 

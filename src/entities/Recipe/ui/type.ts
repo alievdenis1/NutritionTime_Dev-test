@@ -14,6 +14,7 @@ export interface RecipesItem {
 	comments: number;
 	bookmarked: boolean;
 	liked: boolean;
+	likes: number;
 }
 
 export type RecipesList = RecipesItem[]

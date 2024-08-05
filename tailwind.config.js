@@ -23,7 +23,9 @@ export default {
         lg: ['18px', '22px'],
         xl: ['20px', '24px'],
         xxl: ['28px', '32px'],
-        xxxl: ['40px', '48px']
+        xxxl: ['40px', '48px'],
+        title: ['20px', '28px'],
+        description: ['14px', '20px']
       },
       borderColor: {
         'custom-gray': '#1C1C1C0D',

@@ -57,14 +57,17 @@
 						>
 						{{ recipe.author.name }}
 					</div>
-					<p class="flex justify-center items-center gap-[4px]">
+					<p class="flex justify-center items-center gap-[4px] text-[#535353]">
 						<IconComment />
 						{{ recipe.comments }}
 					</p>
 				</div>
 				<div class="flex justify-center items-center gap-[4px] ">
-					<IconHeart icon-color="#9F9FA0" />
-					<IconFavorites />
+					<IconFavorites class="text-[#9F9FA0]" />
+					<p class="flex justify-center items-center gap-[4px] text-[#535353]">
+						<IconHeart icon-color="#9F9FA0" />
+						{{ recipe.likes }}
+					</p>
 				</div>
 			</div>
 		</div>
