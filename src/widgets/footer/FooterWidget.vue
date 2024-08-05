@@ -1,5 +1,9 @@
 <template>
-	<div class="grid w-full px-4 mb-2.5">
+	<div
+		ref="footer"
+		class="grid w-full px-4 mb-2.5"
+		:class="footerClasses"
+	>
 		<footer class="flex py-2 px-4 items-center gap-4 justify-between rounded-full bg-white shadow-custom">
 			<button
 				:class="{ 'active': isCurrentRoute('/') }"
@@ -35,7 +39,7 @@
 <script setup lang="ts">
 import { IconHome, IconPlus, IconSearch } from 'shared/components/Icon'
 import { useRouter } from 'vue-router'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useTranslation } from '@/shared/lib/i18n'
 import Localization from './FooterWidget.localization.json'
 import { ModalCreateRecipe } from 'entities/Recipe/CreateRecipe/modal-create/ui'
@@ -67,6 +71,19 @@ const homeIconColor = computed(() => {
 const searchIconColor = computed(() => {
 	return isCurrentRoute('/recipes') ? '#319A6E' : '#9F9FA0'
 })
+
+const footer = ref<HTMLDivElement | null>(null)
+
+const footerClasses = computed((): string => {
+	const tgWebApp = (window as any)?.Telegram?.WebApp
+	if (!footer.value || !tgWebApp) return 'fixed bottom-0'
+
+	const viewportStableHeight: number = tgWebApp.viewportStableHeight
+	const viewportHeight: number = tgWebApp.viewportHeight
+	const bottom: number = viewportStableHeight - viewportHeight + footer.value.clientHeight
+
+	return `fixed bottom-[${bottom}px]`
+})
 </script>
 
 <style lang="scss" scoped>
@@ -96,4 +113,3 @@ const searchIconColor = computed(() => {
 	opacity: 0.5;
 }
 </style>
-@/entities/Recipe/ui/CreateRecipe/modal-create/ui@/entities/Recipe/ui/CreateRecipe/modal-create/model/model-store

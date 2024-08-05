@@ -1,7 +1,7 @@
 <template>
 	<div class="wrapper">
 		<p
-			class="wrapper__title"
+			class="title"
 		>
 			{{ props.title }}
 		</p>
@@ -69,7 +69,7 @@ const setFocus = (value: boolean): void => {
     @apply relative w-full h-14;
 
     &:has(input:focus), &:has(input.focused) {
-        .wrapper__title {
+        .title {
             @apply text-xs top-1.5;
         }
 
@@ -78,7 +78,7 @@ const setFocus = (value: boolean): void => {
         }
     }
 
-    &__title {
+    & .title {
         @apply flex absolute text-[#9F9FA0] font-normal top-[18px] bottom-[18px] left-3 right-3 text-description transition-[150ms];
     }
 
