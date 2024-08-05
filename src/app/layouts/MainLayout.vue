@@ -2,7 +2,7 @@
 	<main :class="`layout p-[16px] pb-[50px] bg-mainBg`">
 		<slot />
 	</main>
-	<footer-widget />
+	<footer-widget class="fixed bottom-[78px]" />
 </template>
 
 <script setup lang="ts">
