@@ -85,10 +85,12 @@ const openModal = (): void => {
 	isOpen.value = true
 }
 const onEdit = (tab: DragTypes): void => {
+	console.log(tab)
 	modalType.value = 'edit'
 	openModal()
 }
 const onDelete = async (tab: DragTypes): Promise<void> => {
+	console.log(tab)
 	const isConfirmed = await openConfirm({
 		title: t('confirmTitle'),
 		description: t('confirmDescription'),
