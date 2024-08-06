@@ -1,6 +1,11 @@
 <template>
-	<VAccordion :title="t('basicInformation')">
-		<div class="mt-[20px]">
+	<VAccordion
+		:title="t('basicInformation')"
+		open-by-default
+	>
+		<div
+			class="mt-[20px]"
+		>
 			<VAddPhoto
 				:width-image="54"
 				:height-image="54"
