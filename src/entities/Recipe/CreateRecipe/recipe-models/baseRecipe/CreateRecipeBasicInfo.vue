@@ -30,16 +30,14 @@
 				{{ t('additionalPhotosInfo') }}
 			</p>
 			<div class="form-section flex flex-col gap-4">
-				<input
-					v-model="recipeTitle"
-					type="text"
-					:placeholder="t('recipeTitlePlaceholder')"
-					class="border rounded px-2 py-4 text-base"
-				>
-				<textarea
-					v-model="recipeDescription"
-					:placeholder="t('recipeDescriptionPlaceholder')"
-					class="border rounded px-2 py-4 text-base min-h-[122px]"
+				<VInput
+					v-model:value="recipeTitle"
+					:title="t('recipeTitlePlaceholder')"
+				/>
+				<VInput
+					v-model:value="recipeDescription"
+					:title="t('recipeDescriptionPlaceholder')"
+					textarea
 				/>
 			</div>
 
@@ -109,6 +107,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useTranslation } from '@/shared/lib/i18n'
 import { IconArrowRight, IconSearch, IconClose, IconRadio, IconPhoto } from 'shared/components/Icon'
+import { VInput } from 'shared/components/Input'
 import { VAccordion } from '@/shared/components/Accordion'
 import { VAddPhoto } from '@/shared/components/AddPhoto'
 import { VModal } from '@/shared/components/Modal'
