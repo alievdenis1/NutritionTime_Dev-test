@@ -7,6 +7,7 @@
 			class="mt-[20px]"
 		>
 			<VAddPhoto
+				v-model:error="isUploadError"
 				:width-image="54"
 				:height-image="54"
 				:title="t('uploadMainPhoto')"
@@ -16,7 +17,16 @@
 				:initial-image="recipeImage"
 				:on-image-uploaded="handleImageUpload"
 			/>
-			<p class="text-xs text-gray max-w-xs mb-[24px]">
+			<p
+				v-if="isUploadError"
+				class="text-xs text-coralRed max-w-xs mb-[24px]"
+			>
+				{{ t('errorMessage') }}
+			</p>
+			<p
+				v-else
+				class="text-xs text-gray max-w-xs mb-[24px]"
+			>
 				{{ t('additionalPhotosInfo') }}
 			</p>
 			<div class="form-section flex flex-col gap-4">
@@ -120,6 +130,7 @@ interface Category {
 const show = ref(false)
 const searchQuery = ref('')
 const selectedType = ref<keyof Category | null>(null)
+const isUploadError = ref<boolean>(false)
 
 const recipeTitle = ref('')
 const recipeDescription = ref('')

@@ -9,7 +9,8 @@
             "cuisineNationality": "Национальность кухни",
             "dietType": "Тип диеты",
             "categorySelection": "Выбор категории",
-            "searchCategory": "Поиск категории"
+            "searchCategory": "Поиск категории",
+            "errorMessage": "Не удалось загрузить эту фотографию. Попробуйте другую"
         },
         "en": {
             "basicInformation": "Basic information",
@@ -21,6 +22,7 @@
             "cuisineNationality": "Cuisine nationality",
             "dietType": "Diet type",
             "categorySelection": "Category selection",
-            "searchCategory": "Search category"
+            "searchCategory": "Search category",
+            "errorMessage": "Failed to upload this photo. Try another one"
         }
     }
