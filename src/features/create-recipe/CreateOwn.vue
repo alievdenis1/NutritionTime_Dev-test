@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-[16px] mt-[16px] mb-[60px]">
+	<div class="relative flex flex-col gap-[16px] mt-[16px] mb-[60px]">
 		<CreateRecipeBasicInfo ref="basicInfo" />
 		<CreateRecipeGradation />
 		<CreateRecipeTime />
@@ -13,6 +13,7 @@
 		<TagsRecipe />
 		<v-button
 			:color="ButtonColors.Green"
+			class="sticky bottom-14"
 			@click="CheckRecipe"
 		>
 			<div class="flex gap-[12px] items-center">
@@ -36,6 +37,7 @@ CreateRecipeTime
 }
 	from
 	'entities/Recipe/CreateRecipe/recipe-models'
+import { IconArrowRight } from 'shared/components/Icon'
 import { ButtonColors, VButton } from '@/shared/components/Button'
 import { useRouter } from 'vue-router'
 import { useTranslation } from '@/shared/lib/i18n'
