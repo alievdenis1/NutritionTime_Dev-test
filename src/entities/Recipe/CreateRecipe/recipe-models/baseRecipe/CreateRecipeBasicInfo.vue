@@ -35,13 +35,15 @@
 					:title="t('recipeTitlePlaceholder')"
 					:error="!!errors?.title"
 					:error-message="errors?.title?.message"
+					@focusout="validateField('title')"
 				/>
 				<VInput
-					v-model:value="values.title"
+					v-model:value="values.description"
 					:title="t('recipeDescriptionPlaceholder')"
 					textarea
 					:error="!!errors?.description"
 					:error-message="errors?.description?.message"
+					@focusout="validateField('description')"
 				/>
 			</div>
 
@@ -143,12 +145,13 @@ const selectedCategory = ref<Category>({
 	diet: ''
 })
 
-const { errors, values } = useForm(createRecipeBasicInfoSchema, {
+const { errors, values, validateField, validate } = useForm(createRecipeBasicInfoSchema, {
 	defaultValues: {
 		title: '',
 		description: '',
 		image: '',
-	}
+	},
+	mode: 'eager'
 })
 
 const categoryTypes: (keyof Category)[] = ['dishCategory', 'cuisine', 'diet']
@@ -225,6 +228,12 @@ const selectCategory = (category: string) => {
 		show.value = false
 	}
 }
+
+const onValidate = (): boolean => {
+	return validate()
+}
+
+defineExpose({ onValidate })
 
 // Watch for changes and update store
 watch([values.title, values.description, values.image, selectedCategory], () => {

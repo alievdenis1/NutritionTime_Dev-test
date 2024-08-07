@@ -35,7 +35,7 @@
 
 		<p
 			v-if="hasError"
-			class="text-coralRed font-medium text-xs inline-block absolute top-full left-0 ring-0 text-left mt-1"
+			class="text-coralRed font-medium text-xs inline-block text-left mt-1"
 		>
 			{{ props.errorMessage }}
 		</p>
@@ -48,6 +48,7 @@ import { computed, ref } from 'vue'
 export type InputEmits = {
     'update:value': [string]
     'update:error': [boolean]
+    focusout: [void]
 }
 export interface InputProps {
     value: string;
@@ -80,6 +81,8 @@ const onInput = (): void => {
 }
 const setFocus = (value: boolean): void => {
     isFocused.value = value
+
+    if (!value) emits('focusout')
 }
 const onScroll = (): void => {
     if (!textareaRef.value) return
@@ -92,7 +95,7 @@ const onScroll = (): void => {
 
 <style lang="scss" scoped>
 .wrapper {
-    @apply relative w-full h-14;
+    @apply relative w-full min-h-14;
 
     &:has(textarea) {
         @apply h-auto;
@@ -118,6 +121,10 @@ const onScroll = (): void => {
         &:focus {
             @apply border-[#319A6E33] pt-[26px] py-3 pb-[10px];
         }
+    }
+
+    input {
+        @apply min-h-14;
     }
 
     textarea {
