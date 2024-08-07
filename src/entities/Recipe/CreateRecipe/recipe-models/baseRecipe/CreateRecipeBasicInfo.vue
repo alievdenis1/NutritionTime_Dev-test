@@ -212,7 +212,7 @@ const filteredCategories = computed(() => {
 
 const categorySelectionTitle = computed(() => {
 	const titles: Record<keyof Category, string> = {
-		dishCategory: t('dishCategory'),
+		dishCategory: t('categorySelection'),
 		cuisine: t('cuisineNationality'),
 		diet: t('dietType')
 	}
