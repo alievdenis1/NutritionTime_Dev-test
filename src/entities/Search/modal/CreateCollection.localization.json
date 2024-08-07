@@ -1,0 +1,16 @@
+{
+    "ru": {
+        "collection": "Коллекция",
+        "nameCollection": "Название коллекции",
+        "upTo15Min": "Вкусняшки на завтра",
+        "15to30Min": "15-30 мин",
+        "30to60Min": "30-60 мин"
+    },
+    "en": {
+        "collection": "Cooking Time",
+        "nameCollection": "Collection name",
+        "upTo15Min": "Вкусняшки на завтра",
+        "15to30Min": "15-30 min",
+        "30to60Min": "30-60 min"
+    }
+}

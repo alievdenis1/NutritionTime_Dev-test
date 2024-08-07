@@ -17,7 +17,7 @@
 		>
 			<div class="flex gap-[12px] items-center">
 				<div>{{ t('further') }}</div>
-				<IconArrowRight icon-color="#FFFFFF" />
+				<IconArrowRight icon-color="#ffffff" />
 			</div>
 		</v-button>
 	</div>
@@ -40,6 +40,7 @@ import { ButtonColors, VButton } from '@/shared/components/Button'
 import { useRouter } from 'vue-router'
 import { useTranslation } from '@/shared/lib/i18n'
 import localizations from './CreateOwn.localization.json'
+import { IconArrowRight } from '@/shared/components/Icon'
 
 const router = useRouter()
 const { t } = useTranslation(localizations)

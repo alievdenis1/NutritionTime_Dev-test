@@ -1,7 +1,5 @@
 <template>
-	<div
-		class="grid w-full px-4 mb-2.5"
-	>
+	<div class="grid w-full px-4 mb-2.5">
 		<footer class="flex py-2 px-4 items-center gap-4 justify-between rounded-full bg-white shadow-custom">
 			<button
 				:class="{ 'active': isCurrentRoute('/') }"
@@ -22,7 +20,7 @@
 				<icon-plus :icon-color="'#FFFFFF'" />
 			</button>
 			<button
-				:class="{ 'active': isCurrentRoute('/recipes') }"
+				:class="{ 'active': isCurrentRoute('/search') }"
 				class="cursor-pointer flex-grow rounded-full"
 				@click="navigateToRecipes"
 			>
@@ -59,7 +57,7 @@ const navigateToHome = () => {
 }
 
 const navigateToRecipes = () => {
-	router.push('/recipes')
+	router.push('/search')
 }
 
 const homeIconColor = computed(() => {
@@ -67,7 +65,7 @@ const homeIconColor = computed(() => {
 })
 
 const searchIconColor = computed(() => {
-	return isCurrentRoute('/recipes') ? '#319A6E' : '#9F9FA0'
+	return isCurrentRoute('/search') ? '#319A6E' : '#9F9FA0'
 })
 </script>
 

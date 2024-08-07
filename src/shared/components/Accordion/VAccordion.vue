@@ -74,6 +74,7 @@ watch(isOpen, (newVal) => {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	color: #1c1c1c;
 }
 
 .accordion-content {

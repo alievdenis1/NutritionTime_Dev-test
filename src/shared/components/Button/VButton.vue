@@ -62,19 +62,6 @@ const onButtonClicked = () => {
     &--red {
         @apply bg-red  text-white shadow-[0_3px_2px_rgba(237,216,194,0.35)];
     }
-    ////// До момента пока ховеры не утвердят
-    // &:focus, &:hover {
-    //     &.v-button--green {
-    //         @apply bg-white border-green text-green;
-    //     }
-
-    //     &.v-button--white {
-    //         @apply bg-white  shadow-[0_3px_2px_rgba(237,216,194,0.35)];
-    //     }
-    //     &.v-button--red {
-    //         @apply bg-red text-white shadow-[0_3px_2px_rgba(237,216,194,0.35)];
-    //     }
-    // }
 
     &--default {
         @apply rounded-[16px];

@@ -24,6 +24,8 @@
     "pinia": "^2.0.36",
     "pinia-plugin-persistedstate": "^3.2.1",
     "radix-vue": "^1.8.5",
+    "simplebar": "^6.2.7",
+    "simplebar-vue": "^2.3.5",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "tonapi-sdk-js": "^1.0.6",

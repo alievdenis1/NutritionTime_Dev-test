@@ -5,12 +5,12 @@ import App from './App.vue'
 import Router from './router'
 import * as ElementPlusIcons from '@element-plus/icons-vue'
 import { i18n } from '@/shared/lib/i18n'
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import { createPersistedState } from 'pinia-plugin-persistedstate'
 
 const app = createApp(App)
 const pinia = createPinia()
 
-pinia.use(piniaPluginPersistedstate)
+pinia.use(createPersistedState())
 
 app
 	.use(i18n)
