@@ -5,13 +5,13 @@
 				v-for="(nutrient, key) in nutrients"
 				:key="key"
 			>
-				<h3 class="text-darkGray font-medium mb-[12px]">
+				<h3 class="text-darkGray text-sm font-medium mb-[12px]">
 					{{ t(nutrient.title) }}
 				</h3>
 				<div class="flex gap-4 mb-[12px]">
 					<div class="flex-1 relative">
 						<span class="absolute top-[6px] left-[12px] text-xs text-gray">
-							От
+							{{ t('from') }}
 						</span>
 						<input
 							v-model="nutrient.start"
@@ -25,7 +25,7 @@
 					</div>
 					<div class="flex-1 relative">
 						<span class="absolute top-[6px] left-[12px] text-xs text-gray">
-							До
+							{{ t('to') }}
 						</span>
 						<input
 							v-model="nutrient.end"

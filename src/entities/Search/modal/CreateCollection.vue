@@ -7,7 +7,7 @@
 		<div>
 			<div class="flex justify-between mb-[12px] items-center">
 				<h2 class="text-xl font-darkGray">
-					Сохранить в коллекцию
+					{{ t('saveToCollection') }}
 				</h2>
 				<button
 					class="text-2xl w-[48px] h-[48px] bg-lightGray rounded-[50%] p-[14px] cursor-pointer"
@@ -58,7 +58,7 @@
 				class="mt-[24px]"
 				@click="openSecondModal"
 			>
-				Новая коллекция
+				{{ t('newCollection') }}
 				<IconArrowRight
 					icon-color="#319A6E"
 					class="ml-[12px]"
@@ -69,7 +69,7 @@
 				class="mt-[8px]"
 				@click="store.toggleModalClose()"
 			>
-				Сохранить
+				{{ t('save') }}
 			</VButton>
 		</div>
 	</VModal>
@@ -87,7 +87,7 @@
 						class="rotate-180 mr-[12px] cursor-pointer"
 						@click="backToFirstModal"
 					/>
-					Сохранить в коллекцию
+					{{ t('saveToCollection') }}
 				</h2>
 				<button
 					class="text-2xl w-[48px] h-[48px] bg-lightGray rounded-[50%] p-[14px] cursor-pointer"
@@ -119,7 +119,7 @@
 				class="mt-[24px]"
 				@click="backToFirstModal"
 			>
-				Создать коллекцию и сохранить рецепт
+				{{ t('createAndSaveRecipe') }}
 			</VButton>
 		</div>
 	</VModal>
@@ -142,9 +142,14 @@ const collectionOptions = ref([
 	{ label: 'Вкусняшки на завтра', value: 'Вкусняшки на завтра' },
 	{ label: 'Ещё одна коллекция', value: 'Ещё одна коллекция' },
 ])
+
 const selectedCollection = computed(() => {
-	return showSelectedCollection.value
+	if (showSelectedCollection.value) {
+		return showSelectedCollection.value
+	}
+	return collectionOptions.value.length > 0 ? collectionOptions.value[0].label : ''
 })
+
 const showSelectedCollection = ref('')
 const newSelectedCollection = ref('Новая коллекция')
 

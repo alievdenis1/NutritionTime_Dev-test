@@ -29,7 +29,7 @@
 			class="flex-grow overflow-y-auto p-4 recipe-search"
 		>
 			<div class="mb-6">
-				<h3 class="text-darkGray font-medium mb-[16px] mt-[20px]">
+				<h3 class="text-darkGray text-sm mb-[16px] mt-[20px]">
 					{{ t('cuisine') }}
 				</h3>
 				<Simplebar
@@ -52,7 +52,7 @@
 						<span>{{ t(cuisine.name) }}</span>
 					</div>
 				</Simplebar>
-				<h3 class="text-darkGray font-medium mb-[16px] mt-4">
+				<h3 class="text-darkGray text-sm mb-[16px] mt-4">
 					{{ t('dietType') }}
 				</h3>
 				<Simplebar
@@ -85,7 +85,7 @@
 				:color="ButtonColors.Green"
 				@click="searchFilter"
 			>
-				440 рецептов
+				440 {{ t('recipes') }}
 			</VButton>
 		</div>
 	</div>

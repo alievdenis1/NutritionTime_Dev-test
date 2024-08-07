@@ -18,7 +18,13 @@
         "caloriesPer100g": "Калорийность на 100 г.",
         "proteinPer100g": "Белки на 100 г.",
         "fatPer100g": "Жиры на 100 г.",
-        "carbsPer100g": "Углеводы на 100 г."
+        "carbsPer100g": "Углеводы на 100 г.",
+        "spiciness": "Острота",
+        "from": "От",
+        "to": "До",
+        "cookingDifficulty": "Сложность приготовления",
+        "dishRating": "Рейтинг блюда",
+        "recipes": "рецептов"
     },
     "en": {
         "filters": "Filters",
@@ -39,6 +45,12 @@
         "caloriesPer100g": "Calories per 100g",
         "proteinPer100g": "Protein per 100g",
         "fatPer100g": "Fat per 100g",
-        "carbsPer100g": "Carbohydrates per 100g"
+        "carbsPer100g": "Carbohydrates per 100g",
+        "spiciness": "Spiciness",
+        "from": "From",
+        "to": "To",
+        "cookingDifficulty": "Cooking Difficulty",
+        "dishRating": "Dish Rating",
+        "recipes": "recipes"
     }
 }

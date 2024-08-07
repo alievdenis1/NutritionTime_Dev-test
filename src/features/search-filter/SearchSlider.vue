@@ -1,13 +1,13 @@
 <template>
 	<div>
 		<div>
-			<h3 class="text-darkGray font-medium mb-2">
-				Острота
+			<h3 class="text-darkGray text-sm mb-2">
+				{{ t('spiciness') }}
 			</h3>
 			<div class="flex items-center justify-center mb-2 gap-[12px]">
 				<div class="relative border-slide w-full">
 					<span class="absolute top-[6px] left-[12px] text-xs text-gray">
-						От
+						{{ t('from') }}
 					</span>
 					<input
 						v-model="spicyInputStart"
@@ -20,7 +20,7 @@
 				</div>
 				<div class="relative border-slide w-full">
 					<span class="absolute top-[6px] left-[12px] text-xs text-gray">
-						До
+						{{ t('to') }}
 					</span>
 					<input
 						v-model="spicyInputEnd"
@@ -42,13 +42,13 @@
 		</div>
 
 		<div>
-			<h3 class="text-darkGray font-medium mb-2">
-				Cложность приготовления
+			<h3 class="text-darkGray text-sm mb-2">
+				{{ t('cookingDifficulty') }}
 			</h3>
 			<div class="flex items-center justify-center mb-2 gap-[12px]">
 				<div class="relative border-slide w-full">
 					<span class="absolute top-[6px] left-[12px] text-xs text-gray">
-						От
+						{{ t('from') }}
 					</span>
 					<input
 						v-model="difficultyInputStart"
@@ -61,7 +61,7 @@
 				</div>
 				<div class="relative border-slide w-full">
 					<span class="absolute top-[6px] left-[12px] text-xs text-gray">
-						До
+						{{ t('to') }}
 					</span>
 					<input
 						v-model="difficultyInputEnd"
@@ -86,7 +86,7 @@
 			<div class="relative">
 				<span
 					v-if="selectedTime"
-					class="absolute text-[12px] top-[6px] left-[12px] text-gray"
+					class="absolute text-sm top-[6px] left-[12px] text-gray"
 				>
 					{{ t('cookingTime') }}
 				</span>
@@ -130,13 +130,13 @@
 		</div>
 
 		<div>
-			<h3 class="text-darkGray font-medium mb-2">
-				Рейтинг блюда
+			<h3 class="text-darkGray text-sm mb-2">
+				{{ t('dishRating') }}
 			</h3>
 			<div class="flex items-center justify-center mb-2 gap-[12px]">
 				<div class="relative border-slide w-full">
 					<span class="absolute top-[6px] left-[12px] text-xs text-gray">
-						От
+						{{ t('from') }}
 					</span>
 					<input
 						v-model="ratingInputStart"
@@ -149,7 +149,7 @@
 				</div>
 				<div class="relative border-slide w-full">
 					<span class="absolute top-[6px] left-[12px] text-xs text-gray">
-						До
+						{{ t('to') }}
 					</span>
 					<input
 						v-model="ratingInputEnd"
