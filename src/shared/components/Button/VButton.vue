@@ -3,6 +3,7 @@
 		class="v-button"
 		:class="[colorClass, borderRadiusClass]"
 		:size="size"
+		:disabled="props.disabled"
 		@click="onButtonClicked"
 	>
 		<slot />
@@ -20,11 +21,13 @@ const emit = defineEmits<{
 const props = withDefaults(defineProps<{
 	color?: ButtonColors,
 	size?: 'large' | 'default' | 'small',
-	borderRadius?: number
+	borderRadius?: number,
+    disabled?: boolean
 }>(), {
 	color: ButtonColors.Green,
 	size: 'default',
-	borderRadius: 15
+	borderRadius: 15,
+    disabled: false
 })
 
 const { color, size, borderRadius } = toRefs(props)

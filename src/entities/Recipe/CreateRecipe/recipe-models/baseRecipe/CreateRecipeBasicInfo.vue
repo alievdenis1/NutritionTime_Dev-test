@@ -111,6 +111,13 @@
 					<IconRadio icon-color="#ffffff" />{{ item }}
 				</div>
 			</div>
+			<VButton
+				class="mt-5"
+				:disabled="isDisabled"
+				@click="onSave"
+			>
+				{{ t('save') }}
+			</VButton>
 		</div>
 	</VModal>
 </template>
@@ -128,6 +135,7 @@ import { VModal } from '@/shared/components/Modal'
 import localization from './CreateRecipeBasicInfo.localization.json'
 import { useRecipeStore } from '../../../DetailedCardRecipe/stores/recipeStore'
 import { useRoute } from 'vue-router'
+import { VButton } from '@/shared/components/Button'
 
 const store = useRecipeStore()
 const route = useRoute()
@@ -145,6 +153,11 @@ const searchQuery = ref('')
 const selectedType = ref<keyof Category | null>(null)
 const isUploadError = ref<boolean>(false)
 
+const selectedItem = ref<Category>({
+	dishCategory: '',
+	cuisine: '',
+	diet: ''
+})
 const selectedCategory = ref<Category>({
 	dishCategory: '',
 	cuisine: '',
@@ -223,15 +236,29 @@ const categorySelectionTitle = computed(() => {
 	return selectedType.value ? titles[selectedType.value] : ''
 })
 
+const isDisabled = computed((): boolean => {
+	return !selectedType.value || !selectedItem.value[selectedType.value].length
+})
+
 const openCategoryModal = (type: keyof Category) => {
 	selectedType.value = type
 	show.value = true
 }
 
+const closeModal = (): void => {
+	show.value = false
+}
+
+const onSave = (): void => {
+	closeModal()
+	if (selectedType.value !== null) {
+		selectedCategory.value[selectedType.value] = selectedItem.value[selectedType.value]
+	}
+}
+
 const selectCategory = (category: string) => {
 	if (selectedType.value !== null) {
-		selectedCategory.value[selectedType.value] = category
-		show.value = false
+		selectedItem.value[selectedType.value] = category
 	}
 }
 

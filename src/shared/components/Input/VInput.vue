@@ -42,7 +42,7 @@
 			class="absolute top-4 right-2 icon flex justify-between items-center gap-3"
 		>
 			<IconClose
-				v-if="inputValue.length"
+				v-if="inputValue.length && props.clearable"
 				icon-color="#9F9FA0"
 				class="clear"
 				@click="onClear"

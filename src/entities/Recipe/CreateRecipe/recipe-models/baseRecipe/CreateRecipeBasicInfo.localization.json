@@ -10,7 +10,8 @@
             "dietType": "Тип диеты",
             "categorySelection": "Выбор категории",
             "searchCategory": "Поиск категории",
-            "errorMessage": "Не удалось загрузить эту фотографию. Попробуйте другую"
+            "errorMessage": "Не удалось загрузить эту фотографию. Попробуйте другую",
+            "save": "Сохранить"
         },
         "en": {
             "basicInformation": "Basic information",
@@ -23,6 +24,7 @@
             "dietType": "Diet type",
             "categorySelection": "Category selection",
             "searchCategory": "Search category",
-            "errorMessage": "Failed to upload this photo. Try another one"
+            "errorMessage": "Failed to upload this photo. Try another one",
+            "save": "Save"
         }
     }
