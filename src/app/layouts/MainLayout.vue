@@ -5,7 +5,7 @@
 	>
 		<slot />
 	</main>
-	<footer-widget class="fixed bottom-[8px]" />
+	<footer-widget class="fixed bottom-0" />
 </template>
 
 <script setup lang="ts">
