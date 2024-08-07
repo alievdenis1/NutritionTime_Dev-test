@@ -1,0 +1,10 @@
+{
+    "ru": {
+        "max": "Максимальное количество символов",
+        "required": "Введите данные"
+    },
+    "en": {
+        "max": "Maximum number of characters",
+        "required": "Enter data"
+    }
+}

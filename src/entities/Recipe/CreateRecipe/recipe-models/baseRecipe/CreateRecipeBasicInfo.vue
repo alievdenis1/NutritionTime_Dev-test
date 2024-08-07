@@ -14,7 +14,7 @@
 				:height-main="66"
 				backgrounds="#F3F3F3"
 				:icon="IconPhoto"
-				:initial-image="recipeImage"
+				:initial-image="values.image"
 				:on-image-uploaded="handleImageUpload"
 			/>
 			<p
@@ -31,13 +31,17 @@
 			</p>
 			<div class="form-section flex flex-col gap-4">
 				<VInput
-					v-model:value="recipeTitle"
+					v-model:value="values.title"
 					:title="t('recipeTitlePlaceholder')"
+					:error="!!errors?.title"
+					:error-message="errors?.title?.message"
 				/>
 				<VInput
-					v-model:value="recipeDescription"
+					v-model:value="values.title"
 					:title="t('recipeDescriptionPlaceholder')"
 					textarea
+					:error="!!errors?.description"
+					:error-message="errors?.description?.message"
 				/>
 			</div>
 
@@ -106,6 +110,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useTranslation } from '@/shared/lib/i18n'
+import { createRecipeBasicInfoSchema } from 'features/create-recipe/model'
+import { useForm } from 'shared/utils/useForm'
 import { IconArrowRight, IconSearch, IconClose, IconRadio, IconPhoto } from 'shared/components/Icon'
 import { VInput } from 'shared/components/Input'
 import { VAccordion } from '@/shared/components/Accordion'
@@ -131,14 +137,18 @@ const searchQuery = ref('')
 const selectedType = ref<keyof Category | null>(null)
 const isUploadError = ref<boolean>(false)
 
-const recipeTitle = ref('')
-const recipeDescription = ref('')
-const recipeImage = ref('')
-
 const selectedCategory = ref<Category>({
 	dishCategory: '',
 	cuisine: '',
 	diet: ''
+})
+
+const { errors, values } = useForm(createRecipeBasicInfoSchema, {
+	defaultValues: {
+		title: '',
+		description: '',
+		image: '',
+	}
 })
 
 const categoryTypes: (keyof Category)[] = ['dishCategory', 'cuisine', 'diet']
@@ -169,9 +179,9 @@ const categories = ref([
 onMounted(() => {
 	const isCreateRoute = route.name === 'CreateRecipe'
 	if (!isCreateRoute && store.currentRecipe) {
-		recipeTitle.value = store.currentRecipe.title
-		recipeDescription.value = store.currentRecipe.description
-		recipeImage.value = store.currentRecipe.image
+		values.title = store.currentRecipe.title
+		values.description = store.currentRecipe.description
+		values.image = store.currentRecipe.image
 		if (store.currentRecipe.recipeInfo) {
 			selectedCategory.value = {
 				dishCategory: store.currentRecipe.recipeInfo['Категория'] || '',
@@ -184,9 +194,9 @@ onMounted(() => {
 
 const handleImageUpload = (imageUrl: string | null) => {
 	if (imageUrl !== null) {
-		recipeImage.value = imageUrl
+		values.image = imageUrl
 	} else {
-		recipeImage.value = ''
+		values.image = ''
 	}
 }
 
@@ -217,11 +227,11 @@ const selectCategory = (category: string) => {
 }
 
 // Watch for changes and update store
-watch([recipeTitle, recipeDescription, recipeImage, selectedCategory], () => {
+watch([values.title, values.description, values.image, selectedCategory], () => {
 	if (store.currentRecipe) {
-		store.currentRecipe.title = recipeTitle.value
-		store.currentRecipe.description = recipeDescription.value
-		store.currentRecipe.image = recipeImage.value
+		store.currentRecipe.title = values.title
+		store.currentRecipe.description = values.description
+		store.currentRecipe.image = values.image
 		if (store.currentRecipe.recipeInfo) {
 			store.currentRecipe.recipeInfo['Категория'] = selectedCategory.value.dishCategory
 			store.currentRecipe.recipeInfo['Кухня'] = selectedCategory.value.cuisine
