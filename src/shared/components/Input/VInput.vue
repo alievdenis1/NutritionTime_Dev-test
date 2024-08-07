@@ -38,9 +38,15 @@
 		/>
 
 		<span
-			v-if="$slots['right-icon']"
-			class="absolute top-4 right-2 icon"
+			v-if="$slots['right-icon'] || props.clearable"
+			class="absolute top-4 right-2 icon flex justify-between items-center gap-3"
 		>
+			<IconClose
+				v-if="inputValue.length"
+				icon-color="#9F9FA0"
+				class="clear"
+				@click="onClear"
+			/>
 			<slot
 				name="right-icon"
 			/>
@@ -57,6 +63,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { IconClose } from 'shared/components/Icon'
 
 export type InputEmits = {
     'update:value': [string]
@@ -72,6 +79,7 @@ export interface InputProps {
     disabled?: boolean;
     textarea?: boolean;
     readonly?: boolean;
+    clearable?: boolean;
 }
 
 defineSlots<{
@@ -113,6 +121,9 @@ const onScroll = (): void => {
     if (scrollTop >= 8) titleClasses.value = 'hidden'
     if (scrollTop < 8) titleClasses.value = ''
 }
+const onClear = (): void => {
+    emits('update:value', '')
+}
 
 watch(() => props.value, (newValue: string) => {
     inputValue.value = newValue
@@ -130,6 +141,12 @@ watch(() => props.value, (newValue: string) => {
     &:has(.icon) {
         input {
             @apply pr-8;
+        }
+    }
+
+    &:has(.clear) {
+        input {
+            @apply pr-20;
         }
     }
 

@@ -91,11 +91,14 @@
 					v-model:value="searchQuery"
 					:title="t('searchCategory')"
 					class="mb-4"
-				/>
-				<IconSearch
-					icon-color="#1C1C1C"
-					class="absolute top-[15px] right-[14px]"
-				/>
+					clearable
+				>
+					<template #right-icon>
+						<IconSearch
+							icon-color="#1C1C1C"
+						/>
+					</template>
+				</VInput>
 			</div>
 
 			<div class="category-list flex-1 overflow-y-auto">
