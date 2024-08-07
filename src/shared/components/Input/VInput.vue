@@ -1,9 +1,11 @@
 <template>
-	<div class="wrapper">
+	<div
+		class="wrapper"
+	>
 		<p
 			class="title"
 			:class="titleClasses"
-			@click="setFocus(true)"
+			@click="!props.readonly && setFocus(true)"
 		>
 			{{ props.title }}
 		</p>
@@ -14,9 +16,10 @@
 			v-model="inputValue"
 			:value="inputValue"
 			:disabled="props.disabled"
-			:class="[errorClasses, focusedInputClasses]"
+			:class="[errorClasses, focusedInputClasses, readonlyClasses]"
+			:readonly="props.readonly"
 			@input="onInput"
-			@focusin="setFocus(true)"
+			@focusin="!props.readonly && setFocus(true)"
 			@focusout="setFocus(false)"
 		>
 		<textarea
@@ -27,11 +30,21 @@
 			:value="inputValue"
 			:disabled="disabled"
 			:class="[errorClasses, focusedInputClasses]"
+			:readonly="props.readonly"
 			@input="onInput"
 			@focusin="setFocus(true)"
 			@focusout="setFocus(false)"
 			@scroll="onScroll"
 		/>
+
+		<span
+			v-if="$slots['right-icon']"
+			class="absolute top-4 right-2 icon"
+		>
+			<slot
+				name="right-icon"
+			/>
+		</span>
 
 		<p
 			v-if="hasError"
@@ -43,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 export type InputEmits = {
     'update:value': [string]
@@ -58,7 +71,13 @@ export interface InputProps {
     errorMessage?: string;
     disabled?: boolean;
     textarea?: boolean;
+    readonly?: boolean;
 }
+
+defineSlots<{
+  default(props: object): never;
+  'right-icon'(props: object): never;
+}>()
 
 const props = defineProps<InputProps>()
 const emits = defineEmits<InputEmits>()
@@ -74,6 +93,9 @@ const errorClasses = computed((): string =>
 )
 const focusedInputClasses = computed((): string =>
     inputValue.value.length ? 'focused' : ''
+)
+const readonlyClasses = computed((): string =>
+    props.readonly ? 'readonly' : ''
 )
 
 const onInput = (): void => {
@@ -91,6 +113,10 @@ const onScroll = (): void => {
     if (scrollTop >= 8) titleClasses.value = 'hidden'
     if (scrollTop < 8) titleClasses.value = ''
 }
+
+watch(() => props.value, (newValue: string) => {
+    inputValue.value = newValue
+})
 </script>
 
 <style lang="scss" scoped>
@@ -99,6 +125,12 @@ const onScroll = (): void => {
 
     &:has(textarea) {
         @apply h-auto;
+    }
+
+    &:has(.icon) {
+        input {
+            @apply pr-8;
+        }
     }
 
     &:has(input:focus), &:has(textarea:focus), &:has(input.focused), &:has(textarea.focused) {
@@ -116,7 +148,7 @@ const onScroll = (): void => {
     }
 
     input, textarea {
-        @apply mt-0 border border-[#E1E1E1] py-1.5 px-3 border-solid rounded h-full w-full outline-none relative font-normal text-description text-[#1c1c1c];
+        @apply mt-0 border border-[#E1E1E1] border-solid rounded py-1.5 px-3 h-full w-full outline-none relative font-normal text-description text-[#1c1c1c];
 
         &:focus {
             @apply border-[#319A6E33] pt-[26px] py-3 pb-[10px];
@@ -142,6 +174,10 @@ const onScroll = (): void => {
 
     .error {
         @apply border-[#F04F4F] !important;
+    }
+
+    .readonly {
+        pointer-events: none;
     }
 }
 </style>

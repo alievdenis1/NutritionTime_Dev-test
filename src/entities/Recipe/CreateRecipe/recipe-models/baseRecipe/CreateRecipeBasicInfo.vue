@@ -48,20 +48,24 @@
 			</div>
 
 			<div class="category-selection flex flex-col gap-[12px] mt-[12px]">
-				<div
+				<span
 					v-for="category in categoryTypes"
 					:key="category"
-					class="border rounded px-2 py-4 cursor-pointer flex justify-between items-center text-darkGray"
-					@click="openCategoryModal(category)"
 				>
-					<input
-						v-model="selectedCategory[category]"
-						type="text"
-						:placeholder="t(category)"
+					<VInput
+						v-model:value="selectedCategory[category]"
+						:title="t(category)"
+						class="cursor-pointer"
 						readonly
 					>
-					<IconArrowRight icon-color="#1C1C1C" />
-				</div>
+						<template #right-icon>
+							<IconArrowRight
+								icon-color="#1C1C1C"
+								@click="openCategoryModal(category)"
+							/>
+						</template>
+					</VInput>
+				</span>
 			</div>
 		</div>
 	</VAccordion>
