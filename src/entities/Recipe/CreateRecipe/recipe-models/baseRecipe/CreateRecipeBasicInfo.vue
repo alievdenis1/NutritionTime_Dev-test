@@ -83,12 +83,11 @@
 				</button>
 			</div>
 			<div class="relative">
-				<input
-					v-model="searchQuery"
-					type="text"
-					:placeholder="t('searchCategory')"
-					class="border rounded p-[16px] text-base w-full mb-4"
-				>
+				<VInput
+					v-model:value="searchQuery"
+					:title="t('searchCategory')"
+					class="mb-4"
+				/>
 				<IconSearch
 					icon-color="#1C1C1C"
 					class="absolute top-[15px] right-[14px]"
