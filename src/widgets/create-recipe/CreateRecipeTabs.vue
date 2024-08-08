@@ -55,7 +55,7 @@ const router = useRouter()
 
 const ownRecipe = 'ownRecipe'
 const aiRecipe = 'aiRecipe'
-const selectedTab = ref<string>('ownRecepie')
+const selectedTab = ref<string>(ownRecipe)
 
 const AIIconColor = computed((): string => {
 	return selectedTab.value === aiRecipe ? '#319A6E' : '#E1E1E1'
