@@ -30,6 +30,7 @@
 					:title="t('recipeTitlePlaceholder')"
 					:error="!!errors?.title"
 					:error-message="errors?.title?.message"
+					:max-length="100"
 					@focusout="validateField('title')"
 				/>
 				<VInput
@@ -38,6 +39,7 @@
 					textarea
 					:error="!!errors?.description"
 					:error-message="errors?.description?.message"
+					:max-length="500"
 					@focusout="validateField('description')"
 				/>
 			</div>

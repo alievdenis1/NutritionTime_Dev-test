@@ -20,8 +20,8 @@
 			:disabled="props.disabled"
 			:class="inputClasses"
 			:readonly="props.readonly"
-			:type="inputType"
 			:autofocus="props.autofocus"
+			:maxlength="props.maxLength"
 			@input="onInput"
 			@focusin="!props.readonly && setFocus(true)"
 			@focusout="setFocus(false)"
@@ -35,6 +35,7 @@
 			:disabled="disabled"
 			:class="inputClasses"
 			:readonly="props.readonly"
+			:maxlength="props.maxLength"
 			@input="onInput"
 			@focusin="setFocus(true)"
 			@focusout="setFocus(false)"
@@ -102,6 +103,7 @@ export interface InputProps {
     autofocus?: boolean;
     searchable?: boolean;
     zIndex?: string;
+    maxLength?: number;
 }
 
 defineSlots<{
@@ -127,7 +129,7 @@ const titleClasses = ref<string>('')
 
 const hasError = computed((): boolean => props.error && !!props.errorMessage)
 const titleZIndex = computed(() => {
-    return props.zIndex ? `z-${+props.zIndex - 1}` : 'z-2'
+    return props.zIndex ? `z-${+props.zIndex - 1}` : 'z-10'
 })
 const inputClasses = computed(() => {
     const classes = []
@@ -139,17 +141,13 @@ const inputClasses = computed(() => {
 
     return classes
  })
-const inputType = computed((): string => {
-    if (props.digital) return 'number'
-    return 'text'
-})
 
 const onInput = (): void => {
     if (props.noDigital) {
         inputValue.value = inputValue.value.replace(/\d/g, '')
     }
     if (props.digital) {
-        inputValue.value = String(inputValue.value)
+        inputValue.value = String(inputValue.value.replace(/[^\d]/g, ''))
     }
     emits('update:value', inputValue.value)
 }

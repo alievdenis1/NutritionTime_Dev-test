@@ -8,29 +8,33 @@
 				<IconArrowRight icon-color="#1C1C1C" />
 			</button>
 			<h2 class="text-center text-lg text-darkGray">
-				{{ t('createRecipe') }}
+				{{ t('addRecipe') }}
 			</h2>
 			<div />
 		</div>
 		<TabsList>
-			<TabsTrigger value="ownRecepie">
+			<TabsTrigger
+				:value="ownRecipe"
+				@click="onSelect(ownRecipe)"
+			>
 				{{ t('manualCreation') }}
 			</TabsTrigger>
 			<TabsTrigger
-				value="aiRecepie"
+				:value="aiRecipe"
 				class="flex gap-[8px]"
+				@click="onSelect(aiRecipe)"
 			>
 				{{ t('aiCreation') }}
-				<IconAi :icon-color="'#E1E1E1'" />
+				<IconAi :icon-color="AIIconColor" />
 			</TabsTrigger>
 		</TabsList>
 		<TabsContent
-			value="ownRecepie"
+			:value="ownRecipe"
 			class=""
 		>
 			<CreateOwn />
 		</TabsContent>
-		<TabsContent value="aiRecepie">
+		<TabsContent :value="aiRecipe">
 			<CreateAi />
 		</TabsContent>
 	</TabsMain>
@@ -46,7 +50,20 @@ import { IconAi, IconArrowRight } from 'shared/components/Icon'
 const store = useModalCreateStore()
 const { t } = useTranslation(localizations)
 import { useRouter } from 'vue-router'
+import { computed, ref } from 'vue'
 const router = useRouter()
+
+const ownRecipe = 'ownRecipe'
+const aiRecipe = 'aiRecipe'
+const selectedTab = ref<string>('ownRecepie')
+
+const AIIconColor = computed((): string => {
+	return selectedTab.value === aiRecipe ? '#319A6E' : '#E1E1E1'
+})
+
+const onSelect = (value: string): void => {
+	selectedTab.value = value
+}
 </script>
 
 <style scoped></style>

@@ -68,6 +68,7 @@
 							:error="!!errors?.quantity"
 							:error-message="errors?.quantity?.message"
 							digital
+							:max-length="10"
 						/>
 					</div>
 					<TabsMain

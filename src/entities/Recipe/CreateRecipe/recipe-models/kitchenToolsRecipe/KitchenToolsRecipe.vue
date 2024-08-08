@@ -72,6 +72,7 @@
 						digital
 						:title="t('ingredientPlaceholderQuantity')"
 						z-index="1"
+						:max-length="4"
 					/>
 
 					<button
