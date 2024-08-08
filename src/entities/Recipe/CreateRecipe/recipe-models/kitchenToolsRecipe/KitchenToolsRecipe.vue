@@ -173,12 +173,6 @@ const closeModal = () => {
 	tryToSave.value = false
 }
 
-const filterNumericInput = (event: Event) => {
-	const target = event.target as HTMLInputElement
-	target.value = target.value.replace(/\D/g, '')
-	kitchenwareQuantity.value = target.value
-}
-
 const updateKitchenware = () => {
 	const recipeId = route.params.id as string
 	const currentRecipe = store.recipes.find(recipe => recipe.id === recipeId)
@@ -186,11 +180,6 @@ const updateKitchenware = () => {
 		currentRecipe.kitchenware = kitchenware.value.map(item => item.name)
 	}
 }
-
-const activeInputName = computed(() => tryToSave.value && !kitchenwareName.value)
-const notEmptyKitchenwareName = computed(() => kitchenwareName.value.length !== 0)
-const activeInputQuantity = computed(() => tryToSave.value && !kitchenwareQuantity.value)
-const notEmptyKitchenwareQuantity = computed(() => kitchenwareQuantity.value.length !== 0)
 
 watch(showModal, (newVal) => {
 	if (newVal) {

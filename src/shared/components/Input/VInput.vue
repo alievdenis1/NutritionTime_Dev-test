@@ -116,7 +116,8 @@ const props = withDefaults(
     defineProps<InputProps>(), {
         background: 'default',
         errorMessage: '',
-        zIndex: ''
+        zIndex: '',
+        maxLength: 100
     }
 )
 const emits = defineEmits<InputEmits>()

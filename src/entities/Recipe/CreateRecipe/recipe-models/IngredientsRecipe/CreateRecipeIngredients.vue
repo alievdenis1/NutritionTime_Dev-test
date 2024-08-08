@@ -99,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useTranslation } from '@/shared/lib/i18n'
 import { VAccordion } from '@/shared/components/Accordion'
 import { VModal } from '@/shared/components/Modal'
@@ -179,11 +179,6 @@ const closeModal = () => {
 	tryToSave.value = false
 	clearErrors()
 }
-
-const activeInputName = computed(() => tryToSave.value && !values.title)
-const notEmptyIngredientName = computed(() => values.title.length !== 0)
-const activeInputQuantity = computed(() => tryToSave.value && !values.quantity)
-const notEmptyIngredientQuantity = computed(() => values.quantity.length !== 0)
 
 watch(ingredients, () => {
 	if (store.currentRecipe) {
