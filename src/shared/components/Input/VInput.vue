@@ -80,6 +80,8 @@ export interface InputProps {
     textarea?: boolean;
     readonly?: boolean;
     clearable?: boolean;
+    digital?: boolean;
+    noDigital?: boolean;
 }
 
 defineSlots<{
@@ -100,13 +102,16 @@ const errorClasses = computed((): string =>
     hasError.value ? 'error' : ''
 )
 const focusedInputClasses = computed((): string =>
-    inputValue.value.length ? 'focused' : ''
+    inputValue.value.length || inputValue.value ? 'focused' : ''
 )
 const readonlyClasses = computed((): string =>
     props.readonly ? 'readonly' : ''
 )
 
 const onInput = (): void => {
+    if (props.noDigital) {
+        inputValue.value = inputValue.value.replace(/\d/g, '')
+    }
     emits('update:value', inputValue.value)
 }
 const setFocus = (value: boolean): void => {
