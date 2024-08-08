@@ -16,15 +16,10 @@
 				:icon="IconPhoto"
 				:initial-image="values.image"
 				:on-image-uploaded="handleImageUpload"
+				:error-message="t('errorMessage')"
 			/>
 			<p
-				v-if="isUploadError"
-				class="text-xs text-coralRed max-w-xs mb-[24px]"
-			>
-				{{ t('errorMessage') }}
-			</p>
-			<p
-				v-else
+				v-if="!isUploadError"
 				class="text-xs text-gray max-w-xs mb-[24px]"
 			>
 				{{ t('additionalPhotosInfo') }}

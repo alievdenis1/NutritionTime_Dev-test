@@ -43,6 +43,12 @@
 			</div>
 		</label>
 	</div>
+	<p
+		v-if="props.error"
+		class="text-xs text-coralRed max-w-xs mb-[24px]"
+	>
+		{{ props.errorMessage }}
+	</p>
 </template>
 
 <script setup lang="ts">
@@ -60,7 +66,8 @@ const props = withDefaults(defineProps<AddPhoto & {
 	textColor: '#1C1C1C',
 	initialImage: null,
 	onImageUploaded: undefined,
-	error: false
+	error: false,
+	errorMessage: ''
 })
 
 const uploadedImage = ref<string | null>(props.initialImage)

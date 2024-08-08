@@ -16,7 +16,7 @@
 			v-model="inputValue"
 			:value="inputValue"
 			:disabled="props.disabled"
-			:class="[errorClasses, focusedInputClasses, readonlyClasses]"
+			:class="inputClasses"
 			:readonly="props.readonly"
 			@input="onInput"
 			@focusin="!props.readonly && setFocus(true)"
@@ -29,7 +29,7 @@
 			v-model="inputValue"
 			:value="inputValue"
 			:disabled="disabled"
-			:class="[errorClasses, focusedInputClasses]"
+			:class="inputClasses"
 			:readonly="props.readonly"
 			@input="onInput"
 			@focusin="setFocus(true)"
@@ -65,6 +65,8 @@
 import { computed, ref, watch } from 'vue'
 import { IconClose } from 'shared/components/Icon'
 
+type InputBackground = 'default' | 'gray'
+
 export type InputEmits = {
     'update:value': [string]
     'update:error': [boolean]
@@ -82,6 +84,7 @@ export interface InputProps {
     clearable?: boolean;
     digital?: boolean;
     noDigital?: boolean;
+    background?: InputBackground;
 }
 
 defineSlots<{
@@ -89,7 +92,12 @@ defineSlots<{
   'right-icon'(props: object): never;
 }>()
 
-const props = defineProps<InputProps>()
+const props = withDefaults(
+    defineProps<InputProps>(), {
+        background: 'default',
+        errorMessage: ''
+    }
+)
 const emits = defineEmits<InputEmits>()
 
 const inputValue = ref<string>(props.value)
@@ -98,15 +106,16 @@ const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const titleClasses = ref<string>('')
 
 const hasError = computed((): boolean => props.error && !!props.errorMessage)
-const errorClasses = computed((): string =>
-    hasError.value ? 'error' : ''
-)
-const focusedInputClasses = computed((): string =>
-    inputValue.value.length || inputValue.value ? 'focused' : ''
-)
-const readonlyClasses = computed((): string =>
-    props.readonly ? 'readonly' : ''
-)
+const inputClasses = computed(() => {
+    const classes = []
+
+    if (hasError.value) classes.push('error')
+    if (inputValue.value.length || inputValue.value) classes.push('focused')
+    if (props.readonly) classes.push('readonly')
+    if (props.background !== 'default') classes.push(props.background)
+
+    return classes
+ })
 
 const onInput = (): void => {
     if (props.noDigital) {
@@ -174,6 +183,10 @@ watch(() => props.value, (newValue: string) => {
 
         &:focus {
             @apply border-[#319A6E33] pt-[26px] py-3 pb-[10px];
+        }
+
+        &.gray {
+            @apply bg-[#F3F3F3] border-transparent;
         }
     }
 

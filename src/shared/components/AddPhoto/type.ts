@@ -16,4 +16,5 @@ export interface AddPhoto {
     initialImage?: string | null;
     onImageUploaded?: (imageUrl: string | null) => void;
     error?: boolean;
+    errorMessage?: string;
 }

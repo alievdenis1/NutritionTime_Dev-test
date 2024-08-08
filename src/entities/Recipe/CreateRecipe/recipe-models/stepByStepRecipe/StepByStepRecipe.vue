@@ -33,15 +33,16 @@
 				</div>
 
 				<VAddPhoto
+					v-model:error="isUploadError"
 					:width-image="44"
 					:height-image="44"
 					:height-main="54"
 					:title="t('uploadPhoto')"
-					icon-color="#1C1C1C"
 					backgrounds="#F3F3F3"
 					:icon="IconPhoto"
 					:initial-image="step.image"
 					:on-image-uploaded="(imageUrl) => handleImageUpload(index, imageUrl)"
+					:error-message="t('errorMessage')"
 				/>
 			</div>
 			<button
@@ -75,6 +76,7 @@ interface Step {
 }
 
 const steps = ref<Step[]>([])
+const isUploadError = ref<boolean>(false)
 
 const loadSteps = () => {
 	const recipeId = route.params.id as string

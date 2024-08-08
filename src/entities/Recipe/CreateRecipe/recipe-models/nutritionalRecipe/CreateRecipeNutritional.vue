@@ -12,13 +12,12 @@
 					<span class="absolute text-[12px] top-[6px] left-[12px] text-gray">
 						{{ t('caloriesPer100gTitle') }}
 					</span>
-					<input
-						v-model="calories"
-						type="text"
-						:placeholder="t('caloriesPer100gPlaceholder')"
-						class="border rounded px-[12px] pt-[22px] pb-[12px] text-base w-full mb-4 bg-white"
-						@input="updateNutritionInfo"
-					>
+					<VInput
+						v-model:value="calories"
+						class="mb-4"
+						background="gray"
+						:title="t('caloriesPlaceholder')"
+					/>
 				</div>
 			</div>
 			<div>
@@ -29,37 +28,33 @@
 					<span class="absolute text-[12px] top-[6px] left-[12px] text-gray">
 						{{ t('proteinPer100gPlaceholder') }}
 					</span>
-					<input
-						v-model="protein"
-						type="text"
-						:placeholder="t('proteinPer100gPlaceholder')"
-						class="border rounded px-[12px] pt-[22px] pb-[10px] text-base w-full mb-2 bg-white text-[14px]"
-						@input="updateNutritionInfo"
-					>
+					<VInput
+						v-model:value="protein"
+						class="mb-2"
+						background="gray"
+						:title="t('proteinPlaceholder')"
+					/>
 				</div>
 				<div class="mb-2 relative">
 					<span class="absolute text-[12px] top-[6px] left-[12px] text-gray">
 						{{ t('fatPer100gPlaceholder') }}
 					</span>
-					<input
-						v-model="fat"
-						type="text"
-						:placeholder="t('fatPer100gPlaceholder')"
-						class="border rounded px-[12px] pt-[22px] pb-[10px] text-base w-full mb-2 bg-white text-[14px]"
-						@input="updateNutritionInfo"
-					>
+					<VInput
+						v-model:value="fat"
+						class="mb-2"
+						background="gray"
+						:title="t('fatPlaceholder')"
+					/>
 				</div>
 				<div class="relative">
 					<span class="absolute text-[12px] top-[6px] left-[12px] text-gray">
 						{{ t('carbohydratesPer100gPlaceholder') }}
 					</span>
-					<input
-						v-model="carbohydrates"
-						type="text"
-						:placeholder="t('carbohydratesPer100gPlaceholder')"
-						class="border rounded px-[12px] pt-[22px] pb-[10px] text-base w-full bg-white text-[14px]"
-						@input="updateNutritionInfo"
-					>
+					<VInput
+						v-model:value="carbohydrates"
+						background="gray"
+						:title="t('carbohydratesPlaceholder')"
+					/>
 				</div>
 			</div>
 		</div>
@@ -70,6 +65,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useTranslation } from '@/shared/lib/i18n'
 import { VAccordion } from '@/shared/components/Accordion'
+import { VInput } from '@/shared/components/Input'
 import localization from './CreateRecipeNutritional.localization.json'
 import { useRecipeStore } from '../../../DetailedCardRecipe/stores/recipeStore'
 import { useRoute } from 'vue-router'
