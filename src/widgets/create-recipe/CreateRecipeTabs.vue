@@ -14,27 +14,27 @@
 		</div>
 		<TabsList>
 			<TabsTrigger
-				:value="ownRecipe"
-				@click="onSelect(ownRecipe)"
+				value="ownRecepie"
+				@click="onSelect('ownRecepie')"
 			>
 				{{ t('manualCreation') }}
 			</TabsTrigger>
 			<TabsTrigger
-				:value="aiRecipe"
+				value="aiRecepie"
 				class="flex gap-[8px]"
-				@click="onSelect(aiRecipe)"
+				@click="onSelect('aiRecepie')"
 			>
 				{{ t('aiCreation') }}
 				<IconAi :icon-color="AIIconColor" />
 			</TabsTrigger>
 		</TabsList>
 		<TabsContent
-			:value="ownRecipe"
+			value="ownRecepie"
 			class=""
 		>
 			<CreateOwn />
 		</TabsContent>
-		<TabsContent :value="aiRecipe">
+		<TabsContent value="aiRecepie">
 			<CreateAi />
 		</TabsContent>
 	</TabsMain>
@@ -53,12 +53,10 @@ import { useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
 const router = useRouter()
 
-const ownRecipe = 'ownRecipe'
-const aiRecipe = 'aiRecipe'
-const selectedTab = ref<string>(ownRecipe)
+const selectedTab = ref<string>('ownRecepie')
 
 const AIIconColor = computed((): string => {
-	return selectedTab.value === aiRecipe ? '#319A6E' : '#E1E1E1'
+	return selectedTab.value === 'aiRecepie' ? '#319A6E' : '#E1E1E1'
 })
 
 const onSelect = (value: string): void => {
