@@ -8,7 +8,10 @@
 			>
 				<div class="flex justify-between mb-[16px]">
 					<h3>{{ t('step', { idx: index + 1 }) }}</h3>
-					<button @click="removeStep(index)">
+					<button
+						v-if="index !== 0"
+						@click="removeStep(index)"
+					>
 						<IconClose
 							icon-color="#9F9FA0"
 							class="w-[12px] h-[12px] cursor-pointer"
