@@ -4,7 +4,7 @@
 	>
 		<p
 			class="title"
-			:class="titleClasses"
+			:class="[titleClasses, titleZIndex]"
 			@click="!props.readonly && setFocus(true)"
 		>
 			{{ props.title }}
@@ -12,12 +12,16 @@
 
 		<input
 			v-if="!textarea"
+			:id="useId()"
+			ref="inputRef"
 			v-bind="$attrs"
 			v-model="inputValue"
 			:value="inputValue"
 			:disabled="props.disabled"
 			:class="inputClasses"
 			:readonly="props.readonly"
+			:type="inputType"
+			:autofocus="props.autofocus"
 			@input="onInput"
 			@focusin="!props.readonly && setFocus(true)"
 			@focusout="setFocus(false)"
@@ -51,6 +55,15 @@
 				name="right-icon"
 			/>
 		</span>
+		<div
+			v-if="$slots['list'] && props.searchable && isFocused"
+			class="absolute top-full right-0 left-0 bg-white"
+			:style="{
+				zIndex: props.zIndex
+			}"
+		>
+			<slot name="list" />
+		</div>
 
 		<p
 			v-if="hasError"
@@ -62,7 +75,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
+import { useId } from 'radix-vue'
 import { IconClose } from 'shared/components/Icon'
 
 type InputBackground = 'default' | 'gray'
@@ -85,17 +99,22 @@ export interface InputProps {
     digital?: boolean;
     noDigital?: boolean;
     background?: InputBackground;
+    autofocus?: boolean;
+    searchable?: boolean;
+    zIndex?: string;
 }
 
 defineSlots<{
   default(props: object): never;
   'right-icon'(props: object): never;
+  'list'(props: object): never;
 }>()
 
 const props = withDefaults(
     defineProps<InputProps>(), {
         background: 'default',
-        errorMessage: ''
+        errorMessage: '',
+        zIndex: ''
     }
 )
 const emits = defineEmits<InputEmits>()
@@ -103,23 +122,34 @@ const emits = defineEmits<InputEmits>()
 const inputValue = ref<string>(props.value)
 const isFocused = ref<boolean>(false)
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
+const inputRef = ref<HTMLInputElement | null>(null)
 const titleClasses = ref<string>('')
 
 const hasError = computed((): boolean => props.error && !!props.errorMessage)
+const titleZIndex = computed(() => {
+    return props.zIndex ? `z-${+props.zIndex - 1}` : 'z-2'
+})
 const inputClasses = computed(() => {
     const classes = []
 
     if (hasError.value) classes.push('error')
-    if (inputValue.value.length || inputValue.value) classes.push('focused')
+    if (inputValue.value?.length || inputValue.value) classes.push('focused')
     if (props.readonly) classes.push('readonly')
     if (props.background !== 'default') classes.push(props.background)
 
     return classes
  })
+const inputType = computed((): string => {
+    if (props.digital) return 'number'
+    return 'text'
+})
 
 const onInput = (): void => {
     if (props.noDigital) {
         inputValue.value = inputValue.value.replace(/\d/g, '')
+    }
+    if (props.digital) {
+        inputValue.value = String(inputValue.value)
     }
     emits('update:value', inputValue.value)
 }
@@ -138,10 +168,19 @@ const onScroll = (): void => {
 const onClear = (): void => {
     emits('update:value', '')
 }
+const onAutofocus = (): void => {
+    nextTick(() => {
+        if (!inputRef.value || !props.autofocus) return
+        inputRef.value.focus()
+        setFocus(true)
+    })
+}
 
 watch(() => props.value, (newValue: string) => {
     inputValue.value = newValue
 })
+
+defineExpose({ onAutofocus })
 </script>
 
 <style lang="scss" scoped>
@@ -175,7 +214,7 @@ watch(() => props.value, (newValue: string) => {
     }
 
     & .title {
-        @apply flex absolute text-[#9F9FA0] font-normal top-[18px] bottom-[18px] left-3 right-3 text-description transition-[150ms] z-10 h-fit w-fit;
+        @apply flex absolute text-[#9F9FA0] font-normal top-[18px] bottom-[18px] left-3 right-3 text-description transition-[150ms] h-fit w-fit;
     }
 
     input, textarea {

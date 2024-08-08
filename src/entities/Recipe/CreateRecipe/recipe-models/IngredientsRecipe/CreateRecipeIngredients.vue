@@ -67,6 +67,7 @@
 							:title="t('ingredientPlaceholderQuantity')"
 							:error="!!errors?.quantity"
 							:error-message="errors?.quantity?.message"
+							digital
 						/>
 					</div>
 					<TabsMain
