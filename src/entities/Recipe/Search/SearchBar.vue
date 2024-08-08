@@ -29,7 +29,7 @@ import { ref, onMounted } from 'vue'
 import { IconSearch, IconFilter } from 'shared/components/Icon'
 import { useTranslation } from 'shared/lib/i18n'
 import localization from './SearchBar.localization.json'
-import { useSearchStore } from 'entities/Search'
+import { useSearchStore } from './store/search-store'
 import { useRouter } from 'vue-router'
 const router =useRouter()
 const { t } = useTranslation(localization)
@@ -73,4 +73,4 @@ onMounted(() => {
 .border-custom {
 	border: 1px solid #E1E1E1;
 }
-</style>
+</style>@/entities/Recipe/Search

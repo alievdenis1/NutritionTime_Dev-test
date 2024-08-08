@@ -65,8 +65,9 @@
 
 <script setup lang="ts">
 import { IconComment, IconFire, IconHeart, IconTime, IconFavorites } from 'shared/components/Icon'
-import type { RecipesItem } from 'entities/Recipe/ui'
-import { useSearchStore, CreateCollection } from 'entities/Search'
+import type { RecipesItem } from '../RecipesList/type'
+import { useSearchStore } from '../Search/store/search-store'
+import CreateCollection  from '../Search/modal/CreateCollection.vue'
 
 const store = useSearchStore()
 defineProps<{

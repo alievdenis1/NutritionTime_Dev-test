@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { RecipesItem } from 'entities/Recipe/ui'
+import type { RecipesItem } from '@/entities/Recipe/RecipesList'
 import { recipesData } from '../mocks/mocks-store'
 
 export const useSearchStore = defineStore('search-store', () => {

@@ -129,7 +129,7 @@
 import { ref, computed } from 'vue'
 import { VModal } from 'shared/components/Modal'
 import { IconClose, IconArrow, IconArrowRight } from 'shared/components/Icon'
-import { useSearchStore } from 'entities/Search'
+import { useSearchStore } from '../store/search-store'
 import { useTranslation } from 'shared/lib/i18n'
 import Localization from './CreateCollection.localization.json'
 import { VButton, ButtonColors } from 'shared/components/Button'
@@ -184,4 +184,4 @@ const backToFirstModal = () => {
 .border {
 	border: 1px solid #319A6E33;
 }
-</style>
+</style>@/entities/Recipe/Search

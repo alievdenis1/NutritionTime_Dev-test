@@ -78,7 +78,7 @@ import { useTranslation } from '@/shared/lib/i18n'
 import localizations from './TagsRecipe.localization.json'
 import { IconArrowRight, IconClose } from 'shared/components/Icon'
 import TagsCollectionsItem from './TagsCollectionsItem.vue'
-import { useRecipeStore } from 'entities/Recipe/DetailedCardRecipe'
+import { useRecipeStore } from '../../../DetailedCardRecipe/stores/recipeStore'
 import { useRoute } from 'vue-router'
 
 const { t } = useTranslation(localizations)

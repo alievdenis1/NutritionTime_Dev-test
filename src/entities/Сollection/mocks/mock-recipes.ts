@@ -1,4 +1,4 @@
-import { RecipesList } from '../../Recipe/ui/type'
+import { RecipesList } from '../../Recipe/RecipesList/type'
 
 export const addPrefix = (url: string) => {
     const prefix = '/NutritionTime_Dev-test'

@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
-import { SearchBar, QuickSearchTag, RecipePreviewSearch, useSearchStore } from 'entities/Search'
+import { SearchBar, QuickSearchTag, RecipePreviewSearch, useSearchStore } from 'entities/Recipe/Search'
 import { VSkeletonCard } from 'shared/components/ui/skeleton'
 
 const store = useSearchStore()
@@ -110,4 +110,4 @@ onUnmounted(() => {
     right: 0;
     z-index: 1000;
 }
-</style>
+</style>@/entities/Recipe/Search

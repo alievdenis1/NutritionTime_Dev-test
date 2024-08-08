@@ -80,9 +80,9 @@ import { ref, computed } from 'vue'
 import { IconTabs, IconClose } from 'shared/components/Icon'
 import { useTranslation } from 'shared/lib/i18n'
 import localization from './QuickSearchTag.localization.json'
-import { useSearchStore } from 'entities/Search'
-import { VModal } from '@/shared/components/Modal'
-import { TagsCollectionsItem } from 'entities/Recipe/CreateRecipe/recipe-models'
+import { useSearchStore } from './store/search-store'
+import { VModal } from 'shared/components/Modal'
+import TagsCollectionsItem  from '../CreateRecipe/recipe-models/tagsRecipe/TagsCollectionsItem.vue'
 
 const store = useSearchStore()
 const { t } = useTranslation(localization)
@@ -162,4 +162,4 @@ const deselectTag = () => {
     display: none;
 }
 
-</style>
+</style>@/entities/Recipe/Search

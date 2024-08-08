@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import RecipesList from 'entities/Recipe/ui/RecipesList.vue'
+import RecipesList from '../../Recipe/RecipesList/RecipesList.vue'
 import { VContentBlock } from 'shared/components/ContentBlock'
 import { mockRecipes, addPrefix } from '../mocks/mock-recipes'
 import { useTranslation } from '@/shared/lib/i18n'

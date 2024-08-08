@@ -1,12 +1,17 @@
 import { ref } from 'vue'
-import type { RecipesItem } from 'entities/Recipe/ui'
+import type { RecipesItem } from '@/entities/Recipe/RecipesList'
+
+export const addPrefix = (url: string) => {
+    const prefix = '/NutritionTime_Dev-test'
+    return `${prefix}${url}`
+}
 
 export const recipesData = ref<RecipesItem[]>([
     {
         id: 1,
         title: 'Recipe Title',
-        image: '/image/recipes1.png',
-        author: { name: 'Author Name', image: '/image/denis.svg' },
+        image: addPrefix('/image/recipes1.png'),
+        author: { name: 'Author Name', image: addPrefix('/image/denis.svg') },
         rating: 4.5,
         cookingTime: 30,
         calories: 250,
@@ -20,8 +25,8 @@ export const recipesData = ref<RecipesItem[]>([
     {
         id: 2,
         title: 'Recipe Title',
-        image: '/image/recipes1.png',
-        author: { name: 'Author Name', image: '/image/denis.svg' },
+        image: addPrefix('/image/recipes1.png'),
+        author: { name: 'Author Name', image: addPrefix('/image/denis.svg') },
         rating: 4.5,
         cookingTime: 30,
         calories: 250,
@@ -35,8 +40,8 @@ export const recipesData = ref<RecipesItem[]>([
     {
         id: 3,
         title: 'Recipe Title',
-        image: '/image/recipes1.png',
-        author: { name: 'Author Name', image: '/image/denis.svg' },
+        image: addPrefix('/image/recipes1.png'),
+        author: { name: 'Author Name', image: addPrefix('/image/denis.svg') },
         rating: 4.5,
         cookingTime: 30,
         calories: 250,

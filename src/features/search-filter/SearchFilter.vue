@@ -104,7 +104,7 @@ import 'simplebar/dist/simplebar.min.css'
 import SimpleBar from 'simplebar'
 import 'simplebar/dist/simplebar.css'
 
-import { useSearchStore } from 'entities/Search'
+import { useSearchStore } from 'entities/Recipe/Search'
 const store = useSearchStore()
 
 const { t } = useTranslation(localization)
@@ -217,4 +217,4 @@ onMounted(() => {
     border: 1px solid #319A6E33;
     border-radius: 4px;
 }
-</style>
+</style>@/entities/Recipe/Search

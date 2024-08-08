@@ -19,7 +19,7 @@
 					<div
 						class="absolute top-[8px] left-[8px] py-[6px] px-[6px] text-white bg-forestGreen rounded-[100px]"
 					>
-						{{ recipe.rating }}
+						{{ recipe.rating.toFixed(1) }}
 					</div>
 				</div>
 
