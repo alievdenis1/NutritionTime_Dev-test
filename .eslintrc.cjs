@@ -9,11 +9,7 @@ module.exports = {
 		ecmaVersion: 2020,
 		sourceType: 'module',
 	},
-	extends: [
-		'eslint:recommended',
-		'plugin:vue/vue3-recommended',
-		'plugin:@typescript-eslint/recommended',
-	],
+	extends: ['eslint:recommended', 'plugin:vue/vue3-recommended', 'plugin:@typescript-eslint/recommended', 'plugin:storybook/recommended'],
 	plugins: ['@typescript-eslint'],
 	ignorePatterns: ['dist'],
 	rules: {
