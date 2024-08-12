@@ -19,7 +19,7 @@
 					<div
 						class="absolute top-[8px] left-[8px] py-[6px] px-[6px] text-white bg-forestGreen rounded-[100px]"
 					>
-						{{ recipe.rating }}
+						{{ recipe.rating.toFixed(1) }}
 					</div>
 				</div>
 
@@ -52,18 +52,18 @@
 					<div class="flex justify-center items-center gap-[8px] mr-[20px]">
 						<img
 							class="h-[20px] w-[20px]"
-							:src="recipe.author.profile_image"
-							alt="author image"
+							:src="recipe.author.image"
+							:alt="recipe.author.name"
 						>
 						{{ recipe.author.name }}
 					</div>
 					<p class="flex justify-center items-center gap-[4px] text-[#535353]">
 						<IconComment />
-						{{ recipe.comments }}
+						{{ recipe.commentsCount }}
 					</p>
 				</div>
 				<div class="flex justify-center items-center gap-[4px] ">
-					<IconFavorites class="text-[#9F9FA0]" />
+					<IconFavorites icon-color="#9F9FA0" />
 					<p class="flex justify-center items-center gap-[4px] text-[#535353]">
 						<IconHeart icon-color="#9F9FA0" />
 						{{ recipe.likes }}

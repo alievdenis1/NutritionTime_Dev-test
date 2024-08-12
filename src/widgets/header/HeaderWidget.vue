@@ -22,6 +22,7 @@
 
 				<button
 					aria-label="Settings"
+					:aria-expanded="languageDropDownOpen"
 					class="settings-button p-[12px]"
 					role="button"
 					@click="languageDropDownOpen = !languageDropDownOpen"
@@ -29,20 +30,22 @@
 					{{ t('lang') }}
 					<IconArrow
 						:icon-color="'#1C1C1C'"
+						:icon-width="14"
+						:icon-height="14"
 						:class="{ 'rotate-180': languageDropDownOpen }"
 					/>
 					<div
-						v-if="languageDropDownOpen"
+						v-show="languageDropDownOpen"
 						class="language-dropdown"
 					>
 						<button
-							:class="{ 'active': localeStore.currentLocale === 'ru' }"
+							:class="{ 'active': isActiveLocale('ru') }"
 							@click="localeStore.setLocale('ru')"
 						>
 							Rus
 						</button>
 						<button
-							:class="{ 'active': localeStore.currentLocale === 'en' }"
+							:class="{ 'active': isActiveLocale('en') }"
 							@click="localeStore.setLocale('en')"
 						>
 							Eng
@@ -55,12 +58,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { useLocaleStore, useTranslation } from 'shared/lib/i18n'
+import { ref, computed } from 'vue'
 import Localization from './HeaderWidget.localization.json'
 import { onClickOutside } from '@vueuse/core'
 import { useRouter } from 'vue-router'
-import { IconWallet, IconArrow } from 'shared/components/Icon'
+import { useLocaleStore, useTranslation } from '@/shared/lib/i18n'
+import { IconWallet, IconArrow } from '@/shared/components/Icon'
 
 const router = useRouter()
 
@@ -71,6 +74,7 @@ const target = ref(null)
 const languageDropDownOpen = ref(false)
 
 onClickOutside(target, () => languageDropDownOpen.value = false)
+const isActiveLocale = computed(() => (locale: string) => localeStore.currentLocale === locale)
 
 const navigateToWallet = () => {
 	router.push('/wallet')

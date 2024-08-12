@@ -9,7 +9,12 @@
 			class="mt-4 text-description font-normal text-[#535353] break-words"
 		>
 			{{ t('creationDescription') }}
-			<span class="w-auto h-auto"><IconFavorites class="form__icon w-4 h-4 text-[#9F9FA0] inline align-middle" /></span>
+			<span class="w-auto h-auto">
+				<IconFavorites
+					class="form__icon w-4 h-4 inline align-middle"
+					icon-color="#9F9FA0"
+				/>
+			</span>
 		</p>
 
 		<VInput

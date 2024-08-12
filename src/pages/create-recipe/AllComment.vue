@@ -18,7 +18,7 @@
 				<span
 					class="text-lg text-white w-[32px] h-[32px] rounded-[50%] bg-forestGreen flex items-center justify-center mb-[12px]"
 				>
-					{{ recipe?.rating }}
+					{{ recipe?.rating.toFixed(1) }}
 				</span>
 
 				<div class="text-lg text-darkGray">
