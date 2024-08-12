@@ -69,8 +69,8 @@
 				>
 				<span class="text-sm text-slateGray">{{ recipe?.author.name }}</span>
 				<div
-					v-if="recipe?.comments?.length ?? 0 > 0"
-					class="ml-auto flex items-center"
+					v-if="recipe?.comments?.length && recipe.comments.length > 0"
+					class=" ml-auto flex items-center"
 				>
 					<span class="text-xs text-slateGray mr-[8px]">
 						{{ recipe?.reviewsCount }}
@@ -79,7 +79,7 @@
 					<span
 						class="text-sm text-white w-[32px] h-[32px] rounded-[50%] bg-forestGreen flex items-center justify-center"
 					>
-						{{ recipe?.rating }}
+						{{ recipe?.rating.toFixed(1) }}
 					</span>
 				</div>
 			</div>
@@ -117,17 +117,17 @@
 			/>
 
 			<div class="shadow-custom mt-[40px] p-[16px] rounded-[12px] flex items-center justify-between">
-				<div v-if="recipe?.comments?.length ?? 0 > 0">
+				<div v-if="recipe?.comments?.length && recipe.comments.length > 0">
 					<span
 						class="text-sm text-white w-[32px] h-[32px] rounded-[50%] bg-forestGreen flex items-center justify-center mb-[12px]"
 					>
-						{{ recipe?.rating }}
+						{{ recipe?.rating.toFixed(1) }}
 					</span>
 					{{ recipe?.reviewsCount }}
 					{{ t('reviewsCount') }}
 				</div>
 				<div
-					v-if="recipe?.comments?.length ?? 0 > 0"
+					v-if="recipe?.comments?.length && recipe.comments.length < 0"
 					class="text-sm text-darkGray"
 				>
 					Отзывов пока нет

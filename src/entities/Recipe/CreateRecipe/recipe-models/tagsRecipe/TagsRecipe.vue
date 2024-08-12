@@ -47,6 +47,7 @@
 					<div class="w-12 h-12 flex items-center justify-center bg-lightGray rounded-full">
 						<IconClose
 							class="w-6 h-6 cursor-pointer"
+							icon-color="#9F9FA0"
 							@click="closeModal"
 						/>
 					</div>

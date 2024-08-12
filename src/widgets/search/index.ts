@@ -1,0 +1,1 @@
+export { default as SearchWidgets } from './SearchWidgets.vue'

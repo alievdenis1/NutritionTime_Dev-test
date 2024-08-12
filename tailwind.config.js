@@ -50,7 +50,7 @@ export default {
         mainBg: '#FCFCFC',
         forestGreen: '#319A6E',
         lightGray: '#F3F3F3',
-        darkGray: '#1c1c1c',
+        darkGray: '#1C1C1C',
         slateGray: '#535353',
         transparent: 'transparent',
         gray: '#9F9FA0',

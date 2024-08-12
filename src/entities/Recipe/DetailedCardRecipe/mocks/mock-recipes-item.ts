@@ -1,12 +1,17 @@
 import { ref } from 'vue'
 import { Recipe } from '../types/recipe'
 
+export const addPrefix = (url: string) => {
+    const prefix = '/NutritionTime_Dev-test'
+    return `${prefix}${url}`
+}
+
 export const mockRecipe = ref<Recipe[]>([
     {
         id: '1',
         title: 'Вкуснейший домашний бургер',
         description: 'Это рецепт вкуснейшего домашнего бургера, который очень просто приготовить',
-        image: '/image/recipes1.png',
+        image: addPrefix('/image/recipes1.png'),
         author: {
             name: 'Денис Алиев',
             image: '/image/denis.svg'
@@ -26,27 +31,27 @@ export const mockRecipe = ref<Recipe[]>([
         cookingSteps: [
             {
                 description: 'Подготавливаем необходимые ингредиенты для бургера',
-                image: '/image/recipes3.png'
+                image: addPrefix('/image/recipes3.png')
             },
             {
                 description: 'В мясной фарш добавляем соль и перец по вкусу, хорошо вымешиваем. Формируем шарик, расплющиваем его в руках, чтобы получилась плоская котлета. Надавливаем большим пальцем в центр котлеты, чтобы она не вздулась во время обжаривания.',
-                image: '/image/recipes2.png'
+                image: addPrefix('/image/recipes2.png')
             },
             {
                 description: 'Обжариваем котлету 4-5 минут с каждой стороны.На готовую котлету кладем тонкий кусочек сыра.',
-                image: '/image/recipes2.png'
+                image: addPrefix('/image/recipes2.png')
             },
             {
                 description: 'Помидоры нарезаем кружочками, твердый сыр - тонкими пластинами, соленый огурец - тонкими кружочками.В отдельной емкости смешиваем майонез и кетчуп.',
-                image: '/image/recipes1.png'
+                image: addPrefix('/image/recipes1.png')
             },
             {
                 description: 'На котлету выкладываем пару ломтиков соленого огурца и ломтик сыра.',
-                image: '/image/recipes2.png'
+                image: addPrefix('/image/recipes2.png')
             },
             {
                 description: 'Накрываем бургер второй частью булочки. По такому же принципу формируем остальные бургеры. Приятного аппетита!',
-                image: '/image/recipes3.png'
+                image: addPrefix('/image/recipes3.png')
             },
         ],
         recipeInfo: {
@@ -68,40 +73,40 @@ export const mockRecipe = ref<Recipe[]>([
         tags: ['тег1', 'тег2', 'тег3'],
         comments: [
             {
-                authorImage: '/image/denis.svg',
+                authorImage: addPrefix('/image/denis.svg'),
                 author: 'Игнат Балышев',
                 text: 'Рецепт классный, получилось с первого раза и очень вкусно! Автору респект',
                 likes: 0,
-                image: '/image/recipes2.png',
+                image: addPrefix('/image/recipes2.png'),
             },
             {
-                authorImage: '/image/denis.svg',
+                authorImage: addPrefix('/image/denis.svg'),
                 author: 'Игнат Балышев',
                 text: 'Рецепт классный, получилось с первого раза и очень вкусно! Автору респект',
                 likes: 12,
                 image: null,
             },
             {
-                authorImage: '/image/denis.svg',
+                authorImage: addPrefix('/image/denis.svg'),
                 author: 'Игнат Балышев',
                 text: 'Рецепт классный, получилось с первого раза и очень вкусно! Автору респект',
                 likes: 24,
-                image: '/image/recipes2.png',
+                image: addPrefix('/image/recipes2.png'),
             }
         ],
         nftOwner: {
             name: 'Денис Алиев',
-            image: '/image/denis.svg'
+            image: addPrefix('/image/denis.svg')
         }
     },
     {
         id: '2',
         title: 'Ещё один вкусный рецепт',
         description: 'Описание второго вкусного рецепта',
-        image: '/image/recipes3.png',
+        image: addPrefix('/image/recipes3.png'),
         author: {
             name: 'Иван Иванов',
-            image: '/image/CatIllustration.png'
+            image: addPrefix('/image/CatIllustration.png')
         },
         rating: 4.5,
         reviewsCount: 8,
@@ -114,15 +119,15 @@ export const mockRecipe = ref<Recipe[]>([
         cookingSteps: [
             {
                 description: 'Шаг первый',
-                image: '/image/recipes1.png'
+                image: addPrefix('/image/recipes1.png')
             },
             {
                 description: 'Шаг второй',
-                image: '/image/recipes1.png'
+                image: addPrefix('/image/recipes1.png')
             },
             {
                 description: 'Шаг третий',
-                image: '/image/recipes1.png'
+                image: addPrefix('/image/recipes1.png')
             },
         ],
         recipeInfo: {
@@ -144,14 +149,14 @@ export const mockRecipe = ref<Recipe[]>([
         tags: ['тег4', 'тег5', 'тег6'],
         comments: [
             {
-                authorImage: '/image/CatIllustration.png',
+                authorImage: addPrefix('/image/CatIllustration.png'),
                 author: 'Петр Петров',
                 text: 'Отличный рецепт, очень понравилось!',
                 likes: 5,
-                image: '/image/recipes3.png',
+                image: addPrefix('/image/recipes3.png'),
             },
             {
-                authorImage: '/image/CatIllustration.png',
+                authorImage: addPrefix('/image/CatIllustration.png'),
                 author: 'Анна Смирнова',
                 text: 'Очень вкусно, спасибо!',
                 likes: 10,
@@ -160,7 +165,7 @@ export const mockRecipe = ref<Recipe[]>([
         ],
         nftOwner: {
             name: 'Иван Иванов',
-            image: '/image/CatIllustration.png'
+            image: addPrefix('/image/CatIllustration.png')
         }
     }
 ])

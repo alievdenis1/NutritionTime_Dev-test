@@ -12,7 +12,7 @@
 					class="text-2xl w-[48px] h-[48px] bg-lightGray rounded-[50%] p-[14px] cursor-pointer"
 					@click="store.closeModal"
 				>
-					<IconClose />
+					<IconClose icon-color="#9F9FA0" />
 				</button>
 			</div>
 
@@ -58,8 +58,8 @@
 </template>
 
 <script setup lang="ts">
-import { VModal } from 'shared/components/Modal'
-import { IconArrowRight, IconClose, IconAi } from 'shared/components/Icon'
+import { VModal } from '@/shared/components/Modal'
+import { IconClose, IconArrowRight, IconAi } from '@/shared/components/Icon'
 import { useModalCreateStore } from '../model/model-store'
 import { useTranslation } from '@/shared/lib/i18n'
 import Localization from './ModalCreateRecipe.localization.json'
