@@ -5,7 +5,6 @@
 		<p
 			class="title"
 			:class="[titleClasses, titleZIndex]"
-			@click="!props.readonly && setFocus(true)"
 		>
 			{{ props.title }}
 		</p>
@@ -213,7 +212,7 @@ defineExpose({ onAutofocus })
     }
 
     & .title {
-        @apply flex absolute text-[#9F9FA0] font-normal top-[18px] bottom-[18px] left-3 right-3 text-description transition-[150ms] h-fit w-fit;
+        @apply pointer-events-none flex absolute text-[#9F9FA0] font-normal top-[18px] bottom-[18px] left-3 right-3 text-description transition-[150ms] h-fit w-fit;
     }
 
     input, textarea {

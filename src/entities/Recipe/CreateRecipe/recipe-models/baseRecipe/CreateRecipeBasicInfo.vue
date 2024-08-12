@@ -54,11 +54,11 @@
 						:title="t(category)"
 						class="cursor-pointer"
 						readonly
+						@click="openCategoryModal(category)"
 					>
 						<template #right-icon>
 							<IconArrowRight
 								icon-color="#1C1C1C"
-								@click="openCategoryModal(category)"
 							/>
 						</template>
 					</VInput>
