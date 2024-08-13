@@ -13,7 +13,8 @@
         "moreAbout":"Больше о NFT",
         "yourRecipe": "Это ваш рецепт",
         "editInstructions": "При необходимости, вы можете отредактировать его и отправить на повторную модерацию",
-        "editButton": "Редактировать"
+        "editButton": "Редактировать",
+        "noReviews":"Пока нет отзывов"
     },
     "en": {
         "reviewsCount": "reviews",
@@ -29,6 +30,7 @@
         "moreAbout": "More about NFTs",
         "yourRecipe": "This is your recipe",
         "editInstructions": "If needed, you can edit it and submit for re-moderation",
-        "editButton": "Edit"
+        "editButton": "Edit",
+        "noReviews": "No reviews yet"
     }
 }

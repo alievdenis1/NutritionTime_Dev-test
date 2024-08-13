@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { IconSearch, IconFilter } from 'shared/components/Icon'
 import { useTranslation } from 'shared/lib/i18n'
 import localization from './SearchBar.localization.json'
@@ -51,22 +51,6 @@ const openFilters = () => {
 	router.push('/filter')
 }
 
-const handleMobileSubmit = (event: Event) => {
-	if (event instanceof SubmitEvent) {
-		event.preventDefault()
-		handleSearch()
-	}
-}
-
-onMounted(() => {
-	const form = document.createElement('form')
-	form.addEventListener('submit', handleMobileSubmit)
-	const input = document.querySelector('input[type="text"]')
-	if (input) {
-		input.parentNode?.insertBefore(form, input)
-		form.appendChild(input)
-	}
-})
 </script>
 
 <style scoped>
