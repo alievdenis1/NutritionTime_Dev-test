@@ -1,25 +1,73 @@
 <template>
-	<div class="wrapper">
+	<div
+		class="wrapper"
+	>
 		<p
 			class="title"
+			:class="[titleClasses, titleZIndex]"
 		>
 			{{ props.title }}
 		</p>
 
 		<input
+			v-if="!textarea"
+			:id="useId()"
+			ref="inputRef"
 			v-bind="$attrs"
 			v-model="inputValue"
 			:value="inputValue"
 			:disabled="props.disabled"
-			:class="[errorClasses, focusedInputClasses]"
+			:class="inputClasses"
+			:readonly="props.readonly"
+			:autofocus="props.autofocus"
+			:maxlength="props.maxLength"
+			@input="onInput"
+			@focusin="!props.readonly && setFocus(true)"
+			@focusout="setFocus(false)"
+		>
+		<textarea
+			v-else
+			ref="textareaRef"
+			v-bind="$attrs"
+			v-model="inputValue"
+			:value="inputValue"
+			:disabled="disabled"
+			:class="inputClasses"
+			:readonly="props.readonly"
+			:maxlength="props.maxLength"
 			@input="onInput"
 			@focusin="setFocus(true)"
 			@focusout="setFocus(false)"
+			@scroll="onScroll"
+		/>
+
+		<span
+			v-if="$slots['right-icon'] || props.clearable"
+			class="absolute top-4 right-2 icon flex justify-between items-center gap-3"
 		>
+			<IconClose
+				v-if="inputValue.length && props.clearable"
+				icon-color="#9F9FA0"
+				class="clear"
+				@click="onClear"
+			/>
+			<slot
+				name="right-icon"
+			/>
+		</span>
+		<div
+			v-if="$slots['list'] && props.searchable && isFocused"
+			class="absolute top-full right-0 left-0 bg-white"
+			:style="{
+				zIndex: props.zIndex
+			}"
+		>
+			<slot name="list" />
+		</div>
 
 		<p
 			v-if="hasError"
-			class="text-coralRed font-medium text-xs inline-block absolute top-full left-0 ring-0 text-left mt-1"
+			class="text-coralRed font-medium text-xs inline-block text-left mt-1"
 		>
 			{{ props.errorMessage }}
 		</p>
@@ -27,11 +75,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
+import { useId } from 'radix-vue'
+import { IconClose } from 'shared/components/Icon'
+
+type InputBackground = 'default' | 'gray'
 
 export type InputEmits = {
     'update:value': [string]
     'update:error': [boolean]
+    focusout: [void]
 }
 export interface InputProps {
     value: string;
@@ -40,35 +93,115 @@ export interface InputProps {
     error?: boolean;
     errorMessage?: string;
     disabled?: boolean;
+    textarea?: boolean;
+    readonly?: boolean;
+    clearable?: boolean;
+    digital?: boolean;
+    noDigital?: boolean;
+    background?: InputBackground;
+    autofocus?: boolean;
+    searchable?: boolean;
+    zIndex?: string;
+    maxLength?: number;
 }
 
-const props = defineProps<InputProps>()
+defineSlots<{
+  default(props: object): never;
+  'right-icon'(props: object): never;
+  'list'(props: object): never;
+}>()
+
+const props = withDefaults(
+    defineProps<InputProps>(), {
+        background: 'default',
+        errorMessage: '',
+        zIndex: '',
+        maxLength: 100
+    }
+)
 const emits = defineEmits<InputEmits>()
 
 const inputValue = ref<string>(props.value)
 const isFocused = ref<boolean>(false)
+const textareaRef = ref<HTMLTextAreaElement | null>(null)
+const inputRef = ref<HTMLInputElement | null>(null)
+const titleClasses = ref<string>('')
 
 const hasError = computed((): boolean => props.error && !!props.errorMessage)
-const errorClasses = computed((): string =>
-    hasError.value ? 'error' : ''
-)
-const focusedInputClasses = computed((): string =>
-    inputValue.value.length ? 'focused' : ''
-)
+const titleZIndex = computed(() => {
+    return props.zIndex ? `z-${+props.zIndex - 1}` : 'z-10'
+})
+const inputClasses = computed(() => {
+    const classes = []
+
+    if (hasError.value) classes.push('error')
+    if (inputValue.value?.length || inputValue.value) classes.push('focused')
+    if (props.readonly) classes.push('readonly')
+    if (props.background !== 'default') classes.push(props.background)
+
+    return classes
+ })
 
 const onInput = (): void => {
+    if (props.noDigital) {
+        inputValue.value = inputValue.value.replace(/\d/g, '')
+    }
+    if (props.digital) {
+        inputValue.value = String(inputValue.value.replace(/[^\d]/g, ''))
+    }
     emits('update:value', inputValue.value)
 }
 const setFocus = (value: boolean): void => {
     isFocused.value = value
+
+    if (!value) emits('focusout')
 }
+const onScroll = (): void => {
+    if (!textareaRef.value) return
+
+    const scrollTop = textareaRef.value.scrollTop
+    if (scrollTop >= 8) titleClasses.value = 'hidden'
+    if (scrollTop < 8) titleClasses.value = ''
+}
+const onClear = (): void => {
+    emits('update:value', '')
+}
+const onAutofocus = (): void => {
+    nextTick(() => {
+        if (!inputRef.value || !props.autofocus) return
+        inputRef.value.focus()
+        setFocus(true)
+    })
+}
+
+watch(() => props.value, (newValue: string) => {
+    inputValue.value = newValue
+})
+
+defineExpose({ onAutofocus })
 </script>
 
 <style lang="scss" scoped>
 .wrapper {
-    @apply relative w-full h-14;
+    @apply relative w-full min-h-14;
 
-    &:has(input:focus), &:has(input.focused) {
+    &:has(textarea) {
+        @apply h-auto;
+    }
+
+    &:has(.icon) {
+        input {
+            @apply pr-8;
+        }
+    }
+
+    &:has(.clear) {
+        input {
+            @apply pr-20;
+        }
+    }
+
+    &:has(input:focus), &:has(textarea:focus), &:has(input.focused), &:has(textarea.focused) {
         .title {
             @apply text-xs top-1.5;
         }
@@ -79,19 +212,44 @@ const setFocus = (value: boolean): void => {
     }
 
     & .title {
-        @apply flex absolute text-[#9F9FA0] font-normal top-[18px] bottom-[18px] left-3 right-3 text-description transition-[150ms];
+        @apply pointer-events-none flex absolute text-[#9F9FA0] font-normal top-[18px] bottom-[18px] left-3 right-3 text-description transition-[150ms] h-fit w-fit;
     }
 
-    input {
-        @apply mt-0 border border-[#E1E1E1] py-1.5 px-3 border-solid rounded h-full w-full outline-none relative font-normal text-description text-[#1c1c1c];
+    input, textarea {
+        @apply mt-0 border border-[#E1E1E1] border-solid rounded py-1.5 px-3 h-full w-full outline-none relative font-normal text-description text-[#1c1c1c];
 
         &:focus {
             @apply border-[#319A6E33] pt-[26px] py-3 pb-[10px];
         }
+
+        &.gray {
+            @apply bg-[#F3F3F3] border-transparent;
+        }
+    }
+
+    input {
+        @apply min-h-14;
+    }
+
+    textarea {
+        @apply min-h-[122px];
+        resize: none;
+
+        &:focus {
+            @apply pt-[32px] py-3 pb-[10px];
+        }
+    }
+
+    .hidden {
+        @apply opacity-0;
     }
 
     .error {
         @apply border-[#F04F4F] !important;
+    }
+
+    .readonly {
+        pointer-events: none;
     }
 }
 </style>

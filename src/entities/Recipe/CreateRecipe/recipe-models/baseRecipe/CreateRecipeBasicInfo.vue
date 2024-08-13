@@ -1,48 +1,68 @@
 <template>
-	<VAccordion :title="t('basicInformation')">
-		<div class="mt-[20px]">
+	<VAccordion
+		:title="t('basicInformation')"
+		open-by-default
+	>
+		<div
+			class="mt-[20px]"
+		>
 			<VAddPhoto
+				v-model:error="isUploadError"
 				:width-image="54"
 				:height-image="54"
 				:title="t('uploadMainPhoto')"
 				:height-main="66"
 				backgrounds="#F3F3F3"
 				:icon="IconPhoto"
-				:initial-image="recipeImage"
+				:initial-image="values.image"
 				:on-image-uploaded="handleImageUpload"
+				:error-message="t('errorMessage')"
 			/>
-			<p class="text-xs text-gray max-w-xs mb-[24px]">
+			<p
+				v-if="!isUploadError"
+				class="text-xs text-gray max-w-xs mb-[24px]"
+			>
 				{{ t('additionalPhotosInfo') }}
 			</p>
 			<div class="form-section flex flex-col gap-4">
-				<input
-					v-model="recipeTitle"
-					type="text"
-					:placeholder="t('recipeTitlePlaceholder')"
-					class="border rounded px-2 py-4 text-base"
-				>
-				<textarea
-					v-model="recipeDescription"
-					:placeholder="t('recipeDescriptionPlaceholder')"
-					class="border rounded px-2 py-4 text-base min-h-[122px]"
+				<VInput
+					v-model:value="values.title"
+					:title="t('recipeTitlePlaceholder')"
+					:error="!!errors?.title"
+					:error-message="errors?.title?.message"
+					:max-length="100"
+					@focusout="validateField('title')"
+				/>
+				<VInput
+					v-model:value="values.description"
+					:title="t('recipeDescriptionPlaceholder')"
+					textarea
+					:error="!!errors?.description"
+					:error-message="errors?.description?.message"
+					:max-length="500"
+					@focusout="validateField('description')"
 				/>
 			</div>
 
 			<div class="category-selection flex flex-col gap-[12px] mt-[12px]">
-				<div
+				<span
 					v-for="category in categoryTypes"
 					:key="category"
-					class="border rounded px-2 py-4 cursor-pointer flex justify-between items-center text-darkGray"
-					@click="openCategoryModal(category)"
 				>
-					<input
-						v-model="selectedCategory[category]"
-						type="text"
-						:placeholder="t(category)"
+					<VInput
+						v-model:value="selectedCategory[category]"
+						:title="t(category)"
+						class="cursor-pointer"
 						readonly
+						@click="openCategoryModal(category)"
 					>
-					<IconArrowRight icon-color="#1C1C1C" />
-				</div>
+						<template #right-icon>
+							<IconArrowRight
+								icon-color="#1C1C1C"
+							/>
+						</template>
+					</VInput>
+				</span>
 			</div>
 		</div>
 	</VAccordion>
@@ -64,16 +84,18 @@
 				</button>
 			</div>
 			<div class="relative">
-				<input
-					v-model="searchQuery"
-					type="text"
-					:placeholder="t('searchCategory')"
-					class="border rounded p-[16px] text-base w-full mb-4"
+				<VInput
+					v-model:value="searchQuery"
+					:title="t('searchCategory')"
+					class="mb-4"
+					clearable
 				>
-				<IconSearch
-					icon-color="#1C1C1C"
-					class="absolute top-[15px] right-[14px]"
-				/>
+					<template #right-icon>
+						<IconSearch
+							icon-color="#1C1C1C"
+						/>
+					</template>
+				</VInput>
 			</div>
 
 			<div class="category-list flex-1 overflow-y-auto">
@@ -86,6 +108,13 @@
 					<IconRadio icon-color="#ffffff" />{{ item }}
 				</div>
 			</div>
+			<VButton
+				class="mt-5"
+				:disabled="isDisabled"
+				@click="onSave"
+			>
+				{{ t('save') }}
+			</VButton>
 		</div>
 	</VModal>
 </template>
@@ -93,13 +122,17 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useTranslation } from '@/shared/lib/i18n'
+import { createRecipeBasicInfoSchema } from 'features/create-recipe/model'
+import { useForm } from 'shared/utils/useForm'
 import { IconArrowRight, IconSearch, IconClose, IconRadio, IconPhoto } from 'shared/components/Icon'
+import { VInput } from 'shared/components/Input'
 import { VAccordion } from '@/shared/components/Accordion'
 import { VAddPhoto } from '@/shared/components/AddPhoto'
 import { VModal } from '@/shared/components/Modal'
 import localization from './CreateRecipeBasicInfo.localization.json'
 import { useRecipeStore } from '../../../DetailedCardRecipe/stores/recipeStore'
 import { useRoute } from 'vue-router'
+import { VButton } from '@/shared/components/Button'
 
 const store = useRecipeStore()
 const route = useRoute()
@@ -115,15 +148,26 @@ interface Category {
 const show = ref(false)
 const searchQuery = ref('')
 const selectedType = ref<keyof Category | null>(null)
+const isUploadError = ref<boolean>(false)
 
-const recipeTitle = ref('')
-const recipeDescription = ref('')
-const recipeImage = ref('')
-
+const selectedItem = ref<Category>({
+	dishCategory: '',
+	cuisine: '',
+	diet: ''
+})
 const selectedCategory = ref<Category>({
 	dishCategory: '',
 	cuisine: '',
 	diet: ''
+})
+
+const { errors, values, validateField, validate } = useForm(createRecipeBasicInfoSchema, {
+	defaultValues: {
+		title: '',
+		description: '',
+		image: '',
+	},
+	mode: 'eager'
 })
 
 const categoryTypes: (keyof Category)[] = ['dishCategory', 'cuisine', 'diet']
@@ -154,9 +198,9 @@ const categories = ref([
 onMounted(() => {
 	const isCreateRoute = route.name === 'CreateRecipe'
 	if (!isCreateRoute && store.currentRecipe) {
-		recipeTitle.value = store.currentRecipe.title
-		recipeDescription.value = store.currentRecipe.description
-		recipeImage.value = store.currentRecipe.image
+		values.title = store.currentRecipe.title
+		values.description = store.currentRecipe.description
+		values.image = store.currentRecipe.image
 		if (store.currentRecipe.recipeInfo) {
 			selectedCategory.value = {
 				dishCategory: store.currentRecipe.recipeInfo['Категория'] || '',
@@ -169,9 +213,9 @@ onMounted(() => {
 
 const handleImageUpload = (imageUrl: string | null) => {
 	if (imageUrl !== null) {
-		recipeImage.value = imageUrl
+		values.image = imageUrl
 	} else {
-		recipeImage.value = ''
+		values.image = ''
 	}
 }
 
@@ -181,12 +225,16 @@ const filteredCategories = computed(() => {
 
 const categorySelectionTitle = computed(() => {
 	const titles: Record<keyof Category, string> = {
-		dishCategory: t('dishCategory'),
-		cuisine: t('cuisineNationality'),
-		diet: t('dietType')
+		dishCategory: t('categorySelection'),
+		cuisine: t('cuisineSelection'),
+		diet: t('dietSelection')
 	}
 
 	return selectedType.value ? titles[selectedType.value] : ''
+})
+
+const isDisabled = computed((): boolean => {
+	return !selectedType.value || !selectedItem.value[selectedType.value].length
 })
 
 const openCategoryModal = (type: keyof Category) => {
@@ -194,19 +242,35 @@ const openCategoryModal = (type: keyof Category) => {
 	show.value = true
 }
 
-const selectCategory = (category: string) => {
+const closeModal = (): void => {
+	show.value = false
+}
+
+const onSave = (): void => {
+	closeModal()
 	if (selectedType.value !== null) {
-		selectedCategory.value[selectedType.value] = category
-		show.value = false
+		selectedCategory.value[selectedType.value] = selectedItem.value[selectedType.value]
 	}
 }
 
+const selectCategory = (category: string) => {
+	if (selectedType.value !== null) {
+		selectedItem.value[selectedType.value] = category
+	}
+}
+
+const onValidate = (): boolean => {
+	return validate()
+}
+
+defineExpose({ onValidate })
+
 // Watch for changes and update store
-watch([recipeTitle, recipeDescription, recipeImage, selectedCategory], () => {
+watch([values.title, values.description, values.image, selectedCategory], () => {
 	if (store.currentRecipe) {
-		store.currentRecipe.title = recipeTitle.value
-		store.currentRecipe.description = recipeDescription.value
-		store.currentRecipe.image = recipeImage.value
+		store.currentRecipe.title = values.title
+		store.currentRecipe.description = values.description
+		store.currentRecipe.image = values.image
 		if (store.currentRecipe.recipeInfo) {
 			store.currentRecipe.recipeInfo['Категория'] = selectedCategory.value.dishCategory
 			store.currentRecipe.recipeInfo['Кухня'] = selectedCategory.value.cuisine

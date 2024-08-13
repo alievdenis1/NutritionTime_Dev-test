@@ -1,6 +1,7 @@
 <template>
 	<div
 		class="photo-upload mb-[8px] flex justify-center items-center"
+		:class="errorClasses"
 		:style="{ height: `${heightMain}px`, background: backgrounds }"
 	>
 		<div
@@ -42,13 +43,20 @@
 			</div>
 		</label>
 	</div>
+	<p
+		v-if="props.error"
+		class="text-xs text-coralRed max-w-xs mb-[24px]"
+	>
+		{{ props.errorMessage }}
+	</p>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { IconClose, IconPhoto } from 'shared/components/Icon'
-import { AddPhoto } from './type.ts'
+import { AddPhoto, AddPhotoEmits } from './type.ts'
 
+const emits = defineEmits<AddPhotoEmits>()
 const props = withDefaults(defineProps<AddPhoto & {
 	initialImage?: string | null;
 	onImageUploaded?: (imageUrl: string | null) => void;
@@ -57,27 +65,55 @@ const props = withDefaults(defineProps<AddPhoto & {
 	iconColor: '#9F9FA0',
 	textColor: '#1C1C1C',
 	initialImage: null,
-	onImageUploaded: undefined
+	onImageUploaded: undefined,
+	error: false,
+	errorMessage: ''
 })
 
 const uploadedImage = ref<string | null>(props.initialImage)
+const imageTypes = ['jpeg', 'jpg', 'png']
+
+const errorClasses = computed(() => props.error ? 'border-1 border-solid border-[#f04f4f]' : '')
 
 watch(() => props.initialImage, (newValue) => {
 	uploadedImage.value = newValue
 })
 
-const handleFileUpload = (event: Event) => {
+const onUploadError = (): void => {
+	emits('update:error', true)
+}
+
+const validateFileType = (file: File): boolean => {
+	return imageTypes.some(type => file.type.includes(type))
+}
+
+const validateResult = (file: File): void => {
+	const image = new Image()
+
+	image.onerror = (): void => {
+		onUploadError()
+	}
+
+	image.src = URL.createObjectURL(file)
+	uploadedImage.value = image.src
+}
+
+const handleFileUpload = (event: Event): void => {
 	const target = event.target as HTMLInputElement
 	const files = target.files
+
+	emits('update:error', false)
+
 	if (files && files[0]) {
-		const reader = new FileReader()
-		reader.onload = (e: ProgressEvent<FileReader>) => {
-			uploadedImage.value = e.target?.result as string
-			if (props.onImageUploaded) {
-				props.onImageUploaded(uploadedImage.value)
+		Array.from(files).forEach((file) => {
+			const isValidType = validateFileType(file)
+
+			if (!isValidType) {
+				onUploadError()
+				return
 			}
-		}
-		reader.readAsDataURL(files[0])
+			validateResult(file)
+		})
 	}
 }
 

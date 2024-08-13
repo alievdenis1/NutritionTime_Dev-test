@@ -1,6 +1,6 @@
 <template>
-	<div class="flex flex-col gap-[16px] mt-[16px] mb-[60px]">
-		<CreateRecipeBasicInfo />
+	<div class="relative flex flex-col gap-[16px] mt-[16px] mb-[60px]">
+		<CreateRecipeBasicInfo ref="basicInfo" />
 		<CreateRecipeGradation />
 		<CreateRecipeTime />
 		<CreateRecipeIngredients
@@ -13,6 +13,7 @@
 		<TagsRecipe />
 		<v-button
 			:color="ButtonColors.Green"
+			class="sticky bottom-14"
 			@click="CheckRecipe"
 		>
 			<div class="flex gap-[12px] items-center">
@@ -40,12 +41,26 @@ import { ButtonColors, VButton } from '@/shared/components/Button'
 import { useRouter } from 'vue-router'
 import { useTranslation } from '@/shared/lib/i18n'
 import localizations from './CreateOwn.localization.json'
+import { ref } from 'vue'
 import { IconArrowRight } from '@/shared/components/Icon'
 
 const router = useRouter()
 const { t } = useTranslation(localizations)
+
+const basicInfo = ref<typeof CreateRecipeBasicInfo>()
+
+const validateFields = (): boolean | void  => {
+	if (!basicInfo.value) return
+
+	const isInvalidBasicInfo = basicInfo.value.onValidate()
+	return isInvalidBasicInfo
+}
+
 const CheckRecipe = () => {
-	router.push({ path: 'check-recipe' })
+	const isValid = validateFields()
+	if (isValid) {
+		router.push({ path: 'check-recipe' })
+	}
 }
 </script>
 

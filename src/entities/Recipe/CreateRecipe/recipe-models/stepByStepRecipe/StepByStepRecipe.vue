@@ -8,7 +8,10 @@
 			>
 				<div class="flex justify-between mb-[16px]">
 					<h3>{{ t('step', { idx: index + 1 }) }}</h3>
-					<button @click="removeStep(index)">
+					<button
+						v-if="index !== 0"
+						@click="removeStep(index)"
+					>
 						<IconClose
 							icon-color="#9F9FA0"
 							class="w-[12px] h-[12px] cursor-pointer"
@@ -33,15 +36,16 @@
 				</div>
 
 				<VAddPhoto
+					v-model:error="isUploadError"
 					:width-image="44"
 					:height-image="44"
 					:height-main="54"
 					:title="t('uploadPhoto')"
-					icon-color="#1C1C1C"
 					backgrounds="#F3F3F3"
 					:icon="IconPhoto"
 					:initial-image="step.image"
 					:on-image-uploaded="(imageUrl) => handleImageUpload(index, imageUrl)"
+					:error-message="t('errorMessage')"
 				/>
 			</div>
 			<button
@@ -75,6 +79,7 @@ interface Step {
 }
 
 const steps = ref<Step[]>([])
+const isUploadError = ref<boolean>(false)
 
 const loadSteps = () => {
 	const recipeId = route.params.id as string

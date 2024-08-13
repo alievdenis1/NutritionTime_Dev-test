@@ -1,5 +1,9 @@
 import { Component } from 'vue'
 
+export type AddPhotoEmits = {
+    'update:error': [value: boolean]
+}
+
 export interface AddPhoto {
     widthImage: number;
     heightImage: number;
@@ -11,4 +15,6 @@ export interface AddPhoto {
     backgrounds?: string;
     initialImage?: string | null;
     onImageUploaded?: (imageUrl: string | null) => void;
+    error?: boolean;
+    errorMessage?: string;
 }
