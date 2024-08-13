@@ -29,11 +29,11 @@
 			<div class="flex items-center text-sm text-gray-600 mb-4 mt-[12px]">
 				<div class="flex items-center bg-lightGray px-[9px] py-[5px] rounded-[12px] mr-[8px]">
 					<IconTime class="mr-1" />
-					<span>{{ recipe.cookingTime }} мин</span>
+					<span>{{ recipe.cookingTime }} {{ t('min') }}</span>
 				</div>
 				<div class="flex items-center bg-lightGray px-[9px] py-[5px] rounded-[12px]">
 					<IconFire class="mr-1" />
-					<span>{{ recipe.calories }} ккал</span>
+					<span>{{ recipe.calories }} {{ t('kcal') }}</span>
 				</div>
 			</div>
 			<h2 class="text-sm text-darkGray mb-[8px]">
@@ -66,10 +66,13 @@
 <script setup lang="ts">
 import { IconComment, IconFire, IconHeart, IconTime, IconFavorites } from 'shared/components/Icon'
 import type { RecipesItem } from '../RecipesList/type'
-import { useSearchStore } from '../Search/store/search-store'
 import CreateCollection  from '../Search/modal/CreateCollection.vue'
-
+import { useTranslation } from 'shared/lib/i18n'
+import localization from './SearchBar.localization.json'
+import { useSearchStore } from './store/search-store'
+const { t } = useTranslation(localization)
 const store = useSearchStore()
+
 defineProps<{
 	recipes: RecipesItem[]
 }>()
