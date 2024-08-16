@@ -76,7 +76,10 @@
 			class="w-full h-auto object-cover aspect-video rounded-lg"
 		>
 		<div class="flex items-center">
-			<IconHeart class="w-5 h-5 text-red-500 mr-2 cursor-pointer" />
+			<IconHeart
+				icon-color="#319A6E"
+				class="w-5 h-5 text-red-500 mr-2 cursor-pointer"
+			/>
 			<span class="text-slateGray text-xs">{{ comment.likes }}</span>
 		</div>
 		<div class="w-full h-[1px] bg-[#1C1C1C0D]" />
@@ -166,6 +169,13 @@ const rating = ref(0)
 const review = ref('')
 const reviewImage = ref<string | null>(null)
 const addPhotoKey = ref(0)
+// const likedStates = ref<Record<number, boolean>>({})
+// const isLiking = ref<Record<number, boolean>>({})
+
+// recipe.value.forEach(rec => {
+// 	likedStates.value[rec.id] = false
+// 	isLiking.value[rec.id] = false
+// })
 
 const setRating = (value: number) => {
 	rating.value = value

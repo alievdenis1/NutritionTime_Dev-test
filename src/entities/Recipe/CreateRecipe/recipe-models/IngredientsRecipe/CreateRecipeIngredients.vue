@@ -14,10 +14,13 @@
 			>
 				<span class="text-[12px]">{{ ingredient.name }}</span>
 				<div>
-					<span class="text-[#535353] text-xs">
+					<span
+						v-if="!isExclusionMode"
+						class="text-[#535353] text-xs"
+					>
 						{{ ingredient.quantity }}
-						{{ ingredient.type === QuantityType.WEIGHT ?
-							t('unitGrams') : t('unitPieces') }}</span>
+						{{ ingredient.type === QuantityType.WEIGHT ? t('unitGrams') : t('unitPieces') }}
+					</span>
 					<button
 						class="text-forestGreen ml-[14px] cursor-pointer"
 						@click="removeIngredient(index)"
@@ -43,11 +46,17 @@
 				:show="showModal"
 				@close="closeModal"
 			>
-				<div class="p-4">
+				<div
+					class="p-4"
+					@click="handleModalClick"
+				>
 					<h2 class="text-lg mb-4">
 						{{ t('addIngredientTitle') }}
 					</h2>
-					<div class="relative">
+					<div
+						ref="ingredientNameContainer"
+						class="relative"
+					>
 						<span
 							v-if="ingredientName.length > 0"
 							class="absolute text-[12px] top-[6px] left-[12px] text-gray"
@@ -61,9 +70,28 @@
 							:placeholder="t('ingredientPlaceholderName')"
 							class="border rounded px-[12px] py-4 text-base w-full mb-4 h-[54px]"
 							:class="{ activeInput: activeInputName, filledInput: notEmptyIngredientName, 'pt-[26px]': notEmptyIngredientName }"
+							@input="handleIngredientNameInput"
+							@keydown.down="handleArrowDown"
+							@keydown.up="handleArrowUp"
 						>
+						<ul
+							v-if="filteredSuggestions.length > 0"
+							class="absolute z-10 w-full bg-white border border-gray-300 rounded-b-md shadow-lg max-h-60 overflow-auto"
+						>
+							<li
+								v-for="(suggestion, index) in filteredSuggestions"
+								:key="index"
+								:class="['px-4 py-2 cursor-pointer hover:bg-gray-100', { 'bg-gray-100': index === activeSuggestionIndex }]"
+								@click="selectSuggestion(suggestion)"
+							>
+								{{ suggestion }}
+							</li>
+						</ul>
 					</div>
-					<div class="relative">
+					<div
+						v-if="!isExclusionMode"
+						class="relative"
+					>
 						<span
 							v-if="ingredientQuantity.length > 0"
 							class="absolute text-[12px] top-[6px] left-[12px] text-gray"
@@ -75,14 +103,19 @@
 							type="text"
 							:placeholder="t('ingredientPlaceholderQuantity')"
 							class="border rounded px-[12px] py-4 text-base w-full mb-4 h-[54px]"
-							:class="{ activeInput: activeInputQuantity, filledInput: notEmptyIngredientQuantity, 'pt-[26px]': notEmptyIngredientQuantity }"
+							:class="{
+								activeInput: activeInputQuantity,
+								filledInput: notEmptyIngredientQuantity,
+								'pt-[26px]': notEmptyIngredientQuantity,
+							}"
 							@input="filterNumericInput"
 						>
 					</div>
 					<TabsMain
+						v-if="!isExclusionMode"
 						v-model="activeTab"
 						default-value="weight"
-						class="mb-[20px] mt-[10px]"
+						class="mb-[20px]"
 					>
 						<TabsList>
 							<TabsTrigger :value="QuantityType.WEIGHT">
@@ -121,9 +154,12 @@ import { useRoute } from 'vue-router'
 interface Props {
 	title: string;
 	desc: string;
+	isExclusionMode?: boolean;
 }
 
-defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+	isExclusionMode: false
+})
 
 const { t } = useTranslation(localization)
 const store = useRecipeStore()
@@ -132,18 +168,29 @@ const route = useRoute()
 const showModal = ref(false)
 const ingredientName = ref<string>('')
 const ingredientQuantity = ref<string>('')
-const ingredients = ref<{ name: string; quantity: string; type: QuantityType }[]>([])
+const ingredients = ref<{ name: string; quantity?: string; type?: QuantityType }[]>([])
 const tryToSave = ref(false)
 const activeTab = ref<QuantityType>(QuantityType.WEIGHT)
 const ingredientNameInput = ref<HTMLInputElement | null>(null)
+const ingredientNameContainer = ref<HTMLElement | null>(null)
+const quantityLimitReached = ref(false)
+
+const ingredientSuggestions = [
+	'Мука', 'Сахар', 'Соль', 'Яйца', 'Молоко', 'Масло', 'Картофель',
+	'Морковь', 'Лук', 'Чеснок', 'Помидоры', 'Огурцы', 'Перец', 'Курица',
+	'Говядина', 'Свинина', 'Рыба', 'Рис', 'Макароны', 'Сыр'
+]
+
+const filteredSuggestions = ref<string[]>([])
+const activeSuggestionIndex = ref(-1)
 
 onMounted(() => {
 	const isCreateRoute = route.name === 'CreateRecipe'
 	if (!isCreateRoute && store.currentRecipe) {
 		ingredients.value = store.currentRecipe.ingredients.map(ingredient => ({
 			name: ingredient.name,
-			quantity: ingredient.amount.split(' ')[0],
-			type: ingredient.amount.includes('г.') ? QuantityType.WEIGHT : QuantityType.QUANTITY
+			quantity: ingredient.amount?.split(' ')[0],
+			type: ingredient.amount?.includes('г.') ? QuantityType.WEIGHT : QuantityType.QUANTITY
 		}))
 	}
 })
@@ -154,12 +201,15 @@ const openModal = () => {
 
 const addIngredient = () => {
 	tryToSave.value = true
-	if (ingredientName.value && ingredientQuantity.value) {
-		ingredients.value.push({
-			name: ingredientName.value,
-			quantity: ingredientQuantity.value,
-			type: activeTab.value
-		})
+	if (ingredientName.value && (props.isExclusionMode || ingredientQuantity.value)) {
+		const newIngredient: { name: string; quantity?: string; type?: QuantityType } = {
+			name: ingredientName.value
+		}
+		if (!props.isExclusionMode) {
+			newIngredient.quantity = ingredientQuantity.value
+			newIngredient.type = activeTab.value
+		}
+		ingredients.value.push(newIngredient)
 		closeModal()
 	}
 }
@@ -173,24 +223,77 @@ const closeModal = () => {
 	ingredientName.value = ''
 	ingredientQuantity.value = ''
 	tryToSave.value = false
+	filteredSuggestions.value = []
+	activeSuggestionIndex.value = -1
+	quantityLimitReached.value = false
 }
 
 const filterNumericInput = (event: Event) => {
 	const target = event.target as HTMLInputElement
-	const numericValue = target.value.replace(/\D/g, '')
-	ingredientQuantity.value = numericValue
+	let value = target.value.replace(/\D/g, '')
+
+	if (value.length > 10) {
+		value = value.slice(0, 10)
+		quantityLimitReached.value = true
+	} else {
+		quantityLimitReached.value = false
+	}
+
+	ingredientQuantity.value = value
+}
+
+const handleIngredientNameInput = () => {
+	validateIngredientName()
+	filteredSuggestions.value = ingredientSuggestions.filter(suggestion =>
+		suggestion.toLowerCase().startsWith(ingredientName.value.toLowerCase())
+	)
+	activeSuggestionIndex.value = -1
+}
+
+const handleArrowDown = () => {
+	if (activeSuggestionIndex.value < filteredSuggestions.value.length - 1) {
+		activeSuggestionIndex.value++
+	}
+}
+
+const handleArrowUp = () => {
+	if (activeSuggestionIndex.value > 0) {
+		activeSuggestionIndex.value--
+	}
+}
+
+const selectSuggestion = (suggestion?: string) => {
+	if (suggestion) {
+		ingredientName.value = suggestion
+	} else if (activeSuggestionIndex.value !== -1) {
+		ingredientName.value = filteredSuggestions.value[activeSuggestionIndex.value]
+	}
+	filteredSuggestions.value = []
+	activeSuggestionIndex.value = -1
+}
+
+const validateIngredientName = () => {
+	ingredientName.value = ingredientName.value.replace(/[^a-zA-Zа-яА-Я\s]/g, '')
+}
+
+const handleModalClick = (event: MouseEvent) => {
+	const target = event.target as HTMLElement
+	if (ingredientNameContainer.value && !ingredientNameContainer.value.contains(target)) {
+		filteredSuggestions.value = []
+		activeSuggestionIndex.value = -1
+	}
 }
 
 const activeInputName = computed(() => tryToSave.value && !ingredientName.value)
 const notEmptyIngredientName = computed(() => ingredientName.value.length !== 0)
-const activeInputQuantity = computed(() => tryToSave.value && !ingredientQuantity.value)
+const activeInputQuantity = computed(() => !props.isExclusionMode && tryToSave.value && !ingredientQuantity.value)
 const notEmptyIngredientQuantity = computed(() => ingredientQuantity.value.length !== 0)
 
 watch(ingredients, () => {
 	if (store.currentRecipe) {
 		store.currentRecipe.ingredients = ingredients.value.map(ingredient => ({
 			name: ingredient.name,
-			amount: `${ingredient.quantity} ${ingredient.type === QuantityType.WEIGHT ? 'г.' : 'шт.'}`
+			amount: props.isExclusionMode ? t('excluded') : `${ingredient.quantity} ${ingredient.type === QuantityType.WEIGHT ? 'г.' : 'шт.'}`
 		}))
 	}
 }, { deep: true })

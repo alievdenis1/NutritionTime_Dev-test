@@ -1,5 +1,7 @@
 <template>
-	<TabsMain :default-value="store.defaultValueTabs">
+	<TabsMain
+		:default-value="store.defaultValueTabs"
+	>
 		<div class="flex justify-between items-center mb-[16px]">
 			<button
 				class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
@@ -18,10 +20,10 @@
 			</TabsTrigger>
 			<TabsTrigger
 				value="aiRecepie"
-				class="flex gap-[8px]"
+				class="flex gap-[8px] items-center"
 			>
 				{{ t('aiCreation') }}
-				<IconAi :icon-color="'#E1E1E1'" />
+				<IconAi :icon-color="activeTab === 'aiRecepie' ? '#319A6E' : '#E1E1E1'" />
 			</TabsTrigger>
 		</TabsList>
 		<TabsContent
@@ -37,16 +39,28 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, nextTick, watch } from 'vue'
 import { CreateOwn, CreateAi } from 'features/create-recipe'
 import { TabsMain, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { useModalCreateStore } from 'entities/Recipe/CreateRecipe/modal-create/model/model-store'
 import { useTranslation } from '@/shared/lib/i18n'
 import localizations from './CreateRecipeTabs.localization.json'
 import { IconAi, IconArrowRight } from 'shared/components/Icon'
+import { useRouter } from 'vue-router'
 const store = useModalCreateStore()
 const { t } = useTranslation(localizations)
-import { useRouter } from 'vue-router'
 const router = useRouter()
+
+const activeTab = ref(store.defaultValueTabs)
+
+onMounted(() => {
+	nextTick(() => {
+		watch(() => store.defaultValueTabs, (newValue) => {
+			console.log('Store defaultValueTabs changed to:', newValue)
+			activeTab.value = newValue
+		})
+	})
+})
 </script>
 
 <style scoped></style>

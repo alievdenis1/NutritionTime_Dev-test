@@ -57,4 +57,4 @@ const openFilters = () => {
 .border-custom {
 	border: 1px solid #E1E1E1;
 }
-</style>@/entities/Recipe/Search
+</style>

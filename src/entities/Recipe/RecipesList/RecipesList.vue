@@ -47,7 +47,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="flex items-center justify-between  mt-4">
+			<div
+				class="flex items-center justify-between  mt-4"
+				@click.stop
+			>
 				<div class="flex justify-center items-center">
 					<div class="flex justify-center items-center gap-[8px] mr-[20px]">
 						<img
@@ -62,12 +65,25 @@
 						{{ recipe.commentsCount }}
 					</p>
 				</div>
-				<div class="flex justify-center items-center gap-[4px] ">
-					<IconFavorites icon-color="#9F9FA0" />
-					<p class="flex justify-center items-center gap-[4px] text-[#535353]">
-						<IconHeart icon-color="#9F9FA0" />
-						{{ recipe.likes }}
-					</p>
+				<div class="flex items-center justify-between gap-[16px]">
+					<IconFavorites
+						:is-liked="favoritesStates[recipe.id]"
+						active-color="#319A6E"
+						:disabled="isFavoriting[recipe.id]"
+						@toggle="toggleFavorite(recipe.id)"
+					/>
+					<div @click="toggleLike(recipe.id)">
+						<div class="flex justify-center items-center gap-[8px] text-[#535353]">
+							<IconHeart
+								:is-liked="likedStates[recipe.id]"
+								icon-color="#319A6E"
+								:disabled="isLiking[recipe.id]"
+							/>
+							<p :class="{ 'text-green': likedStates[recipe.id] }">
+								{{ recipe.likes }}
+							</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -75,16 +91,70 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { IconComment, IconFavorites, IconFire, IconHeart, IconTime } from 'shared/components/Icon'
 import { RecipesItem } from './type'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
-withDefaults(defineProps<{
-	recipesData: Array<RecipesItem>
-}>(), {
+interface Props {
+	recipesData: RecipesItem[]
+}
+
+const props = withDefaults(defineProps<Props>(), {
 	recipesData: () => []
 })
+
+const likedStates = ref<Record<number, boolean>>({})
+const isLiking = ref<Record<number, boolean>>({})
+const favoritesStates = ref<Record<number, boolean>>({})
+const isFavoriting = ref<Record<number, boolean>>({})
+
+props.recipesData.forEach(recipe => {
+	likedStates.value[recipe.id] = false
+	isLiking.value[recipe.id] = false
+	favoritesStates.value[recipe.id] = false
+	isFavoriting.value[recipe.id] = false
+})
+
+const toggleLike = async (recipeId: number) => {
+	if (isLiking.value[recipeId]) return
+
+	isLiking.value[recipeId] = true
+	try {
+		// Здесь должна быть логика для отправки запроса на сервер
+		likedStates.value[recipeId] = !likedStates.value[recipeId]
+		// Обновление количества лайков
+		const recipe = props.recipesData.find(r => r.id === recipeId)
+		if (recipe) {
+			if (likedStates.value[recipeId]) {
+				recipe.likes++
+			} else {
+				recipe.likes--
+			}
+		}
+	} catch (error) {
+		console.error('Error toggling like:', error)
+	} finally {
+		isLiking.value[recipeId] = false
+	}
+}
+
+const toggleFavorite = async (recipeId: number) => {
+	if (isFavoriting.value[recipeId]) return
+
+	isFavoriting.value[recipeId] = true
+	try {
+		// Здесь должна быть логика для отправки запроса на сервер
+		favoritesStates.value[recipeId] = !favoritesStates.value[recipeId]
+		// Дополнительная логика, если необходимо
+	} catch (error) {
+		console.error('Error toggling favorite:', error)
+	} finally {
+		isFavoriting.value[recipeId] = false
+	}
+}
+
 </script>
 
 <style scoped>

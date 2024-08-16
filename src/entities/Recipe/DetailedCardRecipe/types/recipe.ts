@@ -30,7 +30,7 @@ export interface Comment {
 }
 
 export interface Recipe {
-    id: string;
+    id: number | string;
     title: string;
     description: string;
     image: string;
