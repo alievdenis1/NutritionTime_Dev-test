@@ -169,13 +169,6 @@ const rating = ref(0)
 const review = ref('')
 const reviewImage = ref<string | null>(null)
 const addPhotoKey = ref(0)
-// const likedStates = ref<Record<number, boolean>>({})
-// const isLiking = ref<Record<number, boolean>>({})
-
-// recipe.value.forEach(rec => {
-// 	likedStates.value[rec.id] = false
-// 	isLiking.value[rec.id] = false
-// })
 
 const setRating = (value: number) => {
 	rating.value = value

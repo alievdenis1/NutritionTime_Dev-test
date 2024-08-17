@@ -23,17 +23,22 @@
 				<p class="text-xs text-slateGray mb-4">
 					{{ t('identifyByPhotoDesc') }}
 				</p>
-				<VAddPhoto
-					icon-color="#319A6E"
-					text-color="#319A6E"
-					:title="t('identifyByPhotoButton')"
-					:width-image="32"
-					:height-image="32"
-					:height-main="40"
-					backgrounds="#F3F3F3"
-					:icon="IconCamera"
+				<VButton
+					:color="ButtonColors.White"
 					class="border-img-add"
-				/>
+					@click="handleButtonClick"
+				>
+					<VAddPhoto
+						ref="addPhotoRef"
+						icon-color="#319A6E"
+						text-color="#319A6E"
+						:title="t('identifyByPhotoButton')"
+						:width-image="32"
+						:height-image="32"
+						:height-main="40"
+						:icon="IconCamera"
+					/>
+				</VButton>
 			</div>
 			<div class="mt-4 flex items-center bg-lightGray p-[12px] rounded-lg">
 				<input
@@ -93,11 +98,18 @@ const { t } = useTranslation(localizations)
 const TagChangedRoute = () => {
 	router.push('/tag-recipe')
 }
+
+const addPhotoRef = ref()
+
+const handleButtonClick = () => {
+	addPhotoRef.value.openFileDialog()
+}
 </script>
 
 <style scoped>
 .border-img-add {
 	border: 1px solid #319A6E;
+	cursor: pointer;
 }
 
 .border-check {

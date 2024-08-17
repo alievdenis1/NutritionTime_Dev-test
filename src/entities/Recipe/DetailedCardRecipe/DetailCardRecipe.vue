@@ -410,7 +410,6 @@ const latestComments = computed(() => {
 
 const exportToPDF = () => {
 	// Implement PDF export logic here
-	console.log('Exporting to PDF')
 }
 
 const isReviewModalOpen = ref(false)

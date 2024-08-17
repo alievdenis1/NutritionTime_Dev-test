@@ -51,7 +51,6 @@ const showQuickSearchTag = ref(false)
 
 const handleScroll = (event: Event) => {
     const scrollPosition = (event.target as HTMLElement).scrollTop
-    console.log('Позиция прокрутки блока:', scrollPosition)
 
     lastScrollTop.value = scrollTop.value
     scrollTop.value = scrollPosition
@@ -66,7 +65,6 @@ const handleScroll = (event: Event) => {
 const handleIntersection = (entries: IntersectionObserverEntry[]) => {
     entries.forEach(entry => {
         isSearchBarFixed.value = !entry.isIntersecting
-        console.log('Is search bar fixed:', isSearchBarFixed.value)
     })
 }
 
@@ -77,13 +75,10 @@ onMounted(async () => {
     const mainElement = document.getElementById('main')
     if (mainElement) {
         mainElement.addEventListener('scroll', handleScroll)
-        console.log('Обработчик события прокрутки добавлен для блока #main')
     }
 
     if (searchBarRef.value) {
         searchBarHeight.value = searchBarRef.value.offsetHeight
-        console.log('Search bar height:', searchBarHeight.value)
-
         observer = new IntersectionObserver(handleIntersection, {
             threshold: 0,
             rootMargin: `-${searchBarHeight.value}px 0px 0px 0px`

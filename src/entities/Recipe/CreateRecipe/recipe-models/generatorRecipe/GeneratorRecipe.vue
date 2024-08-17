@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { IconArrowRight, IconAi } from 'shared/components/Icon'
 import { VButton, ButtonColors } from 'shared/components/Button'
 import localization from './GeneratorRecipe.localization.json'
@@ -126,7 +126,6 @@ const validateInput = (event) => {
 
 	if (inputValue.length > MAX_CHARS) {
 		recipeIdea.value = inputValue.slice(0, MAX_CHARS)
-		textarea.value = recipeIdea.value
 	}
 }
 </script>

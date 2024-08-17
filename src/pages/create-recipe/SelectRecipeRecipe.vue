@@ -95,17 +95,8 @@ const recipes = [
     }
 ]
 
-const choiceRecipe = (recipe: recipeItem) => {
-    console.log(recipe)
+const choiceRecipe = () => {
 	router.push({ name: 'check-recipe', query: { source: 'ai' } })
-}
-
-interface recipeItem {
-    id: number;
-    title: string;
-    image: string;
-    time: string;
-    calories: string;
 }
 
 onMounted(() => {
