@@ -40,22 +40,30 @@
 				{{ recipe.title }}
 			</h2>
 
-			<div class="flex justify-between items-center text-slateGray">
+			<div
+				class="flex justify-between items-center text-slateGray"
+				@click.stop
+			>
 				<div class="flex items-center">
 					<IconComment class="mr-1" />
 					<span>{{ recipe.commentsCount }}</span>
 				</div>
 				<div class="flex items-center">
 					<IconFavorites
-						icon-color="#9F9FA0"
+						:is-liked="favoritesState[recipe.id]"
 						class="mr-[12px]"
-						@click="saveCollection"
+						@toggle="toggleFavorite(recipe.id)"
 					/>
-					<IconHeart
-						class="mr-1"
-						icon-color="#9F9FA0"
-					/>
-					<span>{{ recipe.likesCount }}</span>
+					<div
+						class="flex items-center"
+						@click="toggleLike(recipe.id)"
+					>
+						<IconHeart
+							:is-liked="likesState[recipe.id]"
+							class="mr-1"
+						/>
+						<span>{{ recipe.likesCount }}</span>
+					</div>
 				</div>
 			</div>
 			<CreateCollection />
@@ -64,21 +72,40 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { IconComment, IconFire, IconHeart, IconTime, IconFavorites } from 'shared/components/Icon'
 import type { RecipesItem } from '../RecipesList/type'
-import CreateCollection  from '../Search/modal/CreateCollection.vue'
+import CreateCollection from '../Search/modal/CreateCollection.vue'
 import { useTranslation } from 'shared/lib/i18n'
 import localization from './SearchBar.localization.json'
 import { useSearchStore } from './store/search-store'
 const { t } = useTranslation(localization)
 const store = useSearchStore()
 
-defineProps<{
+const props = defineProps<{
 	recipes: RecipesItem[]
 }>()
 
-const saveCollection = () => {
+const favoritesState = ref<Record<number, boolean>>({})
+const likesState = ref<Record<number, boolean>>({})
+
+props.recipes.forEach(recipe => {
+	favoritesState.value[recipe.id] = false
+	likesState.value[recipe.id] = false
+})
+
+const toggleFavorite = (recipeId: number) => {
 	store.toggleModalOpen()
+	favoritesState.value[recipeId] = !favoritesState.value[recipeId]
+
+}
+
+const toggleLike = (recipeId: number) => {
+	likesState.value[recipeId] = !likesState.value[recipeId]
+	// const recipe = props.recipes.find(r => r.id === recipeId)
+	// if (recipe.likesCount !== undefined) {
+	// 	recipe.likesCount += likesState.value[recipeId] ? 1 : -1
+	// }
 }
 </script>
 

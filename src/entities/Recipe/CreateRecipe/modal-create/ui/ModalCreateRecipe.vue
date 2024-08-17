@@ -5,7 +5,7 @@
 	>
 		<div>
 			<div class="flex justify-between mb-[12px] items-center">
-				<h2 class="text-xl font-bold">
+				<h2 class="text-xl font-bold text-darkGray">
 					{{ t('createRecipe') }}
 				</h2>
 				<button
@@ -22,7 +22,7 @@
 					@click="selectMethod('ownRecepie')"
 				>
 					<div class="text-left w-[255px]">
-						<h3 class="font-semibold mb-[8px] text-lg">
+						<h3 class="font-semibold mb-[8px] text-lg text-darkGray">
 							{{ t('manualCreation') }}
 						</h3>
 						<p class="text-slateGray text-xs">
@@ -39,7 +39,7 @@
 					@click="selectMethod('aiRecepie')"
 				>
 					<div class="text-left w-[255px]">
-						<h3 class="flex gap-[8px] font-semibold mb-[8px] text-lg">
+						<h3 class="flex gap-[8px] font-semibold mb-[8px] text-lg text-darkGray">
 							{{ t('aiCreation') }}
 							<IconAi :icon-color="'#319A6E'" />
 						</h3>

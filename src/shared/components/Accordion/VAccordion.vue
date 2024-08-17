@@ -4,7 +4,7 @@
 			class="accordion-header"
 			@click="toggle"
 		>
-			{{ props.title }}
+			{{ title }}
 			<IconArrow
 				:class="{ 'rotate-180': isOpen }"
 				icon-color="#000000"
@@ -26,24 +26,15 @@
 import { ref, computed, watch, onMounted, onUpdated } from 'vue'
 import { IconArrow } from 'shared/components/Icon'
 
-interface VAccordionProps {
+defineProps<{
 	title: string;
-	openByDefault?: boolean;
-}
+}>()
 
-const props = withDefaults(
-	defineProps<VAccordionProps>(), {
-		openByDefault: false
-	}
-)
-
-const isOpen = ref(props.openByDefault || false)
+const isOpen = ref(false)
 const content = ref<HTMLElement | null>(null)
 
-const contentScrollHeight = computed((): string => content.value?.scrollHeight ? `${content.value?.scrollHeight}px` : 'auto')
-
 const contentStyle = computed(() => ({
-	maxHeight: isOpen.value ? contentScrollHeight.value : '0',
+	maxHeight: isOpen.value ? `${content.value?.scrollHeight}px` : '0',
 }))
 
 const toggle = () => {
@@ -52,7 +43,7 @@ const toggle = () => {
 
 const updateHeight = () => {
 	if (isOpen.value && content.value) {
-		content.value.style.maxHeight = contentScrollHeight.value
+		content.value.style.maxHeight = `${content.value.scrollHeight}px`
 	}
 }
 
@@ -60,8 +51,8 @@ onMounted(updateHeight)
 onUpdated(updateHeight)
 
 watch(isOpen, (newVal) => {
-	if (newVal || isOpen.value) {
-		content.value?.style.setProperty('max-height', content.value?.scrollHeight ? `${content.value?.scrollHeight}px` : 'auto')
+	if (newVal) {
+		content.value?.style.setProperty('max-height', `${content.value.scrollHeight}px`)
 	} else {
 		content.value?.style.setProperty('max-height', '0')
 	}
@@ -83,7 +74,6 @@ watch(isOpen, (newVal) => {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	color: #1c1c1c;
 }
 
 .accordion-content {

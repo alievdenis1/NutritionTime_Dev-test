@@ -97,7 +97,7 @@ const recipes = [
 
 const choiceRecipe = (recipe: recipeItem) => {
     console.log(recipe)
-    router.push('/check-recipe')
+	router.push({ name: 'check-recipe', query: { source: 'ai' } })
 }
 
 interface recipeItem {

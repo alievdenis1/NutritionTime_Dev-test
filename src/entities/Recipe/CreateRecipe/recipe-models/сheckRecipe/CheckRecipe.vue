@@ -8,16 +8,16 @@
 				<IconArrowRight icon-color="#1C1C1C" />
 			</button>
 			<h2 class="text-center text-lg text-darkGray">
-				{{ t('recipeReviewTitle') }}
+				{{ titleText }}
 			</h2>
 			<div />
 		</div>
 		<div class="mb-4">
 			<h2 class="text-base font-semibold mb-[12px]">
-				{{ t('howUsersWillSee') }}
+				{{ subtitleText }}
 			</h2>
 			<p class="text-slateGray text-sm">
-				{{ t('reviewDescription') }}
+				{{ descriptionText }}
 			</p>
 		</div>
 		<div class="bg-lightGray rounded-[16px] h-[450px] flex items-center justify-center flex-col">
@@ -32,7 +32,7 @@
 			:color="ButtonColors.Green"
 			class="mt-6 mb-10"
 		>
-			<div class="flex gap-3  justify-center items-center w-full text-sm">
+			<div class="flex gap-3 justify-center items-center w-full text-sm">
 				<div>{{ t('createNftAndPublishRecipe') }}</div>
 				<IconArrowRight icon-color="#FFFFFF" />
 			</div>
@@ -41,17 +41,32 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useTranslation } from '@/shared/lib/i18n'
 import { IconArrowRight } from '@/shared/components/Icon'
 import { ButtonColors } from '@/shared/components/Button'
 import { VButton } from '@/shared/components/Button'
 import localizations from './CheckRecipe.localization.json'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 const { t } = useTranslation(localizations)
+
+// Определяем источник перехода
+const source = computed(() => route.params.source || route.query.source || 'default')
+
+const titleText = computed(() => {
+	return source.value === 'ai' ? t('recipeReviewTitleAI') : t('recipeReviewTitle')
+})
+
+const subtitleText = computed(() => {
+	return source.value === 'ai' ? t('howUsersWillSeeAI') : t('howUsersWillSee')
+})
+
+const descriptionText = computed(() => {
+	return source.value === 'ai' ? t('reviewDescriptionAI') : t('reviewDescription')
+})
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

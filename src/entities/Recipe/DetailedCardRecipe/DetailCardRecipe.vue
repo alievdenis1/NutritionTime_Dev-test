@@ -1,24 +1,47 @@
 <template>
 	<div class="relative">
-		<div ref="imageContainer" class="w-full h-[361px]">
-			<img :src="recipe?.image ?? ''" :alt="recipe?.title ?? ''"
-				class="w-full h-[365px] object-cover absolute top-0 left-0">
+		<div
+			ref="imageContainer"
+			class="w-full h-[361px]"
+		>
+			<img
+				:src="recipe?.image ?? ''"
+				:alt="recipe?.title ?? ''"
+				class="w-full h-[365px] object-cover absolute top-0 left-0"
+			>
 		</div>
 
-		<div v-if="!isReviewModalOpen" ref="headerRef"
+		<div
+			v-if="!isReviewModalOpen"
+			ref="headerRef"
 			class="fixed top-0 left-0 z-50 w-full transition-all duration-300"
-			:class="{ 'bg-white': !isHeaderTransparent }">
+			:class="{ 'bg-white': !isHeaderTransparent }"
+		>
 			<div class="flex justify-between items-center p-[16px]">
-				<button class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
-					@click="router.go(-1)">
+				<button
+					class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
+					@click="router.go(-1)"
+				>
 					<IconArrowRight icon-color="#1C1C1C" />
 				</button>
 				<div class="flex space-x-2">
-					<button v-for="(icon, index) in icons" :key="index"
+					<button
+						v-for="(icon, index) in icons"
+						:key="index"
 						class="flex items-center justify-center rounded-full shadow-custom transition-colors duration-300"
-						:class="[buttonBackgroundClass, icon.class]">
-						<component :is="icon.component" :class="icon.iconClass" />
-						<span v-if="icon.text">{{ icon.text }}</span>
+						:class="[buttonBackgroundClass, icon.class]"
+						@click="toggleIcon(index)"
+					>
+						<component
+							:is="icon.component"
+							:class="icon.iconClass"
+							:is-liked="icon.isActive"
+							:active-color="icon.activeColor || '#319A6E'"
+						/>
+						<span
+							v-if="icon.text"
+							:class="{ 'text-green-500': icon.isActive }"
+						>{{ icon.text }}</span>
 					</button>
 				</div>
 			</div>
@@ -30,7 +53,10 @@
 			<div class="text-xs text-slateGray mb-[12px]">
 				{{ t('editInstructions') }}
 			</div>
-			<VButton :color="ButtonColors.White" @click="editingRecipe">
+			<VButton
+				:color="ButtonColors.White"
+				@click="editingRecipe"
+			>
 				<div class="flex items-center justify-center gap-[12px]">
 					<div>{{ t('editButton') }}</div>
 					<div>
@@ -42,15 +68,23 @@
 
 		<div class="mx-auto p-[16px]">
 			<div class="flex items-center mb-[16px] mt-[24px]">
-				<img :src="recipe?.author.image" :alt="recipe?.author.name" class="w-8 h-8 rounded-full mr-2">
+				<img
+					:src="recipe?.author.image"
+					:alt="recipe?.author.name"
+					class="w-8 h-8 rounded-full mr-2"
+				>
 				<span class="text-sm text-slateGray">{{ recipe?.author.name }}</span>
-				<div v-if="recipe?.comments?.length && recipe.comments.length > 0" class=" ml-auto flex items-center">
+				<div
+					v-if="recipe?.comments?.length && recipe.comments.length > 0"
+					class=" ml-auto flex items-center"
+				>
 					<span class="text-xs text-slateGray mr-[8px]">
 						{{ recipe?.reviewsCount }}
 						{{ t('reviewsCount') }}
 					</span>
 					<span
-						class="text-sm text-white w-[32px] h-[32px] rounded-[50%] bg-forestGreen flex items-center justify-center">
+						class="text-sm text-white w-[32px] h-[32px] rounded-[50%] bg-forestGreen flex items-center justify-center"
+					>
 						{{ recipe?.rating.toFixed(1) }}
 					</span>
 				</div>
@@ -66,8 +100,11 @@
 			<h3 class="text-lg font-semibold text-darkGray mb-[16px]">
 				{{ t('ingredients') }}
 			</h3>
-			<div v-for="(ingredient, index) in recipe?.ingredients ?? []" :key="index"
-				class="flex items-center justify-between bg-lightGray px-[12px] py-[20px] rounded-[16px] mb-[16px]">
+			<div
+				v-for="(ingredient, index) in recipe?.ingredients ?? []"
+				:key="index"
+				class="flex items-center justify-between bg-lightGray px-[12px] py-[20px] rounded-[16px] mb-[16px]"
+			>
 				<span class="text-[12px]">{{ ingredient?.name }}</span>
 				<span class="text-[#535353] text-xs">{{ ingredient?.amount }}</span>
 			</div>
@@ -77,14 +114,19 @@
 				{{ t('totalWeightGram') }}
 			</div>
 
-			<RecipeDetailsTabs :cooking-steps="recipe?.cookingSteps ?? []" :recipe-info="recipe?.recipeInfo ?? {}"
-				:nutrition-info="recipe?.nutritionInfo ?? {}" :kitchenware="recipe?.kitchenware ?? []"
-				:tags="recipe?.tags ?? []" />
+			<RecipeDetailsTabs
+				:cooking-steps="recipe?.cookingSteps ?? []"
+				:recipe-info="recipe?.recipeInfo ?? {}"
+				:nutrition-info="recipe?.nutritionInfo ?? {}"
+				:kitchenware="recipe?.kitchenware ?? []"
+				:tags="recipe?.tags ?? []"
+			/>
 
 			<div class="shadow-custom mt-[40px] p-[16px] rounded-[12px] flex items-center justify-between">
 				<div v-if="!!recipe?.comments?.length">
 					<span
-						class="text-sm text-white w-[32px] h-[32px] rounded-[50%] bg-forestGreen flex items-center justify-center mb-[12px]">
+						class="text-sm text-white w-[32px] h-[32px] rounded-[50%] bg-forestGreen flex items-center justify-center mb-[12px]"
+					>
 						{{ recipe?.rating.toFixed(1) }}
 					</span>
 					{{ recipe?.reviewsCount }}
@@ -96,7 +138,10 @@
 					{{ t('noReviews') }}
 				</div>
 				<div class="w-max">
-					<VButton :color="ButtonColors.White" @click="openReviewModal">
+					<VButton
+						:color="ButtonColors.White"
+						@click="openReviewModal"
+					>
 						<div class="flex items-center justify-center gap-[12px]">
 							<div>{{ t('leaveReview') }}</div>
 							<div>
@@ -107,26 +152,46 @@
 				</div>
 			</div>
 			<div class="space-y-[12px]">
-				<div v-for="(comment, index) in latestComments" :key="index"
-					class="rounded-lg mt-[24px] flex flex-col gap-[12px] mb-[24px]">
+				<div
+					v-for="(comment, index) in latestComments"
+					:key="index"
+					class="rounded-lg mt-[24px] flex flex-col gap-[12px] mb-[24px]"
+				>
 					<div class="flex items-center">
-						<img v-if="comment.authorImage" :src="comment.authorImage" :alt="comment.author"
-							class="w-8 h-8 rounded-full mr-2">
+						<img
+							v-if="comment.authorImage"
+							:src="comment.authorImage"
+							:alt="comment.author"
+							class="w-8 h-8 rounded-full mr-2"
+						>
 						<span class="font-xs text-slateGray">{{ comment.author }}</span>
 					</div>
 					<p class="text-darkGray">
 						{{ comment.text }}
 					</p>
-					<img v-if="comment.image" :src="comment.image" :alt="t('recipe.commentImage')"
-						class="w-full h-auto object-cover aspect-video rounded-lg">
+					<img
+						v-if="comment.image"
+						:src="comment.image"
+						:alt="t('recipe.commentImage')"
+						class="w-full h-auto object-cover aspect-video rounded-lg"
+					>
 					<div class="flex items-center">
-						<IconHeart class="w-5 h-5 text-red-500 mr-2 cursor-pointer" />
+						<div v-if="recipe">
+							<IconHeart
+								:is-liked="likedStates[recipe.id] ?? false"
+								:disabled="isLiking[recipe.id] ?? false"
+							/>
+						</div>
 						<span class="text-slateGray text-xs">{{ comment.likes }}</span>
 					</div>
 					<div class="w-full h-[1px] bg-[#1C1C1C0D]" />
 				</div>
 			</div>
-			<VButton :color="ButtonColors.White" class="mt-[24px]" @click="allCommentPage">
+			<VButton
+				:color="ButtonColors.White"
+				class="mt-[24px]"
+				@click="allCommentPage"
+			>
 				<div class="flex items-center justify-center gap-[12px]">
 					<div>{{ t('allReviews') }}</div>
 					<div>
@@ -142,7 +207,11 @@
 						{{ t('recipeAuthor') }}
 					</div>
 					<div class="flex items-center gap-[8px] mt-[12px]">
-						<img :src="recipe?.author.image" :alt="recipe?.author.name" class="w-[20px] h-[20px]">
+						<img
+							:src="recipe?.author.image"
+							:alt="recipe?.author.name"
+							class="w-[20px] h-[20px]"
+						>
 						<div class="text-xs text-darkGray">
 							{{ recipe?.author.name }}
 						</div>
@@ -158,7 +227,11 @@
 						{{ t('nftOwner') }}
 					</div>
 					<div class="flex items-center gap-[8px] mt-[12px]">
-						<img :src="recipe?.nftOwner.image" :alt="recipe?.nftOwner.name" class="w-[20px] h-[20px]">
+						<img
+							:src="recipe?.nftOwner.image"
+							:alt="recipe?.nftOwner.name"
+							class="w-[20px] h-[20px]"
+						>
 						<div class="text-xs text-darkGray">
 							{{ recipe?.nftOwner.name }}
 						</div>
@@ -169,7 +242,10 @@
 						<div class="flex items-center justify-center gap-[12px]">
 							<div>{{ t('moreAbout') }}</div>
 							<div>
-								<IconArrowRight v-if="!isSmallScreen" icon-color="#319A6E" />
+								<IconArrowRight
+									v-if="!isSmallScreen"
+									icon-color="#319A6E"
+								/>
 							</div>
 						</div>
 					</VButton>
@@ -177,7 +253,10 @@
 			</div>
 		</div>
 		<div class="px-[16px] mt-[24px] mb-[124px]">
-			<VButton :color="ButtonColors.White" @click="exportToPDF">
+			<VButton
+				:color="ButtonColors.White"
+				@click="exportToPDF"
+			>
 				<div class="flex items-center justify-center gap-[12px]">
 					<div>{{ t('exportToPDF') }}</div>
 					<div>
@@ -186,13 +265,18 @@
 				</div>
 			</VButton>
 		</div>
-		<VModal :show="isReviewModalOpen" @close="closeReviewModal">
+		<VModal
+			:show="isReviewModalOpen"
+			@close="closeReviewModal"
+		>
 			<div class="flex items-center justify-between">
 				<div class="text-xl text-darkGray">
 					Отзыв о рецепте
 				</div>
-				<button class="text-2xl w-[48px] h-[48px] bg-lightGray rounded-[50%] p-[14px] cursor-pointer"
-					@click="closeReviewModal">
+				<button
+					class="text-2xl w-[48px] h-[48px] bg-lightGray rounded-[50%] p-[14px] cursor-pointer"
+					@click="closeReviewModal"
+				>
 					<IconClose />
 				</button>
 			</div>
@@ -200,11 +284,15 @@
 				<div>
 					<div class="flex flex items-center justify-between">
 						<div class="flex items-center gap-[8px]">
-							<template v-for="star in 5" :key="star">
+							<template
+								v-for="star in 5"
+								:key="star"
+							>
 								<button
 									class="w-[32px] h-[32px] rounded-full text-white text-sm font-bold flex items-center justify-center focus:outline-none"
 									:class="star <= rating ? 'bg-forestGreen' : 'bg-lightGray text-slateGray'"
-									@click="setRating(star)">
+									@click="setRating(star)"
+								>
 									{{ star }}
 								</button>
 							</template>
@@ -212,13 +300,28 @@
 						<span class="text-xs text-slateGray truncate">{{ ratingText }}</span>
 					</div>
 
-					<textarea v-model="review" :placeholder="'Ваше мнение о рецепте'"
-						class="border rounded px-2 py-4 text-base min-h-[122px] w-[100%] mt-[20px] mb-[12px]" />
+					<textarea
+						v-model="review"
+						:placeholder="'Ваше мнение о рецепте'"
+						class="border rounded px-2 py-4 text-base min-h-[122px] w-[100%] mt-[20px] mb-[12px]"
+					/>
 
-					<VAddPhoto :key="addPhotoKey" :icon-color="'#9F9FA0'" :width-image="54" :height-image="54"
-						:title="'Прикрепить фото'" :height-main="66" backgrounds="#F3F3F3" :icon="IconPhoto"
-						:on-image-uploaded="handleImageUpload" />
-					<VButton class="mt-[20px]" :color="ButtonColors.Green" @click="submitReview">
+					<VAddPhoto
+						:key="addPhotoKey"
+						:icon-color="'#9F9FA0'"
+						:width-image="54"
+						:height-image="54"
+						:title="'Прикрепить фото'"
+						:height-main="66"
+						backgrounds="#F3F3F3"
+						:icon="IconPhoto"
+						:on-image-uploaded="handleImageUpload"
+					/>
+					<VButton
+						class="mt-[20px]"
+						:color="ButtonColors.Green"
+						@click="submitReview"
+					>
 						Оставить отзыв
 					</VButton>
 				</div>
@@ -245,10 +348,18 @@ const router = useRouter()
 const recipe: Ref<Recipe | undefined> = ref(store.currentRecipe)
 
 const { t } = useTranslation(Localization)
-
+const likedStates = ref<Record<string | number, boolean>>({})
+const isLiking = ref<Record<string | number, boolean>>({})
 const headerRef = ref<HTMLElement | null>(null)
 const imageContainer = ref<HTMLElement | null>(null)
 const isImageVisible = ref(true)
+
+if (Array.isArray(recipe.value)) {
+	recipe.value.forEach((rec: Recipe) => {
+		likedStates.value[rec.id] = false
+		isLiking.value[rec.id] = false
+	})
+}
 
 const isHeaderTransparent = computed(() => isImageVisible.value)
 
@@ -279,11 +390,19 @@ onUnmounted(() => {
 	}
 })
 
-const icons = [
+const icons = ref([
 	{ component: IconShare, class: 'w-[44px] h-[44px]', iconClass: 'w-[17px] h-[14px]' },
-	{ component: IconFavorites, class: 'w-[44px] h-[44px]', iconClass: 'w-[24px] h-[20px]' },
-	{ component: IconHeart, class: 'w-[62px] h-[44px]', iconClass: 'w-[20px] h-[20px]', text: '24' }
-]
+	{ component: IconFavorites, class: 'w-[44px] h-[44px]', iconClass: 'w-[24px] h-[20px]', isActive: false, activeColor: '#319A6E' },
+	{ component: IconHeart, class: 'w-[62px] h-[44px]', iconClass: 'w-[20px] h-[20px]', text: '24', isActive: false, activeColor: '#319A6E' }
+])
+
+const toggleIcon = (index: number) => {
+	if (index === 0) return // Не меняем состояние для IconShare
+	icons.value[index].isActive = !icons.value[index].isActive
+	if (index === 2) { // Для IconHeart
+		icons.value[index].text = icons.value[index].isActive ? '25' : '24'
+	}
+}
 
 const latestComments = computed(() => {
 	return (recipe.value?.comments ?? []).slice(0, 3)
