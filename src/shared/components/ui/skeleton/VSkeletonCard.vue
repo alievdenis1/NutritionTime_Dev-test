@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { VSkeleton } from 'shared/components/ui/skeleton'
+import VSkeleton  from './VSkeleton.vue'
 </script>
 
 <style scoped>

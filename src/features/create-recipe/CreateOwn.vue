@@ -11,16 +11,17 @@
 		<StepByStepRecipe />
 		<KitchenToolsRecipe />
 		<TagsRecipe />
-		<v-button
-			:color="ButtonColors.Green"
-			class="sticky bottom-14"
-			@click="CheckRecipe"
-		>
-			<div class="flex gap-[12px] items-center">
-				<div>{{ t('further') }}</div>
-				<IconArrowRight icon-color="#ffffff" />
-			</div>
-		</v-button>
+		<div class="px-[16px] fixed bottom-[100px] left-0 w-full">
+			<v-button
+				:color="ButtonColors.Green"
+				@click="CheckRecipe"
+			>
+				<div class="flex gap-[12px] items-center">
+					<div>{{ t('further') }}</div>
+					<IconArrowRight icon-color="#ffffff" />
+				</div>
+			</v-button>
+		</div>
 	</div>
 </template>
 

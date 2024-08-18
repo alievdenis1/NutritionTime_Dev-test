@@ -1,7 +1,7 @@
 <template>
 	<VModal
 		:show="store.isModalCreateOpen"
-		@close="store.closeModal"
+		@close="store.closeModalRecipe"
 	>
 		<div>
 			<div class="flex justify-between mb-[12px] items-center">
@@ -10,7 +10,7 @@
 				</h2>
 				<button
 					class="text-2xl w-[48px] h-[48px] bg-lightGray rounded-[50%] p-[14px] cursor-pointer"
-					@click="store.closeModal"
+					@click="store.closeModalRecipe"
 				>
 					<IconClose icon-color="#9F9FA0" />
 				</button>
@@ -73,7 +73,7 @@ const selectMethod = (tabValue: string) => {
 	store.defaultValueTabs = tabValue
 	router.push('/create-recipe')
 	emit('selectMethod', tabValue)
-	store.closeModal()
+	store.closeModalRecipe()
 }
 
 </script>

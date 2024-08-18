@@ -1,1 +1,1 @@
-export { default as SearchWidgets } from './SearchWidgets.vue'
+export { default as SearchWidget } from './SearchWidget.vue'

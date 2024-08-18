@@ -15,7 +15,7 @@
 					{ 'cursor-not-allowed opacity-50': isCreateRecipeRoute }
 				]"
 				:disabled="isCreateRecipeRoute"
-				@click="store.openModal"
+				@click="openModalCreateRecipe"
 			>
 				<icon-plus :icon-color="'#FFFFFF'" />
 			</button>
@@ -44,6 +44,9 @@ const store = useModalCreateStore()
 const router = useRouter()
 const { t } = useTranslation(Localization)
 
+const openModalCreateRecipe = () => {
+	store.openModalRecipe()
+}
 const isCurrentRoute = (route: string) => {
 	return router.currentRoute.value.path === route
 }

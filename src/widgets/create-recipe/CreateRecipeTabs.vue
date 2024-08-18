@@ -2,6 +2,7 @@
 	<TabsMain
 		v-model="activeTab"
 		:default-value="store.defaultValueTabs"
+		class="p-[16px]"
 	>
 		<div class="flex justify-between items-center mb-[16px]">
 			<button

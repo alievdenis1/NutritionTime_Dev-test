@@ -1,5 +1,8 @@
 <template>
-	<VAccordion :title="t('tagsTitle')">
+	<VAccordion
+		:title="t('tagsTitle')"
+		class="mb-[80px]"
+	>
 		<div class="border custom-border flex items-center mt-5 rounded-md px-4 py-5">
 			<div class="flex items-center flex-nowrap space-x-2 overflow-x-auto no-scrollbar">
 				<div

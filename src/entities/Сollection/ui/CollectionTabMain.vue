@@ -1,5 +1,8 @@
 <template>
-	<TabsMain default-value="collections">
+	<TabsMain
+		default-value="collections"
+		class="p-[16px]"
+	>
 		<TabsList>
 			<TabsTrigger value="collections">
 				{{ t('collections') }}
@@ -14,6 +17,7 @@
 				class="mt-[16px]"
 				@edit="onEdit"
 				@delete="onDelete"
+				@adding="onAdding"
 			/>
 			<RecipesList :recipes-data="mockRecipes" />
 			<VContentBlock
@@ -35,14 +39,8 @@
 				:button-icon="IconPlus"
 			/>
 		</TabsContent>
-
-		<VModal
-			:show="isOpen"
-			@close="closeModal"
-		>
-			<CollectionForm :type="modalType" />
-		</VModal>
 	</TabsMain>
+	<ModalCollection />
 </template>
 
 <script setup lang="ts">
@@ -53,42 +51,25 @@ import { mockRecipes, addPrefix } from '../mocks/mock-recipes'
 import { useTranslation } from '@/shared/lib/i18n'
 import { TabsMain, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import Localization from './Collection.localization.json'
-import { VDragAndDrop } from 'shared/components/DragAndDrop'
-import { DragTypes } from 'shared/components/DragAndDrop/types'
-import { VModal } from 'shared/components/Modal'
+import { VDragAndDrop, DragTypes } from 'shared/components/DragAndDrop'
 import { openConfirm } from 'shared/components/Confirm'
-import { CollectionForm } from 'widgets/collection-form'
+import { IconArrowRight, IconPlus, } from 'shared/components/Icon'
+import { useModalStore } from '../store/collections.store'
+import ModalCollection from '../../Сollection/modal/ModalCollection.vue'
 
-import type { CollectionFormType } from 'features/collection-form'
-
-import { IconArrowRight, IconPlus } from 'shared/components/Icon'
-
+const store = useModalStore()
 const { t } = useTranslation(Localization)
+const dragAndDropItems = ref(store.dragAndDropItems)
 
-const dragAndDropItems = ref<DragTypes[]>([
-    { id: 1, label: 'Мне понравилось', isActiveEdit: false, count: 5 },
-    { id: 2, label: 'Вкусняшки', isActiveEdit: true, count: 5 },
-    { id: 3, label: 'Красивое', isActiveEdit: true, count: 5 },
-    { id: 4, label: 'Красивое', isActiveEdit: true, count: 5 },
-    { id: 5, label: 'Красивое', isActiveEdit: true, count: 5 },
-    { id: 6, label: 'Красивое', isActiveEdit: true, count: 5 },
-])
+const onEdit = (tab: DragTypes) => {
+	store.collectionId = tab.id
+	console.log(store.collectionId)
+	store.openModal('edit')
+}
 
-const isOpen = ref<boolean>(false)
-const modalType = ref<CollectionFormType>('create')
-
-// methods
-const closeModal = (): void => {
-	isOpen.value = false
-}
-const openModal = (): void => {
-	isOpen.value = true
-}
-const onEdit = (tab: DragTypes): void => {
-	modalType.value = 'edit'
-	openModal()
-}
-const onDelete = async (tab: DragTypes): Promise<void> => {
+const onDelete = async (tab: DragTypes) => {
+	store.collectionId = tab.id
+	console.log(store.collectionId)
 	const isConfirmed = await openConfirm({
 		title: t('confirmTitle'),
 		description: t('confirmDescription'),
@@ -96,8 +77,13 @@ const onDelete = async (tab: DragTypes): Promise<void> => {
 	})
 
 	if (isConfirmed) {
-		//TODO: here will be removing logic
+		store.deleteCollection()
 	}
+}
+
+const onAdding = () => {
+	console.log(store.collectionId)
+	store.openModal('create')
 }
 </script>
 

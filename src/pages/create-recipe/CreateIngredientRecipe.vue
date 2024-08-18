@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-[20px]">
+	<div class="flex flex-col gap-[20px] p-[16px]">
 		<div class="flex justify-between items-center">
 			<button
 				class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
@@ -77,11 +77,13 @@
 				</div>
 			</VButton>
 		</div>
+		<footer-widget	class="fixed bottom-0 left-0" />
 	</div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { FooterWidget } from 'widgets/footer'
 import { CreateRecipeIngredients } from 'entities/Recipe/CreateRecipe/recipe-models'
 import { IconArrowRight, IconCamera, IconAi } from 'shared/components/Icon'
 import { VAddPhoto } from 'shared/components/AddPhoto'

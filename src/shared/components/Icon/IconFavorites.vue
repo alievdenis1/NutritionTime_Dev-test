@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 interface Props {
-	isLiked: boolean
+	isLiked?: boolean
 	defaultColor?: string
 	iconColor?: string
 	disabled?: boolean
