@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="photo-upload mb-[8px] flex justify-center items-center"
+		class="photo-upload flex justify-center items-center"
 		:class="errorClasses"
 		:style="{ height: `${heightMain}px`, background: backgrounds }"
 	>
@@ -26,8 +26,9 @@
 			class="photo-upload-label flex justify-center items-center"
 		>
 			<input
+				ref="fileInput"
 				type="file"
-				class="photo-upload-input"
+				class="hidden"
 				@change="handleFileUpload"
 			>
 			<div class="photo-upload-content flex items-center gap-2">
@@ -123,6 +124,14 @@ const removeImage = () => {
 		props.onImageUploaded(null)
 	}
 }
+
+const fileInput = ref(null)
+
+const openFileDialog = () => {
+	fileInput.value.click()
+}
+
+defineExpose({ openFileDialog })
 </script>
 
 <style scoped>

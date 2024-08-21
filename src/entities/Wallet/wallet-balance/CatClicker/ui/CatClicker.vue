@@ -113,7 +113,6 @@ const handleClick = (event: MouseEvent) => {
 const simulateShake = () => {
   const randomChance = Math.random()
   if (randomChance < 0.1) { // 10% шанс симуляции тряски при каждом клике
-    console.log('Simulated shake detected!')
     store.setShaking(true)
     setTimeout(() => {
       store.setShaking(false)
@@ -124,7 +123,6 @@ const simulateShake = () => {
 const handleDeviceMotion = (event: DeviceMotionEvent) => {
   try {
     eventCount.value++
-    console.log('Device motion event received', event)
 
     const { accelerationIncludingGravity } = event
     if (accelerationIncludingGravity) {
@@ -135,7 +133,6 @@ const handleDeviceMotion = (event: DeviceMotionEvent) => {
       ) - 9.81
 
       debugAcceleration.value = acceleration
-      console.log('Calculated acceleration:', acceleration)
 
       let threshold
       switch (shakeLevel.value) {
@@ -150,7 +147,6 @@ const handleDeviceMotion = (event: DeviceMotionEvent) => {
       }
 
       if (acceleration > threshold) {
-        console.log('Shake detected!')
         store.setShaking(true)
 
         // Добавляем логику для увеличения счетчика или другие действия при тряске
@@ -175,7 +171,6 @@ const requestMotionPermission = async () => {
       if (permissionState === 'granted') {
         permissionGranted.value = true
         window.addEventListener('devicemotion', handleDeviceMotion)
-        console.log('Motion permission granted')
       } else {
         console.error('Motion permission denied')
         lastError.value = 'Motion permission denied. Please enable it in your device settings.'
@@ -184,7 +179,6 @@ const requestMotionPermission = async () => {
       // Для устройств, не требующих явного разрешения
       permissionGranted.value = true
       window.addEventListener('devicemotion', handleDeviceMotion)
-      console.log('Motion listener added without permission request')
     }
   } catch (error: any) {
     console.error('Error requesting motion permission:', error)
@@ -194,7 +188,6 @@ const requestMotionPermission = async () => {
 
 const checkDeviceMotionSupport = () => {
   isDeviceMotionSupported.value = 'DeviceMotionEvent' in window
-  console.log('Device motion supported:', isDeviceMotionSupported.value)
   if (!isDeviceMotionSupported.value) {
     lastError.value = 'Device motion is not supported on this device. Using alternative shake detection.'
   }
@@ -211,25 +204,20 @@ const handleVisibilityChange = () => {
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
 
 onMounted(() => {
-  console.log('Component mounted')
   window.addEventListener('visibilitychange', handleVisibilityChange)
   checkDeviceMotionSupport()
   if (isDeviceMotionSupported.value) {
     if (isIOS && typeof (DeviceMotionEvent as any).requestPermission === 'function') {
       showPermissionButton.value = true
-      console.log('Permission button shown for iOS device')
     } else {
       requestMotionPermission()
     }
-  } else {
-    console.log('Using alternative shake detection method')
   }
   store.setCurrency(props.initialCurrency)
   store.setEnergyCurrent(props.initialEnergyCurrency)
 })
 
 onUnmounted(() => {
-  console.log('Component unmounted')
   window.removeEventListener('visibilitychange', handleVisibilityChange)
   window.removeEventListener('devicemotion', handleDeviceMotion)
   if (shakeTimeout) clearTimeout(shakeTimeout)

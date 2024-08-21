@@ -104,7 +104,6 @@ const shareMessage = async () => {
 				text: 'Приглашаю тебя присоединиться и получить 500 $RECIPETON!',
 				url: 'https://example.com' // Заменить на реальный URL
 			})
-			console.log('Сообщение отправлено успешно')
 		} catch (error: any) {
 			console.error('Ошибка при отправке сообщения:', error)
 			alert('Ошибка при отправке сообщения: ' + error.message)

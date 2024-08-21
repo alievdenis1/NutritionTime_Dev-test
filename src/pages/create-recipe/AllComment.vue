@@ -76,7 +76,10 @@
 			class="w-full h-auto object-cover aspect-video rounded-lg"
 		>
 		<div class="flex items-center">
-			<IconHeart class="w-5 h-5 text-red-500 mr-2 cursor-pointer" />
+			<IconHeart
+				icon-color="#319A6E"
+				class="w-5 h-5 text-red-500 mr-2 cursor-pointer"
+			/>
 			<span class="text-slateGray text-xs">{{ comment.likes }}</span>
 		</div>
 		<div class="w-full h-[1px] bg-[#1C1C1C0D]" />

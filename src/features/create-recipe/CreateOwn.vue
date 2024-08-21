@@ -4,8 +4,8 @@
 		<CreateRecipeGradation />
 		<CreateRecipeTime />
 		<CreateRecipeIngredients
-			:title="t('ingredients')"
-			desc="То, что нужно для приготовления блюда. Например, 250 грамм картошки "
+			:title="t('title')"
+			:desc="t('desc')"
 		/>
 		<CreateRecipeNutritional />
 		<StepByStepRecipe />

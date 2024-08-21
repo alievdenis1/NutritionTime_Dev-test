@@ -1,5 +1,8 @@
 <template>
-	<TabsMain :default-value="store.defaultValueTabs">
+	<TabsMain
+		v-model="activeTab"
+		:default-value="store.defaultValueTabs"
+	>
 		<div class="flex justify-between items-center mb-[16px]">
 			<button
 				class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
@@ -15,23 +18,18 @@
 		<TabsList>
 			<TabsTrigger
 				value="ownRecepie"
-				@click="onSelect('ownRecepie')"
 			>
 				{{ t('manualCreation') }}
 			</TabsTrigger>
 			<TabsTrigger
 				value="aiRecepie"
-				class="flex gap-[8px]"
-				@click="onSelect('aiRecepie')"
+				class="flex gap-[8px] items-center"
 			>
 				{{ t('aiCreation') }}
-				<IconAi :icon-color="AIIconColor" />
+				<IconAi :icon-color="activeTab === 'aiRecepie' ? '#319A6E' : '#E1E1E1'" />
 			</TabsTrigger>
 		</TabsList>
-		<TabsContent
-			value="ownRecepie"
-			class=""
-		>
+		<TabsContent value="ownRecepie">
 			<CreateOwn />
 		</TabsContent>
 		<TabsContent value="aiRecepie">
@@ -41,27 +39,25 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { CreateOwn, CreateAi } from 'features/create-recipe'
 import { TabsMain, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { useModalCreateStore } from 'entities/Recipe/CreateRecipe/modal-create/model/model-store'
 import { useTranslation } from '@/shared/lib/i18n'
 import localizations from './CreateRecipeTabs.localization.json'
 import { IconAi, IconArrowRight } from 'shared/components/Icon'
+import { useRouter } from 'vue-router'
+
 const store = useModalCreateStore()
 const { t } = useTranslation(localizations)
-import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
 const router = useRouter()
 
-const selectedTab = ref<string>('ownRecepie')
-
-const AIIconColor = computed((): string => {
-	return selectedTab.value === 'aiRecepie' ? '#319A6E' : '#E1E1E1'
+const activeTab = computed({
+	get: () => store.defaultValueTabs,
+	set: (value) => {
+		store.defaultValueTabs = value
+	}
 })
-
-const onSelect = (value: string): void => {
-	selectedTab.value = value
-}
 </script>
 
 <style scoped></style>

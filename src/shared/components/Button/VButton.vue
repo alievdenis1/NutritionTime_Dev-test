@@ -1,5 +1,5 @@
 <template>
-	<el-button
+	<button
 		class="v-button"
 		:class="[colorClass, borderRadiusClass]"
 		:size="size"
@@ -7,7 +7,7 @@
 		@click="onButtonClicked"
 	>
 		<slot />
-	</el-button>
+	</button>
 </template>
 
 <script setup lang="ts">

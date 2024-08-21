@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="p-[16px]">
 		<div class="flex justify-between items-center mb-[16px]">
 			<button
 				class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"

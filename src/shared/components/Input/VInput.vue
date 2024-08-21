@@ -30,7 +30,6 @@
 			ref="textareaRef"
 			v-bind="$attrs"
 			v-model="inputValue"
-			:value="inputValue"
 			:disabled="disabled"
 			:class="inputClasses"
 			:readonly="props.readonly"

@@ -23,17 +23,22 @@
 				<p class="text-xs text-slateGray mb-4">
 					{{ t('identifyByPhotoDesc') }}
 				</p>
-				<VAddPhoto
-					icon-color="#319A6E"
-					text-color="#319A6E"
-					:title="t('identifyByPhotoButton')"
-					:width-image="32"
-					:height-image="32"
-					:height-main="40"
-					backgrounds="#F3F3F3"
-					:icon="IconPhoto"
+				<VButton
+					:color="ButtonColors.White"
 					class="border-img-add"
-				/>
+					@click="handleButtonClick"
+				>
+					<VAddPhoto
+						ref="addPhotoRef"
+						icon-color="#319A6E"
+						text-color="#319A6E"
+						:title="t('identifyByPhotoButton')"
+						:width-image="32"
+						:height-image="32"
+						:height-main="40"
+						:icon="IconCamera"
+					/>
+				</VButton>
 			</div>
 			<div class="mt-4 flex items-center bg-lightGray p-[12px] rounded-lg">
 				<input
@@ -52,6 +57,7 @@
 		</CreateRecipeIngredients>
 
 		<CreateRecipeIngredients
+			:is-exclusion-mode="true"
 			:title="t('excludeIngredientsTitle')"
 			:desc="t('excludeIngredientsDesc')"
 		/>
@@ -77,7 +83,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { CreateRecipeIngredients } from 'entities/Recipe/CreateRecipe/recipe-models'
-import { IconArrowRight, IconPhoto, IconAi } from 'shared/components/Icon'
+import { IconArrowRight, IconCamera, IconAi } from 'shared/components/Icon'
 import { VAddPhoto } from 'shared/components/AddPhoto'
 import { VButton, ButtonColors } from 'shared/components/Button'
 const useOnlyTheseIngredients = ref(false)
@@ -92,11 +98,18 @@ const { t } = useTranslation(localizations)
 const TagChangedRoute = () => {
 	router.push('/tag-recipe')
 }
+
+const addPhotoRef = ref()
+
+const handleButtonClick = () => {
+	addPhotoRef.value.openFileDialog()
+}
 </script>
 
 <style scoped>
 .border-img-add {
 	border: 1px solid #319A6E;
+	cursor: pointer;
 }
 
 .border-check {
@@ -109,12 +122,15 @@ const TagChangedRoute = () => {
 	border-radius: 3px;
 	outline: none;
 	cursor: pointer;
+	background-color: white;
+	/* Оставляем белый фон */
 }
 
 .border-check:checked {
-	background-color: #319A6E;
-	border-color: #319A6E;
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23fff'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+	/* Зеленая рамка для активного состояния */
+	background-color: white;
+	/* Оставляем белый фон при активном состоянии */
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23319A6E'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
 	background-size: 100% 100%;
 	background-position: center;
 	background-repeat: no-repeat;

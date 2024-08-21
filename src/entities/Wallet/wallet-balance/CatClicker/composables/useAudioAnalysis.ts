@@ -26,7 +26,6 @@ export const useAudioAnalysis = () => {
         if (isAudioInitialized.value) return
 
         if (!isWebAudioSupported) {
-            console.log('Web Audio API is not supported. Using alternative method.')
             startAlternativeAudioAnalysis()
             return
         }
@@ -64,7 +63,6 @@ export const useAudioAnalysis = () => {
                 } else {
                     if (isCalibrating.value) {
                         isCalibrating.value = false
-                        console.log('Calibration complete. Baseline noise level:', baselineNoiseLevel.value)
                     }
 
                     smoothedAudioLevel.value = smoothedAudioLevel.value * (1 - SMOOTHING_FACTOR) + rawLevel * SMOOTHING_FACTOR
@@ -81,7 +79,6 @@ export const useAudioAnalysis = () => {
                     }
 
                     if (shoutLevel) {
-                        console.log(`Shouting detected! Level: ${shoutLevel}, Normalized level: ${normalizedLevel.toFixed(2)}`)
                         store.setShouting(true, shoutLevel)
                     } else {
                         store.setShouting(false, '')
@@ -100,7 +97,6 @@ export const useAudioAnalysis = () => {
     }
 
     const startAlternativeAudioAnalysis = () => {
-        console.log('Starting alternative audio analysis')
         isAudioInitialized.value = true
         let clickCount = 0
         let lastClickTime = Date.now()

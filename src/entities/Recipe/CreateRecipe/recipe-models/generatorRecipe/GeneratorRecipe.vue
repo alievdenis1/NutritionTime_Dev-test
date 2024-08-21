@@ -1,21 +1,26 @@
 <template>
 	<div>
-		<h2 class="text-lg font-semibold mb-4">
+		<h2 class="text-lg text-darkGray font-semibold mb-4">
 			{{ t('generateRecipeTitle') }}
 		</h2>
 
 		<div class="mb-[32px] relative">
 			<span
 				v-if="recipeIdea.length > 0"
-				class="absolute text-[12px] top-[6px] left-[12px] text-gray"
+				class="absolute text-[12px] top-[8px] left-[12px] text-gray z-10 bg-mainBg px-1"
 			>
-				{{ t('describeIdeaPlaceholder') }}
+				{{ t('describeIdeaPlaceholderActive') }}
 			</span>
 			<textarea
 				v-model="recipeIdea"
-				:class="{ 'border-custom-red': isTextareaActive, 'padding-filled': recipeIdea.length > 0, 'padding-empty': recipeIdea.length === 0 }"
-				placeholder="Опишите свою идею"
-				class="w-full h-[120px] border-custom rounded-[4px] mb-[4px]"
+				:class="{
+					'border-custom-red': isTextareaActive,
+					'padding-filled': recipeIdea.length > 0,
+					'padding-empty': recipeIdea.length === 0
+				}"
+				:placeholder="t('describeIdeaPlaceholderDefault')"
+				class="w-full h-[120px] border-custom rounded-[4px] mb-[4px] px-[12px] resize-none overflow-y-auto"
+				@input="validateInput"
 			/>
 			<p class="text-sm text-gray">
 				{{ t('exampleIdea') }}
@@ -28,7 +33,7 @@
 				@click="GenerateReadyIdeas"
 			>
 				<div>
-					<h3 class="text-lg mb-[4px]">
+					<h3 class="text-lg text-darkGray mb-[4px]">
 						{{ t('readyIdeasTitle') }}
 					</h3>
 					<p class="text-sm text-slateGray">
@@ -46,7 +51,7 @@
 				@click="GenerateIngredient"
 			>
 				<div>
-					<h3 class="text-lg mb-[4px]">
+					<h3 class="text-lg  text-darkGray mb-[4px]">
 						{{ t('generateByIngredientsTitle') }}
 					</h3>
 					<p class="text-sm text-slateGray">
@@ -68,7 +73,7 @@
 				>
 					<div class="flex items-center gap-[4px] text-sm">
 						<div>
-							{{ t('generateWithSelected') }}
+							{{ t('generateButtonText') }}
 						</div>
 						<IconAi
 							v-if="!isSmallScreen"
@@ -112,6 +117,17 @@ const GenerateReadyIdeas = () => {
 const GenerateIngredient = () => {
 	router.push('/ingredient-recipe')
 }
+
+const MAX_CHARS = 250
+
+const validateInput = (event) => {
+	const textarea = event.target
+	const inputValue = textarea.value
+
+	if (inputValue.length > MAX_CHARS) {
+		recipeIdea.value = inputValue.slice(0, MAX_CHARS)
+	}
+}
 </script>
 
 <style scoped>
@@ -130,6 +146,22 @@ const GenerateIngredient = () => {
 .padding-empty {
 	padding: 12px;
 }
+
+textarea {
+	line-height: 1.5;
+}
+
+span {
+	transition: all 0.3s ease;
+}
+
+textarea:focus+span,
+textarea:not(:placeholder-shown)+span {
+	top: -8px;
+	font-size: 10px;
+	background-color: #FCFCFC;
+}
+
 .icon-fixed-size {
 	width: 48px;
 	height: 48px;
