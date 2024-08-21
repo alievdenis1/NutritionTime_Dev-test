@@ -8,7 +8,10 @@
         "recipes": "Мои рецепты",
         "confirmTitle": "Вы хотите удалить коллекцию?",
         "confirmDescription": "Все рецепты из этой коллекции будут удалены вместе с ней",
-        "confirmButton": "Удалить"
+        "confirmButton": "Удалить",
+        "createCollection": "Cоздание коллекции",
+        "createCollectionDesc": "В коллекцию можно добавлять рецепты с помощью иконки",
+        "endingTitle": "Название коллекции"
     },
     "en": {
         "liked": "which you liked",
@@ -19,6 +22,9 @@
         "recipes": "My recipes",
         "confirmTitle": "Do you want to delete the collection?",
         "confirmDescription": "All recipes in this collection will be deleted along with it",
-        "confirmButton": "Delete"
+        "confirmButton": "Delete",
+        "createCollection": "Creating a collection",
+        "createCollectionDesc": "You can add recipes to collections using icons.",
+        "endingTitle": "Collection name"
     }
 }

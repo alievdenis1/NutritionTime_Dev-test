@@ -397,9 +397,9 @@ const icons = ref([
 ])
 
 const toggleIcon = (index: number) => {
-	if (index === 0) return // Не меняем состояние для IconShare
+	if (index === 0) return
 	icons.value[index].isActive = !icons.value[index].isActive
-	if (index === 2) { // Для IconHeart
+	if (index === 2) {
 		icons.value[index].text = icons.value[index].isActive ? '25' : '24'
 	}
 }

@@ -102,10 +102,6 @@ const toggleFavorite = (recipeId: number) => {
 
 const toggleLike = (recipeId: number) => {
 	likesState.value[recipeId] = !likesState.value[recipeId]
-	// const recipe = props.recipes.find(r => r.id === recipeId)
-	// if (recipe.likesCount !== undefined) {
-	// 	recipe.likesCount += likesState.value[recipeId] ? 1 : -1
-	// }
 }
 </script>
 

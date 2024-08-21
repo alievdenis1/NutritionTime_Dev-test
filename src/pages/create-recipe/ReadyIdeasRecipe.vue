@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="p-[16px]">
 		<div class="flex justify-between items-center mb-[16px]">
 			<button
 				class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
@@ -63,11 +63,13 @@
 				</div>
 			</VButton>
 		</div>
+		<footer-widget	class="fixed bottom-0 left-0" />
 	</div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { FooterWidget } from 'widgets/footer'
 import { IconArrowRight, IconAi } from 'shared/components/Icon'
 import { VButton, ButtonColors } from 'shared/components/Button'
 import { useRouter } from 'vue-router'

@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="p-[16px]">
 		<div ref="searchBarRef" />
 		<div
 			:class="[

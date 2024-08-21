@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
-import { MainLayout } from 'app/layouts'
+import { DefaultLayout } from 'app/layouts'
 
 export default [
     {
@@ -8,7 +8,7 @@ export default [
         path: '/wallet',
         meta: {
             title: 'Wallet',
-            layout: MainLayout
+            layout: DefaultLayout
         }
     }
 ] as RouteRecordRaw[]

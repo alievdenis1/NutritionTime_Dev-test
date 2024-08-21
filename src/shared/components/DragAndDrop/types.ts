@@ -1,4 +1,4 @@
-export interface DragTypes  {
+export interface DragTypes {
     id: number
     label: string
     isActiveEdit: boolean
@@ -6,6 +6,7 @@ export interface DragTypes  {
 }
 
 export type VDragAndDropEmits = {
-    edit: [value: DragTypes]
-    delete: [value: DragTypes]
+    edit: [tab: DragTypes];
+    delete: [tab: DragTypes];
+    adding: [];
 }

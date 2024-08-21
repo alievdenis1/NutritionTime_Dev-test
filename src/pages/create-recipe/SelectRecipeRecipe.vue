@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="p-[16px]">
 		<VLoading v-if="loading" />
 		<div v-else>
 			<div class="flex justify-between items-center mb-[16px]">
@@ -19,7 +19,7 @@
 					v-for="recipe in recipes"
 					:key="recipe.id"
 					class="max-w-md mx-auto rounded-[20px] overflow-hidden md:max-w-2xl mb-4 px-[2px] py-[2px] cursor-pointer"
-					@click="choiceRecipe(recipe)"
+					@click="choiceRecipe()"
 				>
 					<div class="flex border-custom">
 						<div class="relative">

@@ -1,7 +1,5 @@
 <template>
-	<div
-		class="wrapper"
-	>
+	<div class="wrapper">
 		<p
 			class="title"
 			:class="[titleClasses, titleZIndex]"
@@ -14,8 +12,7 @@
 			:id="useId()"
 			ref="inputRef"
 			v-bind="$attrs"
-			v-model="inputValue"
-			:value="inputValue"
+			:value="modelValue"
 			:disabled="props.disabled"
 			:class="inputClasses"
 			:readonly="props.readonly"
@@ -29,7 +26,7 @@
 			v-else
 			ref="textareaRef"
 			v-bind="$attrs"
-			v-model="inputValue"
+			:value="modelValue"
 			:disabled="disabled"
 			:class="inputClasses"
 			:readonly="props.readonly"
@@ -45,14 +42,12 @@
 			class="absolute top-4 right-2 icon flex justify-between items-center gap-3"
 		>
 			<IconClose
-				v-if="inputValue.length && props.clearable"
+				v-if="props.clearable"
 				icon-color="#9F9FA0"
 				class="clear"
 				@click="onClear"
 			/>
-			<slot
-				name="right-icon"
-			/>
+			<slot name="right-icon" />
 		</span>
 		<div
 			v-if="$slots['list'] && props.searchable && isFocused"
@@ -74,19 +69,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { useId } from 'radix-vue'
 import { IconClose } from 'shared/components/Icon'
 
 type InputBackground = 'default' | 'gray'
 
 export type InputEmits = {
-    'update:value': [string]
+    'update:modelValue': [string]
     'update:error': [boolean]
     focusout: [void]
 }
+
 export interface InputProps {
-    value: string;
+    modelValue: string;
     title: string;
     required?: boolean;
     error?: boolean;
@@ -105,22 +101,23 @@ export interface InputProps {
 }
 
 defineSlots<{
-  default(props: object): never;
-  'right-icon'(props: object): never;
-  'list'(props: object): never;
+    default(props: object): never;
+    'right-icon'(props: object): never;
+    'list'(props: object): never;
 }>()
 
 const props = withDefaults(
-    defineProps<InputProps>(), {
+    defineProps<InputProps>(),
+    {
         background: 'default',
         errorMessage: '',
         zIndex: '',
         maxLength: 100
     }
 )
+
 const emits = defineEmits<InputEmits>()
 
-const inputValue = ref<string>(props.value)
 const isFocused = ref<boolean>(false)
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const inputRef = ref<HTMLInputElement | null>(null)
@@ -134,27 +131,30 @@ const inputClasses = computed(() => {
     const classes = []
 
     if (hasError.value) classes.push('error')
-    if (inputValue.value?.length || inputValue.value) classes.push('focused')
+    if (props.modelValue?.length || props.modelValue) classes.push('focused')
     if (props.readonly) classes.push('readonly')
     if (props.background !== 'default') classes.push(props.background)
 
     return classes
- })
+})
 
-const onInput = (): void => {
+const onInput = (event: Event): void => {
+    let value = (event.target as HTMLInputElement).value
     if (props.noDigital) {
-        inputValue.value = inputValue.value.replace(/\d/g, '')
+        value = value.replace(/\d/g, '')
     }
     if (props.digital) {
-        inputValue.value = String(inputValue.value.replace(/[^\d]/g, ''))
+        value = value.replace(/[^\d]/g, '')
     }
-    emits('update:value', inputValue.value)
+    emits('update:modelValue', value)
 }
+
 const setFocus = (value: boolean): void => {
     isFocused.value = value
 
     if (!value) emits('focusout')
 }
+
 const onScroll = (): void => {
     if (!textareaRef.value) return
 
@@ -162,9 +162,11 @@ const onScroll = (): void => {
     if (scrollTop >= 8) titleClasses.value = 'hidden'
     if (scrollTop < 8) titleClasses.value = ''
 }
+
 const onClear = (): void => {
-    emits('update:value', '')
+    emits('update:modelValue', '')
 }
+
 const onAutofocus = (): void => {
     nextTick(() => {
         if (!inputRef.value || !props.autofocus) return
@@ -172,10 +174,6 @@ const onAutofocus = (): void => {
         setFocus(true)
     })
 }
-
-watch(() => props.value, (newValue: string) => {
-    inputValue.value = newValue
-})
 
 defineExpose({ onAutofocus })
 </script>
