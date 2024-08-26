@@ -97,6 +97,7 @@ const validateResult = (file: File): void => {
 
 	image.src = URL.createObjectURL(file)
 	uploadedImage.value = image.src
+	emits('upload:image', image.src)
 }
 
 const handleFileUpload = (event: Event): void => {

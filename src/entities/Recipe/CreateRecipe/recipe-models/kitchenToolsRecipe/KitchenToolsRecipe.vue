@@ -48,7 +48,7 @@
 					</h2>
 					<VInput
 						ref="kitchenwareNameInput"
-						v-model:value="kitchenwareName"
+						v-model="kitchenwareName"
 						autofocus
 						no-digital
 						searchable
@@ -67,7 +67,7 @@
 						{{ t('forExampleBlender') }}
 					</div>
 					<VInput
-						v-model:value="kitchenwareQuantity"
+						v-model="kitchenwareQuantity"
 						class="mb-4"
 						digital
 						:title="t('ingredientPlaceholderQuantity')"
@@ -96,11 +96,9 @@ import { VInput, type InputListItem, InputList } from '@/shared/components/Input
 import { IconClose, IconPlus } from 'shared/components/Icon'
 import localization from './KitchenToolsRecipe.localization.json'
 import { useRecipeStore } from '../../../DetailedCardRecipe/stores/recipeStore'
-import { useRoute } from 'vue-router'
 
 const { t } = useTranslation(localization)
 const store = useRecipeStore()
-const route = useRoute()
 
 const showModal = ref(false)
 const kitchenwareName = ref<string>('')
@@ -132,11 +130,9 @@ const filteredList = computed((): InputListItem[] => {
 })
 
 onMounted(() => {
-	const recipeId = route.params.id as string
-	const currentRecipe = store.recipes.find(recipe => recipe.id === recipeId)
-	if (currentRecipe && currentRecipe.kitchenware) {
-		kitchenware.value = currentRecipe.kitchenware.map(item => ({
-			name: item,
+	if (store.currentRecipe && store.currentRecipe.kitchenware) {
+		kitchenware.value = store.currentRecipe.kitchenware.map(item => ({
+			name: item.name,
 			quantity: '1' // По умолчанию устанавливаем количество 1, так как в исходных данных нет информации о количестве
 		}))
 	}
@@ -154,7 +150,7 @@ const addKitchenware = () => {
 	if (kitchenwareName.value && kitchenwareQuantity.value) {
 		kitchenware.value.push({
 			name: kitchenwareName.value,
-			quantity: kitchenwareQuantity.value
+			quantity: `${kitchenwareQuantity.value}`
 		})
 		updateKitchenware()
 		closeModal()
@@ -174,10 +170,8 @@ const closeModal = () => {
 }
 
 const updateKitchenware = () => {
-	const recipeId = route.params.id as string
-	const currentRecipe = store.recipes.find(recipe => recipe.id === recipeId)
-	if (currentRecipe) {
-		currentRecipe.kitchenware = kitchenware.value.map(item => item.name)
+	if (store.currentRecipe) {
+		store.currentRecipe.kitchenware = kitchenware.value.map(item => item)
 	}
 }
 

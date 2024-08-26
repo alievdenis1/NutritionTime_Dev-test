@@ -1,7 +1,8 @@
 import { Component } from 'vue'
 
 export type AddPhotoEmits = {
-    'update:error': [value: boolean]
+    'update:error': [value: boolean],
+    'upload:image': [value: string]
 }
 
 export interface AddPhoto {

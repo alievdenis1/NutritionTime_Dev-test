@@ -44,6 +44,7 @@
 			</button>
 			<VModal
 				:show="showModal"
+				:placed-center="isModalCentered"
 				@close="closeModal"
 			>
 				<div
@@ -70,6 +71,8 @@
 							:placeholder="t('ingredientPlaceholderName')"
 							class="border rounded px-[12px] py-4 text-base w-full mb-4 h-[54px]"
 							:class="{ activeInput: activeInputName, filledInput: notEmptyIngredientName, 'pt-[26px]': notEmptyIngredientName }"
+							@focus.stop="setModalCentered"
+							@blur.stop="setModalBottom"
 							@input="handleIngredientNameInput"
 							@keydown.down="handleArrowDown"
 							@keydown.up="handleArrowUp"
@@ -109,6 +112,8 @@
 								'pt-[26px]': notEmptyIngredientQuantity,
 							}"
 							@input="filterNumericInput"
+							@focus.stop="setModalCentered"
+							@blur.stop="setModalBottom"
 						>
 					</div>
 					<TabsMain
@@ -174,6 +179,7 @@ const activeTab = ref<QuantityType>(QuantityType.WEIGHT)
 const ingredientNameInput = ref<HTMLInputElement | null>(null)
 const ingredientNameContainer = ref<HTMLElement | null>(null)
 const quantityLimitReached = ref(false)
+const isModalCentered = ref(false)
 
 const ingredientSuggestions = [
 	'Мука', 'Сахар', 'Соль', 'Яйца', 'Молоко', 'Масло', 'Картофель',
@@ -190,7 +196,7 @@ onMounted(() => {
 		ingredients.value = store.currentRecipe.ingredients.map(ingredient => ({
 			name: ingredient.name,
 			quantity: ingredient.amount?.split(' ')[0],
-			type: ingredient.amount?.includes('г.') ? QuantityType.WEIGHT : QuantityType.QUANTITY
+			type: ingredient.amount?.includes('г.') ? QuantityType.WEIGHT : QuantityType.QUANTITY,
 		}))
 	}
 })
@@ -282,6 +288,14 @@ const handleModalClick = (event: MouseEvent) => {
 		filteredSuggestions.value = []
 		activeSuggestionIndex.value = -1
 	}
+}
+
+const setModalCentered = () => {
+	isModalCentered.value = true
+}
+
+const setModalBottom = () => {
+	isModalCentered.value = false
 }
 
 const activeInputName = computed(() => tryToSave.value && !ingredientName.value)

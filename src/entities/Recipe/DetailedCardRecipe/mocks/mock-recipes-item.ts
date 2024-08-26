@@ -69,7 +69,7 @@ export const mockRecipe = ref<Recipe[]>([
             'Жиры на 100 г.': '34 г.',
             'Углеводы на 100 г.': '54 г.'
         },
-        kitchenware: ['Сковородка'],
+        kitchenware: [{ name: 'Сковородка', quantity: '1' }],
         tags: ['тег1', 'тег2', 'тег3'],
         comments: [
             {
@@ -145,7 +145,10 @@ export const mockRecipe = ref<Recipe[]>([
             'Жиры на 100 г.': '25 г.',
             'Углеводы на 100 г.': '40 г.'
         },
-        kitchenware: ['Кастрюля', 'Сковородка'],
+        kitchenware: [
+            { name:'Кастрюля', quantity: '1' },
+            { name: 'Сковородка', quantity: '1' }
+        ],
         tags: ['тег4', 'тег5', 'тег6'],
         comments: [
             {

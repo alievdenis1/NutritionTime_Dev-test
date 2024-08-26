@@ -45,7 +45,7 @@ export interface Recipe {
     cookingSteps: Array<{ description: string; image: string }>;
     recipeInfo: Record<string, string>;
     nutritionInfo: Record<string, string>;
-    kitchenware: string[];
+    kitchenware: Array<{ name: string; quantity: string }>;
     tags: string[];
     comments: Array<{
         author: string;
