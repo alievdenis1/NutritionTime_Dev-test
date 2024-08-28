@@ -75,7 +75,7 @@
 						>
 							<span class="text-sm text-slateGray">{{ item.name }}</span>
 							<span class="flex flex-grow text-sm font-medium text-darkGray dashed-gap">
-								{{ item.quantity }} шт.
+								{{ item.quantity }} {{ t('quantityUnits') }}
 							</span>
 						</div>
 					</div>

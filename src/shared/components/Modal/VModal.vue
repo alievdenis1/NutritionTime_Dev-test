@@ -13,7 +13,7 @@
 				<div
 					v-show="isVisible"
 					class="bg-white transition-all p-4 rounded-t-xl width-custom max-w-md relative z-50"
-					:class="{'rounded-b-xl translate-y-[-20%]': props.placedCenter}"
+					:class="{'rounded-b-xl translate-y-[-20%]': props.lifted}"
 					@click.stop
 				>
 					<button
@@ -37,7 +37,7 @@ import { ref, watch } from 'vue'
 const props = defineProps<{
 	show: boolean;
 	hideCloseIcon?: boolean
-	placedCenter?: boolean
+	lifted?: boolean
 }>()
 const emit = defineEmits(['close'])
 

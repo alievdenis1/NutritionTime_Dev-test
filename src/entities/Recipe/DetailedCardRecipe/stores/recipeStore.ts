@@ -4,18 +4,27 @@ import { useRoute } from 'vue-router'
 import { Recipe } from '../types/recipe'
 import { mockRecipe } from '../mocks/mock-recipes-item'
 
-const calculateTotalWeight = (ingredients: { name: string; amount: string; }[])=> {
-    const percents = 10
-    const ingredientsWeights = ingredients?.map(ingredient => {
-        if (ingredient.amount.includes('шт')) {
-            return 0
-        }
+const formatIngredientWeight = (ingredient: { name: string; amount: string; }) => {
+    const weight = ingredient.amount
 
-        const ingredientAmount = Number(ingredient.amount.replace(/[^+\d]/g, ''))
-        return ingredientAmount
+    if (weight.includes('шт')) {
+        return 0
+    }
+
+    return Number(weight.replace(/[^+\d]/g, ''))
+}
+
+const calculateTotalWeight = (ingredients: { name: string; amount: string; }[])=> {
+    let totalWeight = 0
+    const percents = 10
+
+    ingredients?.forEach(ingredient => {
+        const ingredientAmount = formatIngredientWeight(ingredient)
+
+        totalWeight += ingredientAmount
     })
 
-    return ingredientsWeights?.reduce((acc, weight) => acc += weight - weight * percents / 100, 0)
+    return totalWeight - totalWeight * percents / 100
 }
 
 export const useRecipeStore = defineStore('recipeStore', () => {
@@ -24,15 +33,14 @@ export const useRecipeStore = defineStore('recipeStore', () => {
 
     const currentRecipe = computed(() => {
         const recipeId = route.params.id as string
-        const currentRecipeInfo = recipes.value.find(recipe => {
-            if (recipe.id === recipeId) {
-                recipe.totalWeight = calculateTotalWeight(recipe?.ingredients)
+        const currentRecipeInfo = recipes.value.find(recipe => recipe.id === recipeId)
 
-                return recipe
-            }
-        })
+        if(currentRecipeInfo) {
+            currentRecipeInfo.totalWeight = calculateTotalWeight(currentRecipeInfo?.ingredients)
+        }
 
         return currentRecipeInfo
+
     })
 
     const setRecipeInfoField = (field: string, value: string) => {

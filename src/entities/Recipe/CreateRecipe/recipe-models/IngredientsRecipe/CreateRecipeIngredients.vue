@@ -44,7 +44,7 @@
 			</button>
 			<VModal
 				:show="showModal"
-				:placed-center="isModalCentered"
+				:lifted="isModalLifted"
 				@close="closeModal"
 			>
 				<div
@@ -179,7 +179,7 @@ const activeTab = ref<QuantityType>(QuantityType.WEIGHT)
 const ingredientNameInput = ref<HTMLInputElement | null>(null)
 const ingredientNameContainer = ref<HTMLElement | null>(null)
 const quantityLimitReached = ref(false)
-const isModalCentered = ref(false)
+const isModalLifted = ref(false)
 
 const ingredientSuggestions = [
 	'Мука', 'Сахар', 'Соль', 'Яйца', 'Молоко', 'Масло', 'Картофель',
@@ -196,7 +196,7 @@ onMounted(() => {
 		ingredients.value = store.currentRecipe.ingredients.map(ingredient => ({
 			name: ingredient.name,
 			quantity: ingredient.amount?.split(' ')[0],
-			type: ingredient.amount?.includes('г.') ? QuantityType.WEIGHT : QuantityType.QUANTITY,
+			type: ingredient.type === 'weight' ? QuantityType.WEIGHT : QuantityType.QUANTITY,
 		}))
 	}
 })
@@ -291,11 +291,11 @@ const handleModalClick = (event: MouseEvent) => {
 }
 
 const setModalCentered = () => {
-	isModalCentered.value = true
+	isModalLifted.value = true
 }
 
 const setModalBottom = () => {
-	isModalCentered.value = false
+	isModalLifted.value = false
 }
 
 const activeInputName = computed(() => tryToSave.value && !ingredientName.value)
@@ -307,7 +307,8 @@ watch(ingredients, () => {
 	if (store.currentRecipe) {
 		store.currentRecipe.ingredients = ingredients.value.map(ingredient => ({
 			name: ingredient.name,
-			amount: props.isExclusionMode ? t('excluded') : `${ingredient.quantity} ${ingredient.type === QuantityType.WEIGHT ? 'г.' : 'шт.'}`
+			amount: props.isExclusionMode ? t('excluded') : `${ingredient.quantity} ${ingredient.type === QuantityType.WEIGHT ? 'г.' : 'шт.'}`,
+			type: ingredient.type === 'weight' ? QuantityType.WEIGHT : QuantityType.QUANTITY
 		}))
 	}
 }, { deep: true })
