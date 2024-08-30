@@ -13,10 +13,11 @@
 						{{ t('caloriesPer100gTitle') }}
 					</span>
 					<VInput
-						v-model:value="calories"
+						v-model="calories"
 						class="mb-4"
 						background="gray"
 						:title="t('caloriesPlaceholder')"
+						readonly
 					/>
 				</div>
 			</div>
@@ -29,10 +30,11 @@
 						{{ t('proteinPer100gPlaceholder') }}
 					</span>
 					<VInput
-						v-model:value="protein"
+						v-model="protein"
 						class="mb-2"
 						background="gray"
 						:title="t('proteinPlaceholder')"
+						readonly
 					/>
 				</div>
 				<div class="mb-2 relative">
@@ -40,10 +42,11 @@
 						{{ t('fatPer100gPlaceholder') }}
 					</span>
 					<VInput
-						v-model:value="fat"
+						v-model="fat"
 						class="mb-2"
 						background="gray"
 						:title="t('fatPlaceholder')"
+						readonly
 					/>
 				</div>
 				<div class="relative">
@@ -51,9 +54,10 @@
 						{{ t('carbohydratesPer100gPlaceholder') }}
 					</span>
 					<VInput
-						v-model:value="carbohydrates"
+						v-model="carbohydrates"
 						background="gray"
 						:title="t('carbohydratesPlaceholder')"
+						readonly
 					/>
 				</div>
 			</div>

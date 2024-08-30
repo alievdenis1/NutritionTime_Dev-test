@@ -15,8 +15,8 @@
 				backgrounds="#F3F3F3"
 				:icon="IconPhoto"
 				:initial-image="values.image"
-				:on-image-uploaded="handleImageUpload"
 				:error-message="t('errorMessage')"
+				@upload:image="handleImageUpload"
 			/>
 			<p
 				v-if="!isUploadError"
@@ -214,6 +214,10 @@ onMounted(() => {
 const handleImageUpload = (imageUrl: string | null) => {
 	if (imageUrl !== null) {
 		values.image = imageUrl
+
+		if (store.currentRecipe) {
+			store.currentRecipe.image = imageUrl
+		}
 	} else {
 		values.image = ''
 	}

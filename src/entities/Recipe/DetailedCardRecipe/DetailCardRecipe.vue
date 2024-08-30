@@ -28,19 +28,19 @@
 					<button
 						v-for="(icon, index) in icons"
 						:key="index"
-						class="flex items-center justify-center rounded-full shadow-custom transition-colors duration-300"
+						class="flex items-center justify-center rounded-full shadow-custom transition-colors duration-300 gap-1"
 						:class="[buttonBackgroundClass, icon.class]"
 						@click="toggleIcon(index)"
 					>
 						<component
 							:is="icon.component"
 							:class="icon.iconClass"
-							:is-liked="icon.isActive"
+							:is-liked="Number(icon.text) > 0"
 							:active-color="icon.activeColor || '#319A6E'"
 						/>
 						<span
 							v-if="icon.text"
-							:class="{ 'text-green-500': icon.isActive }"
+							:class="['text-slateGray text-sm font-medium', { 'text-green-500': Number(icon.text) > 0 }]"
 						>{{ icon.text }}</span>
 					</button>
 				</div>
@@ -129,12 +129,12 @@
 					>
 						{{ recipe?.rating.toFixed(1) }}
 					</span>
-					{{ recipe?.reviewsCount }}
-					{{ t('reviewsCount') }}
+					<span class="text-nowrap">{{ recipe?.reviewsCount }} {{ t('reviewsCount') }}</span>
 				</div>
-				<div v-if="!!recipe?.comments?.length">
+				<div
+					v-if="!recipe?.comments?.length"
 					class="text-sm text-darkGray"
-					>
+				>
 					{{ t('noReviews') }}
 				</div>
 				<div class="w-max">
@@ -175,7 +175,7 @@
 						:alt="t('recipe.commentImage')"
 						class="w-full h-auto object-cover aspect-video rounded-lg"
 					>
-					<div class="flex items-center">
+					<div class="flex items-center gap-1">
 						<div v-if="recipe">
 							<IconHeart
 								:is-liked="likedStates[recipe.id] ?? false"
@@ -212,7 +212,7 @@
 							:alt="recipe?.author.name"
 							class="w-[20px] h-[20px]"
 						>
-						<div class="text-xs text-darkGray">
+						<div class="text-xs text-slateGray">
 							{{ recipe?.author.name }}
 						</div>
 					</div>
@@ -232,7 +232,7 @@
 							:alt="recipe?.nftOwner.name"
 							class="w-[20px] h-[20px]"
 						>
-						<div class="text-xs text-darkGray">
+						<div class="text-xs text-slateGray">
 							{{ recipe?.nftOwner.name }}
 						</div>
 					</div>
@@ -289,8 +289,8 @@
 								:key="star"
 							>
 								<button
-									class="w-[32px] h-[32px] rounded-full text-white text-sm font-bold flex items-center justify-center focus:outline-none"
-									:class="star <= rating ? 'bg-forestGreen' : 'bg-lightGray text-slateGray'"
+									class="w-[32px] h-[32px] rounded-full text-slateGray text-sm  font-bold flex items-center justify-center focus:outline-none"
+									:class="star <= rating ? 'bg-forestGreen text-white' : 'bg-lightGray text-slateGray'"
 									@click="setRating(star)"
 								>
 									{{ star }}
@@ -303,12 +303,13 @@
 					<textarea
 						v-model="review"
 						:placeholder="'Ваше мнение о рецепте'"
+						:maxlength="500"
 						class="border rounded px-2 py-4 text-base min-h-[122px] w-[100%] mt-[20px] mb-[12px]"
 					/>
 
 					<VAddPhoto
 						:key="addPhotoKey"
-						:icon-color="'#9F9FA0'"
+						:icon-color="'#1C1C1C'"
 						:width-image="54"
 						:height-image="54"
 						:title="'Прикрепить фото'"
@@ -427,11 +428,11 @@ const ratingText = computed(() => {
 		case 1:
 			return 'Плохой рецепт'
 		case 2:
-			return 'Неплохой рецепт'
+			return 'Посредственный рецепт'
 		case 3:
-			return 'Хороший рецепт'
+			return 'Средний рецепт'
 		case 4:
-			return 'Невероятный рецепт'
+			return 'Хороший рецепт'
 		case 5:
 			return 'Отличный рецепт'
 		default:
@@ -445,7 +446,7 @@ const handleImageUpload = (imageUrl: string | null) => {
 
 const submitReview = () => {
 	if (rating.value === 0 || review.value.trim() === '') {
-		// alert('Пожалуйста, поставьте оценку и напишите отзыв')
+		alert('Пожалуйста, поставьте оценку и напишите отзыв')
 		return
 	}
 

@@ -40,12 +40,12 @@ export interface Recipe {
     };
     rating: number;
     reviewsCount: number;
-    ingredients: Array<{ name: string; amount: string }>;
+    ingredients: Array<{ name: string, amount: string, type: 'weight' | 'quantity' }>;
     totalWeight: number;
     cookingSteps: Array<{ description: string; image: string }>;
     recipeInfo: Record<string, string>;
     nutritionInfo: Record<string, string>;
-    kitchenware: string[];
+    kitchenware: Array<{ name: string; quantity: string }>;
     tags: string[];
     comments: Array<{
         author: string;

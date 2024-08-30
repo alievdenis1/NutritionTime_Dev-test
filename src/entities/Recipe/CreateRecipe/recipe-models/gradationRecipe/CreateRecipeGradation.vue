@@ -83,10 +83,12 @@ const selectedDifficulty = computed(() => {
 
 const selectSpiciness = (level: number) => {
 	spiciness.value = level
+	store.setRecipeInfoField('Уровень остроты', String(level))
 }
 
 const selectDifficulty = (level: number) => {
 	difficulty.value = level
+	store.setRecipeInfoField('Уровень сложности', String(level))
 }
 
 const setSpicinessAndDifficulty = (recipeInfo: Record<string, string>) => {

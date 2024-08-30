@@ -5,38 +5,70 @@
 				<div class="flex flex-col gap-4">
 					<div class="relative">
 						<span
-							v-if="kitchenTime.length > 0"
-							class="absolute text-[12px] top-[6px] left-[12px] text-gray"
+							class="text-[12px] top-[6px] left-[12px] text-gray"
 						>
 							{{ t('kitchenTimePlaceholder') }}
 						</span>
-						<input
-							v-model="kitchenTime"
-							type="text"
-							:placeholder="t('kitchenTimePlaceholder')"
-							class="border rounded text-base w-full h-[54px]"
-							:class="{ 'padding-filled': kitchenTime.length > 0, 'padding-empty': kitchenTime.length === 0 }"
-							@input="formatInput('kitchen')"
-						>
+						<div class="flex gap-2 items-center">
+							<div class="flex items-center border p-2 rounded text-base h-[54px]">
+								<input
+									v-model="cookingHours"
+									type="number"
+									placeholder="00"
+									class="text-center max-w-8"
+									@change="setCurrentRecipeTime('cooking')"
+									@input="truncateCookingTime"
+								>
+								<span class="text-[#535353] text-xs">{{ t('hour') }}</span>
+							</div>
+							<span>:</span>
+							<div class="flex items-center border p-2 rounded text-base h-[54px]">
+								<input
+									v-model="cookingMinutes"
+									type="number"
+									placeholder="00"
+									class="text-center max-w-8"
+									@change="setCurrentRecipeTime('cooking')"
+									@input="truncateCookingTime"
+								>
+								<span class="text-[#535353] text-xs">{{ t('minute') }}</span>
+							</div>
+						</div>
 						<p class="text-xs text-gray mt-1">
 							{{ t('kitchenTimeDescription') }}
 						</p>
 					</div>
 					<div class="relative">
 						<span
-							v-if="cookingTime.length > 0"
-							class="absolute text-[12px] top-[6px] left-[12px] text-gray"
+							class="text-[12px] top-[6px] left-[12px] text-gray"
 						>
 							{{ t('cookingTimePlaceholder') }}
 						</span>
-						<input
-							v-model="cookingTime"
-							type="text"
-							:placeholder="t('cookingTimePlaceholder')"
-							class="border rounded text-base w-full h-[54px]"
-							:class="{ 'padding-filled': cookingTime.length > 0, 'padding-empty': cookingTime.length === 0 }"
-							@input="formatInput('cooking')"
-						>
+						<div class="flex gap-2 items-center">
+							<div class="flex items-center border p-2 rounded text-base h-[54px]">
+								<input
+									v-model="readyHours"
+									type="number"
+									placeholder="00"
+									class="text-center max-w-8"
+									@change="setCurrentRecipeTime('ready')"
+									@input="truncateReadyTime"
+								>
+								<span class="text-[#535353] text-xs">{{ t('hour') }}</span>
+							</div>
+							<span>:</span>
+							<div class="flex items-center border p-2 rounded text-base h-[54px]">
+								<input
+									v-model="readyMinutes"
+									type="number"
+									placeholder="00"
+									class="text-center max-w-8"
+									@change="setCurrentRecipeTime('ready')"
+									@input="truncateReadyTime"
+								>
+								<span class="text-[#535353] text-xs">{{ t('minute') }}</span>
+							</div>
+						</div>
 						<p class="text-xs text-gray mt-1">
 							{{ t('cookingTimeDescription') }}
 						</p>
@@ -59,40 +91,53 @@ const { t } = useTranslation(localization)
 const store = useRecipeStore()
 const route = useRoute()
 
-const kitchenTime = ref<string>('00 ч : 00 мин')
-const cookingTime = ref<string>('00 ч : 00 мин')
+const cookingHours = ref<number>(0)
+const cookingMinutes = ref<number>(0)
 
-const formatInput = (type: 'kitchen' | 'cooking') => {
-	const input = type === 'kitchen' ? kitchenTime : cookingTime
-	let value = input.value.replace(/[^0-9]/g, '')
+const readyHours = ref<number>(0)
+const readyMinutes = ref<number>(0)
 
-	// Удаляем ведущие нули
-	value = value.replace(/^0+/, '')
-
-	// Если строка пустая, устанавливаем значение "0"
-	if (value === '') {
-		value = '0'
-	}
-
-	// Ограничиваем ввод до 4 цифр
-	if (value.length > 4) {
-		value = value.slice(0, 4)
-	}
-
-	const minutes = parseInt(value)
-	const hours = Math.floor(minutes / 60)
-	const remainingMinutes = minutes % 60
-
-	input.value = `${String(hours).padStart(2, '0')} ${t('hour')} : ${String(remainingMinutes).padStart(2, '0')} ${t('minute')}`
-
-	// Обновляем значение в store
+const setCurrentRecipeTime = (type: 'cooking' | 'ready') => {
 	if (store.currentRecipe) {
-		if (type === 'kitchen') {
-			store.currentRecipe.recipeInfo['Время на кухне'] = minutes.toString()
+		if (type === 'cooking') {
+			const time = formatIntoMinutes(cookingHours.value, cookingMinutes.value)
+
+			store.currentRecipe.recipeInfo['Время на кухне'] = time
 		} else {
-			store.currentRecipe.recipeInfo['Будет готово через'] = minutes.toString()
+			const time = formatIntoMinutes(readyHours.value, readyMinutes.value)
+
+			store.currentRecipe.recipeInfo['Будет готово через'] = time
 		}
 	}
+}
+
+const formatIntoMinutes = (hours: number, minutes: number) => {
+	return `${String(hours * 60 + minutes)} ${t('minutesFull')}`
+}
+
+const truncateCookingTime = (event: Event) => {
+	const target = (<HTMLInputElement>event.target)
+
+	if(target?.value === '000') {
+		target.value = '0'
+	}
+	cookingHours.value = truncateTime(cookingHours.value)
+	cookingMinutes.value = truncateTime(cookingMinutes.value)
+}
+
+const truncateReadyTime = (event: Event) => {
+	const target = (<HTMLInputElement>event.target)
+
+	if(target?.value === '000') {
+		target.value = '0'
+	}
+
+	readyHours.value = truncateTime(readyHours.value)
+	readyMinutes.value = truncateTime(readyMinutes.value)
+}
+
+const truncateTime = (value: number) => {
+	return Number(String(value).substring(0, 2))
 }
 
 const setKitchenAndCookingTime = (recipeInfo: Record<string, string>) => {
@@ -101,13 +146,18 @@ const setKitchenAndCookingTime = (recipeInfo: Record<string, string>) => {
 
 	const formatTimeValue = (value: string) => {
 		const minutes = parseInt(value)
-		const hours = Math.floor(minutes / 60)
-		const remainingMinutes = minutes % 60
-		return `${String(hours).padStart(2, '0')} ${t('hour')} : ${String(remainingMinutes).padStart(2, '0')} ${t('minute')}`
+
+		return {
+			hours: Math.floor(minutes / 60),
+			minutes: minutes % 60,
+		}
 	}
 
-	kitchenTime.value = formatTimeValue(kitchenTimeValue)
-	cookingTime.value = formatTimeValue(cookingTimeValue)
+	cookingHours.value = formatTimeValue(kitchenTimeValue).hours
+	cookingMinutes.value = formatTimeValue(kitchenTimeValue).minutes
+
+	readyHours.value = formatTimeValue(cookingTimeValue).hours
+	readyMinutes.value = formatTimeValue(cookingTimeValue).minutes
 }
 
 onMounted(() => {
@@ -132,10 +182,21 @@ watch(() => store.currentRecipe, (newRecipe) => {
 }
 
 .padding-filled {
-	padding: 26px 0 10px 12px;
+	padding: 26px 12px 10px;
 }
 
 .padding-empty {
 	padding: 16px 8px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.kitchen-hours::after {
+	content: ':';
+	position: absolute;
 }
 </style>

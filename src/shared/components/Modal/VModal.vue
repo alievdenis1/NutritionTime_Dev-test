@@ -12,7 +12,8 @@
 			<transition name="modal">
 				<div
 					v-show="isVisible"
-					class="bg-white p-4 rounded-t-xl width-custom max-w-md relative z-50"
+					class="bg-white transition-all p-4 rounded-t-xl width-custom max-w-md relative z-50"
+					:class="{'rounded-b-xl translate-y-[-20%]': props.lifted}"
 					@click.stop
 				>
 					<button
@@ -33,7 +34,11 @@
 import { IconClose } from 'shared/components/Icon'
 
 import { ref, watch } from 'vue'
-const props = defineProps<{ show: boolean; hideCloseIcon?: boolean }>()
+const props = defineProps<{
+	show: boolean;
+	hideCloseIcon?: boolean
+	lifted?: boolean
+}>()
 const emit = defineEmits(['close'])
 
 const isVisible = ref(props.show)

@@ -44,7 +44,7 @@
 							class="flex justify-between"
 						>
 							<span class="text-sm text-slateGray">{{ t(`${key}`) }}</span>
-							<span class="text-sm font-medium text-darkGray">{{ value }}</span>
+							<span class="flex flex-grow text-sm font-medium text-darkGray dashed-gap">{{ value }}</span>
 						</div>
 					</div>
 
@@ -59,7 +59,7 @@
 							class="flex justify-between"
 						>
 							<span class="text-sm text-slateGray">{{ t(`${key}`) }}</span>
-							<span class="text-sm font-medium text-darkGray">{{ value }}</span>
+							<span class="flex flex-grow text-sm font-medium text-darkGray dashed-gap">{{ value }}</span>
 						</div>
 					</div>
 
@@ -70,11 +70,13 @@
 					<div class="space-y-2">
 						<div
 							v-for="item in kitchenware"
-							:key="item"
+							:key="`Kitchenware${ item.name+ item.quantity }`"
 							class="flex justify-between"
 						>
-							<span class="text-sm text-slateGray">{{ item }}</span>
-							<span class="text-sm font-medium text-darkGray">1 шт.</span>
+							<span class="text-sm text-slateGray">{{ item.name }}</span>
+							<span class="flex flex-grow text-sm font-medium text-darkGray dashed-gap">
+								{{ item.quantity }} {{ t('quantityUnits') }}
+							</span>
 						</div>
 					</div>
 
@@ -102,12 +104,13 @@ import { TabsMain, TabsContent, TabsList, TabsTrigger } from '@/shared/component
 
 import Localization from './RecipeDetailsTabs.localization.json'
 import { useTranslation } from 'shared/lib/i18n'
+
 const { t } = useTranslation(Localization)
 
 interface RecipeInfoProps {
 	recipeInfo: Record<string, string>;
 	nutritionInfo: Record<string, string>;
-	kitchenware: string[];
+	kitchenware: Array<{ name: string; quantity: string }>;
 	tags: string[];
 	cookingSteps: {
 		description: string;
@@ -117,3 +120,12 @@ interface RecipeInfoProps {
 
 defineProps<RecipeInfoProps>()
 </script>
+
+<style>
+.dashed-gap::before {
+    content: '';
+    border-bottom: 1px dashed rgba(28, 28, 28, 0.05);
+    flex-grow: 1;
+    margin: 0 5px;
+   }
+</style>
