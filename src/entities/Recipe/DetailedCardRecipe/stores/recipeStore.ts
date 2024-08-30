@@ -4,17 +4,17 @@ import { useRoute } from 'vue-router'
 import { Recipe } from '../types/recipe'
 import { mockRecipe } from '../mocks/mock-recipes-item'
 
-const formatIngredientWeight = (ingredient: { name: string; amount: string; }) => {
+const formatIngredientWeight = (ingredient: { name: string; amount: string; type: string }) => {
     const weight = ingredient.amount
 
-    if (weight.includes('шт')) {
+    if (ingredient.type === 'quantity') {
         return 0
     }
 
     return Number(weight.replace(/[^+\d]/g, ''))
 }
 
-const calculateTotalWeight = (ingredients: { name: string; amount: string; }[])=> {
+const calculateTotalWeight = (ingredients: { name: string; amount: string; type: string }[])=> {
     let totalWeight = 0
     const percents = 10
 

@@ -307,7 +307,7 @@ watch(ingredients, () => {
 	if (store.currentRecipe) {
 		store.currentRecipe.ingredients = ingredients.value.map(ingredient => ({
 			name: ingredient.name,
-			amount: props.isExclusionMode ? t('excluded') : `${ingredient.quantity} ${ingredient.type === QuantityType.WEIGHT ? 'г.' : 'шт.'}`,
+			amount: props.isExclusionMode ? t('excluded') : `${ingredient.quantity} ${ingredient.type === QuantityType.WEIGHT ? t('unitGrams') : t('unitPieces')}`,
 			type: ingredient.type === 'weight' ? QuantityType.WEIGHT : QuantityType.QUANTITY
 		}))
 	}

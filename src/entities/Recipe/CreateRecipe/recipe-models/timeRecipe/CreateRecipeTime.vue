@@ -115,17 +115,21 @@ const formatIntoMinutes = (hours: number, minutes: number) => {
 	return `${String(hours * 60 + minutes)} ${t('minutesFull')}`
 }
 
-const truncateCookingTime = (event: InputEvent) => {
-	if(event?.target?.value === '000') {
-		event.target.value = 0
+const truncateCookingTime = (event: Event) => {
+	const target = (<HTMLInputElement>event.target)
+
+	if(target?.value === '000') {
+		target.value = '0'
 	}
 	cookingHours.value = truncateTime(cookingHours.value)
 	cookingMinutes.value = truncateTime(cookingMinutes.value)
 }
 
-const truncateReadyTime = (event: InputEvent) => {
-	if(event?.target?.value === '000') {
-		event.target.value = 0
+const truncateReadyTime = (event: Event) => {
+	const target = (<HTMLInputElement>event.target)
+
+	if(target?.value === '000') {
+		target.value = '0'
 	}
 
 	readyHours.value = truncateTime(readyHours.value)
