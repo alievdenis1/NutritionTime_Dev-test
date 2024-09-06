@@ -5,6 +5,7 @@ interface Author {
 
 export interface RecipesItem {
 	id: number;
+	collectionId: number;
 	image: string;
 	title: string;
 	rating: number;

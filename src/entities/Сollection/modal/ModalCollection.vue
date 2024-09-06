@@ -1,5 +1,6 @@
 <template>
 	<VModal
+		:lifted="isModalLifted"
 		:show="store.isModalOpen"
 		@close="store.closeModal"
 	>
@@ -33,8 +34,11 @@
 					:error-message="errorMessage"
 					:autofocus="true"
 					@update:value="validateInput"
+					@focus="onChangeModalPosition"
+					@blur="onChangeModalPosition"
 				/>
 				<VButton
+					:disabled="!isInputValueChanged"
 					:color="ButtonColors.Green"
 					@click="handleSubmit"
 				>
@@ -61,6 +65,8 @@ const { t } = useTranslation(localization)
 const inputTitle = ref('Название коллекции')
 const inputError = ref(false)
 const errorMessage = ref('')
+const isModalLifted = ref(false)
+const isInputValueChanged = ref(false)
 
 const validateInput = (value: string) => {
 	if (value.trim() === '') {
@@ -79,10 +85,22 @@ const handleSubmit = () => {
 	}
 }
 
+const onChangeModalPosition =() => {
+	isModalLifted.value = !isModalLifted.value
+}
+
 watch(() => store.isModalOpen, (isOpen) => {
 	if (isOpen) {
 		inputError.value = false
 		errorMessage.value = ''
+	}
+})
+
+watch(() => store.inputValue, (newVal, oldVal) => {
+	if (oldVal !== '' && newVal !== oldVal) {
+		isInputValueChanged.value = true
+	} else {
+		isInputValueChanged.value = false
 	}
 })
 </script>

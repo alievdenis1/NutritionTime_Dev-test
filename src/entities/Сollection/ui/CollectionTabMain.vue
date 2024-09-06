@@ -13,13 +13,14 @@
 		</TabsList>
 		<TabsContent value="collections">
 			<VDragAndDrop
-				:items="dragAndDropItems"
+				:items="store.dragAndDropItems"
 				class="mt-[16px]"
 				@edit="onEdit"
 				@delete="onDelete"
 				@adding="onAdding"
+				@change="onChangeCollection"
 			/>
-			<RecipesList :recipes-data="mockRecipes" />
+			<RecipesList :recipes-data="recipesList" />
 			<VContentBlock
 				v-if="mockRecipes.length === 0"
 				:image="addPrefix('/image/start-screen-image.webp')"
@@ -44,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import RecipesList from '../../Recipe/RecipesList/RecipesList.vue'
 import { VContentBlock } from 'shared/components/ContentBlock'
 import { mockRecipes, addPrefix } from '../mocks/mock-recipes'
@@ -59,7 +60,7 @@ import ModalCollection from '../../Сollection/modal/ModalCollection.vue'
 
 const store = useModalStore()
 const { t } = useTranslation(Localization)
-const dragAndDropItems = ref(store.dragAndDropItems)
+const recipesList = ref(mockRecipes)
 
 const onEdit = (tab: DragTypes) => {
 	store.collectionId = tab.id
@@ -82,9 +83,16 @@ const onDelete = async (tab: DragTypes) => {
 }
 
 const onAdding = () => {
-	console.log(store.collectionId)
 	store.openModal('create')
 }
+
+const onChangeCollection = (id:number) => {
+	recipesList.value = mockRecipes.filter(recipe => recipe.collectionId === id)
+}
+
+onMounted(() => {
+	onChangeCollection(1)
+})
 </script>
 
 <style lang="scss" scoped></style>

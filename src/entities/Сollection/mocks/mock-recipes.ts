@@ -8,6 +8,7 @@ export const addPrefix = (url: string) => {
 export const mockRecipes: RecipesList = [
     {
         id: 1,
+        collectionId: 1,
         image: addPrefix('/image/recipes1.png'),
         title: 'Вкуснейший домашний бургер',
         rating: 5.0, // Должен быть числом, если интерфейс указывает на число
@@ -25,6 +26,7 @@ export const mockRecipes: RecipesList = [
     },
     {
         id: 2,
+        collectionId: 1,
         image: addPrefix('/image/recipes1.png'),
         title: 'Вкуснейший домашний бургер',
         rating: 5.0,
@@ -42,6 +44,7 @@ export const mockRecipes: RecipesList = [
     },
     {
         id: 3,
+        collectionId: 1,
         image: addPrefix('/image/recipes1.png'),
         title: 'Вкуснейший домашний бургер',
         rating: 5.0,
@@ -59,6 +62,7 @@ export const mockRecipes: RecipesList = [
     },
     {
         id: 4,
+        collectionId: 1,
         image: addPrefix('/image/recipes1.png'),
         title: 'Вкуснейший домашний бургер',
         rating: 5.0,

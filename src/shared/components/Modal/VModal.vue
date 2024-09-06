@@ -13,7 +13,8 @@
 				<div
 					v-show="isVisible"
 					class="bg-white transition-all p-4 rounded-t-xl width-custom max-w-md relative z-50"
-					:class="{'rounded-b-xl translate-y-[-20%]': props.lifted}"
+					:class="{'rounded-b-xl': props.lifted}"
+					:style="{ transform: `translateY(-${liftedHeight}px)`}"
 					@click.stop
 				>
 					<button
@@ -42,9 +43,16 @@ const props = defineProps<{
 const emit = defineEmits(['close'])
 
 const isVisible = ref(props.show)
+const liftedHeight = ref(0)
 
 watch(() => props.show, (newVal) => {
 	isVisible.value = newVal
+})
+
+watch(() => props.lifted, () => {
+	if (window.visualViewport) {
+		liftedHeight.value = window.innerHeight - window.visualViewport.height
+	}
 })
 
 const closeModal = () => {

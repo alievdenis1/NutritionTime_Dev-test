@@ -9,4 +9,5 @@ export type VDragAndDropEmits = {
     edit: [tab: DragTypes];
     delete: [tab: DragTypes];
     adding: [];
+    change: [id: number];
 }

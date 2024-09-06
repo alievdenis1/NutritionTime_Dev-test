@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs } from 'vue'
+import { ref, toRefs, watch } from 'vue'
 import { DragTypes, type VDragAndDropEmits } from './types'
 import { IconPlus, IconKebab, IconBin, IconMove, IconEdit } from 'shared/components/Icon'
 import {
@@ -150,6 +150,8 @@ const onDrop = (event: DragEvent, tab: DragTypes) => {
 
 const onTabClick = (tab: DragTypes) => {
   selectedTab.value = tab
+  onChangeCollection(tab.id)
+
   if (draggableTabId.value !== tab.id) {
     draggableTabId.value = null
     draggedActive.value = false
@@ -217,6 +219,15 @@ const deleteCollection = (tab: DragTypes) => {
 const addingCollection = () => {
   emits('adding')
 }
+
+const onChangeCollection = (id:number) => {
+  emits('change', id)
+}
+
+watch(items, () => {
+	selectedTab.value = items.value[items.value.length - 1]
+  onChangeCollection(selectedTab.value.id)
+}, { deep: true })
 </script>
 
 <style lang="scss" scoped>
