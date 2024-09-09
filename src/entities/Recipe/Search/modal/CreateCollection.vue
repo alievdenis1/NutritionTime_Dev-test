@@ -1,6 +1,7 @@
 <template>
 	<!-- Первая модалка -->
 	<VModal
+		:lifted="isModalLifted"
 		:show="store.modalIsActive"
 		@close="store.toggleModalClose"
 	>
@@ -97,23 +98,14 @@
 				</button>
 			</div>
 
-			<div class="mb-[20px] mt-[20px] relative">
-				<div class="relative">
-					<span
-						v-if="selectedCollection"
-						class="absolute text-[12px] top-[6px] left-[12px] text-gray"
-					>
-						{{ t('nameCollection') }}
-					</span>
-					<input
-						v-model="newSelectedCollection"
-						type="text"
-						:placeholder="t('selectCollection')"
-						class="border rounded text-base w-full pt-[26px] pl-[12px] pb-[10px] cursor-pointer"
-						:class="{ 'padding-filled': selectedCollection, 'padding-empty': !selectedCollection }"
-					>
-				</div>
-			</div>
+			<VInput
+				v-model="newSelectedCollection"
+				type="text"
+				:title="t('nameCollection')"
+				:style="{ color: '#535353' }"
+				@focus="setModalLifted(true)"
+				@blur="setModalLifted(false)"
+			/>
 			<VButton
 				:color="ButtonColors.Green"
 				class="mt-[24px]"
@@ -131,6 +123,7 @@ import { VModal } from 'shared/components/Modal'
 import { IconClose, IconArrow, IconArrowRight } from 'shared/components/Icon'
 import { useSearchStore } from '../store/search-store'
 import { useTranslation } from 'shared/lib/i18n'
+import { VInput } from 'shared/components/Input'
 import Localization from './CreateCollection.localization.json'
 import { VButton, ButtonColors } from 'shared/components/Button'
 const store = useSearchStore()
@@ -142,6 +135,8 @@ const collectionOptions = ref([
 	{ label: 'Вкусняшки на завтра', value: 'Вкусняшки на завтра' },
 	{ label: 'Ещё одна коллекция', value: 'Ещё одна коллекция' },
 ])
+
+const isModalLifted = ref(false)
 
 const selectedCollection = computed(() => {
 	if (showSelectedCollection.value) {
@@ -177,6 +172,10 @@ const backToFirstModal = () => {
 
 	store.toggleSecondModalClose() // Закрываем вторую модалку
 	store.toggleModalOpen() // Открываем первую модалку
+}
+
+const setModalLifted= (isLifted: boolean) => {
+	isModalLifted.value = isLifted
 }
 </script>
 

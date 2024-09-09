@@ -71,8 +71,8 @@
 							:placeholder="t('ingredientPlaceholderName')"
 							class="border rounded px-[12px] py-4 text-base w-full mb-4 h-[54px]"
 							:class="{ activeInput: activeInputName, filledInput: notEmptyIngredientName, 'pt-[26px]': notEmptyIngredientName }"
-							@focus.stop="setModalCentered"
-							@blur.stop="setModalBottom"
+							@focus.stop="setModalLifted(true)"
+							@blur.stop="setModalLifted(false)"
 							@input="handleIngredientNameInput"
 							@keydown.down="handleArrowDown"
 							@keydown.up="handleArrowUp"
@@ -112,8 +112,8 @@
 								'pt-[26px]': notEmptyIngredientQuantity,
 							}"
 							@input="filterNumericInput"
-							@focus.stop="setModalCentered"
-							@blur.stop="setModalBottom"
+							@focus.stop="setModalLifted(true)"
+							@blur.stop="setModalLifted(false)"
 						>
 					</div>
 					<TabsMain
@@ -290,12 +290,8 @@ const handleModalClick = (event: MouseEvent) => {
 	}
 }
 
-const setModalCentered = () => {
-	isModalLifted.value = true
-}
-
-const setModalBottom = () => {
-	isModalLifted.value = false
+const setModalLifted= (isLifted: boolean) => {
+	isModalLifted.value = isLifted
 }
 
 const activeInputName = computed(() => tryToSave.value && !ingredientName.value)

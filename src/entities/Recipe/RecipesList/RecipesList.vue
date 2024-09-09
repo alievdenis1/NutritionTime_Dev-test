@@ -87,6 +87,7 @@
 				</div>
 			</div>
 		</div>
+		<CreateCollection />
 	</div>
 </template>
 
@@ -95,6 +96,10 @@ import { ref } from 'vue'
 import { IconComment, IconFavorites, IconFire, IconHeart, IconTime } from 'shared/components/Icon'
 import { RecipesItem } from './type'
 import { useRouter } from 'vue-router'
+import { useSearchStore } from '../Search/store/search-store'
+import CreateCollection from '../Search/modal/CreateCollection.vue'
+
+const store = useSearchStore()
 const router = useRouter()
 
 interface Props {
@@ -147,6 +152,7 @@ const toggleFavorite = async (recipeId: number) => {
 	try {
 		// Здесь должна быть логика для отправки запроса на сервер
 		favoritesStates.value[recipeId] = !favoritesStates.value[recipeId]
+		store.toggleModalOpen()
 		// Дополнительная логика, если необходимо
 	} catch (error) {
 		console.error('Error toggling favorite:', error)

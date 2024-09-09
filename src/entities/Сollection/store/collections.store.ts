@@ -7,6 +7,7 @@ export const useModalStore = defineStore('modal', () => {
   const titleModal = ref<string>('')
   const descModal = ref<string>('')
   const inputValue = ref<string>('')
+  const initialInputValue = ref<string>('')
   const collectionId = ref<number | null>(null)
 
   const dragAndDropItems = ref<DragTypes[]>([
@@ -23,11 +24,13 @@ export const useModalStore = defineStore('modal', () => {
       titleModal.value = 'Создание коллекции'
       descModal.value = 'В коллекцию можно добавлять рецепты с помощью иконки'
       inputValue.value = ''
+      initialInputValue.value = ''
       collectionId.value = null
     } else if (mode === 'edit' && currentCollection.value) {
       titleModal.value = 'Редактирование коллекции'
       descModal.value = ''
       inputValue.value = currentCollection.value.label
+      initialInputValue.value = currentCollection.value.label
     }
   }
 
@@ -69,6 +72,7 @@ export const useModalStore = defineStore('modal', () => {
     titleModal,
     descModal,
     inputValue,
+    initialInputValue,
     dragAndDropItems,
     saveCollection,
     deleteCollection,

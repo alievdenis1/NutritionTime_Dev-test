@@ -30,7 +30,7 @@
 						/>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
-						<DropdownMenuItem @click="editCollection(tab)">
+						<DropdownMenuItem @click="editTab(tab)">
 							<IconEdit class="icon" />
 							{{ t('edit') }}
 						</DropdownMenuItem>
@@ -42,7 +42,7 @@
 						<DropdownMenuSeparator />
 						<DropdownMenuItem
 							class="text-[#F04F4F]"
-							@click="deleteCollection(tab)"
+							@click="deleteTab(tab)"
 						>
 							<IconBin class="icon" />
 							{{ t('delete') }}
@@ -61,7 +61,7 @@
 		</div>
 		<button
 			class="cursor-pointer px-[13px] py-[13px] rounded-[100px] bg-lightGray ml-[8px]"
-			@click="addingCollection"
+			@click="addTab"
 		>
 			<IconPlus :icon-color="'#319A6E'" />
 		</button>
@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs } from 'vue'
+import { ref, toRefs, watch } from 'vue'
 import { DragTypes, type VDragAndDropEmits } from './types'
 import { IconPlus, IconKebab, IconBin, IconMove, IconEdit } from 'shared/components/Icon'
 import {
@@ -150,6 +150,8 @@ const onDrop = (event: DragEvent, tab: DragTypes) => {
 
 const onTabClick = (tab: DragTypes) => {
   selectedTab.value = tab
+  onChangeTab(tab.id)
+
   if (draggableTabId.value !== tab.id) {
     draggableTabId.value = null
     draggedActive.value = false
@@ -206,17 +208,26 @@ const onTouchEnd = (event: TouchEvent) => {
   draggedTab.value = null
 }
 
-const editCollection = (tab: DragTypes) => {
+const editTab = (tab: DragTypes) => {
   emits('edit', tab)
 }
 
-const deleteCollection = (tab: DragTypes) => {
+const deleteTab = (tab: DragTypes) => {
   emits('delete', tab)
 }
 
-const addingCollection = () => {
+const addTab = () => {
   emits('adding')
 }
+
+const onChangeTab = (id:number) => {
+  emits('change', id)
+}
+
+watch(items, () => {
+	selectedTab.value = items.value[items.value.length - 1]
+  onChangeTab(selectedTab.value.id)
+}, { deep: true })
 </script>
 
 <style lang="scss" scoped>

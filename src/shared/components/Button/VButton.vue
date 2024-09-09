@@ -1,7 +1,7 @@
 <template>
 	<button
 		class="v-button"
-		:class="[colorClass, borderRadiusClass]"
+		:class="[colorClass, borderRadiusClass, disabledClass]"
 		:size="size"
 		:disabled="props.disabled"
 		@click="onButtonClicked"
@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<{
     disabled: false
 })
 
-const { color, size, borderRadius } = toRefs(props)
+const { color, size, borderRadius, disabled } = toRefs(props)
 
 const colorClass = computed<string>(() => {
 	if (color.value === ButtonColors.Green) return 'v-button--green'
@@ -43,6 +43,10 @@ const borderRadiusClass = computed<string>(() => {
 	if (borderRadius.value === ButtonRadius.Default) return 'v-button--default'
 	if (borderRadius.value === ButtonRadius.Rounding) return 'v-button--rounding'
 	return ''
+})
+
+const disabledClass = computed<string>(() => {
+	return disabled.value ? 'v-button--disabled' : ''
 })
 
 const onButtonClicked = () => {
@@ -72,5 +76,9 @@ const onButtonClicked = () => {
     &--rounding {
         @apply rounded-[40px];
     }
+
+	&--disabled {
+		@apply opacity-10;
+	}
 }
 </style>
