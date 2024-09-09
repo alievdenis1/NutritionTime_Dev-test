@@ -30,7 +30,7 @@
 						/>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
-						<DropdownMenuItem @click="editCollection(tab)">
+						<DropdownMenuItem @click="editTab(tab)">
 							<IconEdit class="icon" />
 							{{ t('edit') }}
 						</DropdownMenuItem>
@@ -42,7 +42,7 @@
 						<DropdownMenuSeparator />
 						<DropdownMenuItem
 							class="text-[#F04F4F]"
-							@click="deleteCollection(tab)"
+							@click="deleteTab(tab)"
 						>
 							<IconBin class="icon" />
 							{{ t('delete') }}
@@ -61,7 +61,7 @@
 		</div>
 		<button
 			class="cursor-pointer px-[13px] py-[13px] rounded-[100px] bg-lightGray ml-[8px]"
-			@click="addingCollection"
+			@click="addTab"
 		>
 			<IconPlus :icon-color="'#319A6E'" />
 		</button>
@@ -150,7 +150,7 @@ const onDrop = (event: DragEvent, tab: DragTypes) => {
 
 const onTabClick = (tab: DragTypes) => {
   selectedTab.value = tab
-  onChangeCollection(tab.id)
+  onChangeTab(tab.id)
 
   if (draggableTabId.value !== tab.id) {
     draggableTabId.value = null
@@ -208,25 +208,25 @@ const onTouchEnd = (event: TouchEvent) => {
   draggedTab.value = null
 }
 
-const editCollection = (tab: DragTypes) => {
+const editTab = (tab: DragTypes) => {
   emits('edit', tab)
 }
 
-const deleteCollection = (tab: DragTypes) => {
+const deleteTab = (tab: DragTypes) => {
   emits('delete', tab)
 }
 
-const addingCollection = () => {
+const addTab = () => {
   emits('adding')
 }
 
-const onChangeCollection = (id:number) => {
+const onChangeTab = (id:number) => {
   emits('change', id)
 }
 
 watch(items, () => {
 	selectedTab.value = items.value[items.value.length - 1]
-  onChangeCollection(selectedTab.value.id)
+  onChangeTab(selectedTab.value.id)
 }, { deep: true })
 </script>
 

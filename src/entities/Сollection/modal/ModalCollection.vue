@@ -34,8 +34,8 @@
 					:error-message="errorMessage"
 					:autofocus="true"
 					@update:value="validateInput"
-					@focus="onChangeModalPosition"
-					@blur="onChangeModalPosition"
+					@focus="setModalLifted(true)"
+					@blur="setModalLifted(false)"
 				/>
 				<VButton
 					:disabled="!isInputValueChanged"
@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { VModal } from 'shared/components/Modal'
 import { IconClose, IconFavorites } from 'shared/components/Icon'
 import { useModalStore } from '../store/collections.store'
@@ -67,6 +67,8 @@ const inputError = ref(false)
 const errorMessage = ref('')
 const isModalLifted = ref(false)
 const isInputValueChanged = ref(false)
+
+const initialInputValue = ref(store.inputValue)
 
 const validateInput = (value: string) => {
 	if (value.trim() === '') {
@@ -85,9 +87,13 @@ const handleSubmit = () => {
 	}
 }
 
-const onChangeModalPosition =() => {
-	isModalLifted.value = !isModalLifted.value
+const setModalLifted = (isLifted: boolean) => {
+	isModalLifted.value = isLifted
 }
+
+onMounted(() => {
+	initialInputValue.value = store.inputValue
+})
 
 watch(() => store.isModalOpen, (isOpen) => {
 	if (isOpen) {
@@ -96,11 +102,7 @@ watch(() => store.isModalOpen, (isOpen) => {
 	}
 })
 
-watch(() => store.inputValue, (newVal, oldVal) => {
-	if (oldVal !== '' && newVal !== oldVal) {
-		isInputValueChanged.value = true
-	} else {
-		isInputValueChanged.value = false
-	}
+watch(() => store.inputValue, (newVal) => {
+	isInputValueChanged.value = newVal !== store.initialInputValue && newVal !== ''
 })
 </script>

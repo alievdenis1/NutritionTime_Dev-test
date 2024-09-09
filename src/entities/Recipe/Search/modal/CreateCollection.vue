@@ -103,8 +103,8 @@
 				type="text"
 				:title="t('nameCollection')"
 				:style="{ color: '#535353' }"
-				@focus="onChangeModalPosition"
-				@blur="onChangeModalPosition"
+				@focus="setModalLifted(true)"
+				@blur="setModalLifted(false)"
 			/>
 			<VButton
 				:color="ButtonColors.Green"
@@ -174,8 +174,8 @@ const backToFirstModal = () => {
 	store.toggleModalOpen() // Открываем первую модалку
 }
 
-const onChangeModalPosition =() => {
-	isModalLifted.value = !isModalLifted.value
+const setModalLifted= (isLifted: boolean) => {
+	isModalLifted.value = isLifted
 }
 </script>
 

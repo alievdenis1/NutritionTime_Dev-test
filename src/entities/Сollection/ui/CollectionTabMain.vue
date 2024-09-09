@@ -64,13 +64,11 @@ const recipesList = ref(mockRecipes)
 
 const onEdit = (tab: DragTypes) => {
 	store.collectionId = tab.id
-	console.log(store.collectionId)
 	store.openModal('edit')
 }
 
 const onDelete = async (tab: DragTypes) => {
 	store.collectionId = tab.id
-	console.log(store.collectionId)
 	const isConfirmed = await openConfirm({
 		title: t('confirmTitle'),
 		description: t('confirmDescription'),
