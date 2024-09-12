@@ -4,10 +4,12 @@
 			<input
 				v-model="searchQuery"
 				type="text"
-				:placeholder="t('searchRecipes')"
-				class="w-full px-[16px] py-[12px] h-[44px] rounded-[8px] text-sm text-darkGray placeholder-gray focus:border-forestGreen border-custom"
+				:placeholder="placeholder"
+				class="w-full px-[16px] py-[12px] h-[44px] rounded-[8px] text-sm text-darkGray placeholder-gray border-custom"
 				@keyup.enter="handleSearch"
 				@keyup.esc="clearSearch"
+				@focus="setPlaceholderVisible(true)"
+				@blur="setPlaceholderVisible(false)"
 			>
 			<IconSearch
 				class="absolute right-[16px] top-1/2 transform -translate-y-1/2 cursor-pointer"
@@ -25,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { IconSearch, IconFilter } from 'shared/components/Icon'
 import { useTranslation } from 'shared/lib/i18n'
 import localization from './SearchBar.localization.json'
@@ -36,6 +38,11 @@ const { t } = useTranslation(localization)
 const store = useSearchStore()
 
 const searchQuery = ref('')
+const isInputFocused = ref(false)
+
+const placeholder = computed(() => {
+	return !isInputFocused.value ? t('searchRecipes') : ''
+})
 
 const handleSearch = () => {
 	if (searchQuery.value.trim()) {
@@ -47,6 +54,10 @@ const clearSearch = () => {
 	searchQuery.value = ''
 }
 
+const setPlaceholderVisible = (isVisible: boolean) => {
+	isInputFocused.value = isVisible
+}
+
 const openFilters = () => {
 	router.push('/filter')
 }
@@ -56,5 +67,9 @@ const openFilters = () => {
 <style scoped>
 .border-custom {
 	border: 1px solid #E1E1E1;
+}
+
+.border-custom:focus {
+	border-color: rgba(49, 154, 110, 0.2);
 }
 </style>

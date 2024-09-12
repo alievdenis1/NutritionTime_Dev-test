@@ -12,7 +12,7 @@
 					<input
 						v-model="spicyInputStart"
 						type="number"
-						min="0"
+						min="1"
 						max="5"
 						class="h-[56px] px-[12px] pt-[26px] pb-[12px] text-slateGray rounded text-sm w-full"
 						@input="validateSpicyInput"
@@ -25,7 +25,7 @@
 					<input
 						v-model="spicyInputEnd"
 						type="number"
-						min="0"
+						min="1"
 						max="5"
 						class="h-[56px] px-[12px] pt-[26px] pb-[12px] text-slateGray rounded text-sm w-full"
 						@input="validateSpicyInput"
@@ -34,7 +34,7 @@
 			</div>
 			<VSlider
 				v-model="spicyModelValue"
-				:min="0"
+				:min="1"
 				:max="5"
 				:step="1"
 				class="mt-[12px] mb-[20px] h-[28px]"
@@ -53,7 +53,7 @@
 					<input
 						v-model="difficultyInputStart"
 						type="number"
-						min="0"
+						min="1"
 						max="5"
 						class="h-[56px] px-[12px] pt-[26px] pb-[12px] text-slateGray rounded text-sm w-full"
 						@input="validateDifficultyInput"
@@ -66,7 +66,7 @@
 					<input
 						v-model="difficultyInputEnd"
 						type="number"
-						min="0"
+						min="1"
 						max="5"
 						class="h-[56px] px-[12px] pt-[26px] pb-[12px] text-slateGray rounded text-sm w-full"
 						@input="validateDifficultyInput"
@@ -75,7 +75,7 @@
 			</div>
 			<VSlider
 				v-model="difficultyModelValue"
-				:min="0"
+				:min="1"
 				:max="5"
 				:step="1"
 				class="mt-[12px] mb-[20px] h-[28px]"
@@ -94,7 +94,7 @@
 					v-model="selectedTime"
 					type="text"
 					:placeholder="t('cookingTime')"
-					class="border rounded text-base w-full h-[54px] cursor-pointer"
+					class="border-slide rounded text-base w-full h-[54px] cursor-pointer"
 					:class="{ 'padding-filled': selectedTime, 'padding-empty': !selectedTime }"
 					readonly
 					@click="toggleDropdown"
@@ -141,7 +141,7 @@
 					<input
 						v-model="ratingInputStart"
 						type="number"
-						min="0"
+						min="1"
 						max="5"
 						class="h-[56px] px-[12px] pt-[26px] pb-[12px] text-slateGray rounded text-sm w-full"
 						@input="validateRatingInput"
@@ -154,7 +154,7 @@
 					<input
 						v-model="ratingInputEnd"
 						type="number"
-						min="0"
+						min="1"
 						max="5"
 						class="h-[56px] px-[12px] pt-[26px] pb-[12px] text-slateGray rounded text-sm w-full"
 						@input="validateRatingInput"
@@ -163,7 +163,7 @@
 			</div>
 			<VSlider
 				v-model="ratingModelValue"
-				:min="0"
+				:min="1"
 				:max="5"
 				:step="1"
 				class="mt-[12px] mb-[20px] h-[28px]"
@@ -182,18 +182,18 @@ import localization from './SearchFilter.localization.json'
 const { t } = useTranslation(localization)
 
 // Острота
-const spicyModelValue = ref([0, 5])
-const spicyInputStart = ref('0')
+const spicyModelValue = ref([1, 5])
+const spicyInputStart = ref('1')
 const spicyInputEnd = ref('5')
 
 // Сложность
-const difficultyModelValue = ref([0, 5])
-const difficultyInputStart = ref('0')
+const difficultyModelValue = ref([1, 5])
+const difficultyInputStart = ref('1')
 const difficultyInputEnd = ref('5')
 
 // Рейтинг
-const ratingModelValue = ref([0, 5])
-const ratingInputStart = ref('0')
+const ratingModelValue = ref([1, 5])
+const ratingInputStart = ref('1')
 const ratingInputEnd = ref('5')
 
 const validateInput = (start: string, end: string, min: number, max: number) => {
@@ -241,21 +241,23 @@ watch(ratingModelValue, (newValue) => {
 })
 
 // Оставшийся код для времени приготовления
-const selectedTime = ref('')
+const selectedTime = ref(t('anyTime'))
 const isOpen = ref(false)
 
 const timeOptions = [
-    { label: t('upTo15Min'), value: 'до 15 мин' },
-    { label: t('15to30Min'), value: '15-30 мин' },
-    { label: t('30to60Min'), value: '30-60 мин' },
-    { label: t('moreThanHour'), value: 'Более часа' },
+	{ label: t('anyTime'), value: t('anyTime') },
+    { label: t('upTo15Min'), value: t('upTo15Min') },
+    { label: t('15to30Min'), value: t('15to30Min') },
+    { label: t('30to60Min'), value: t('30to60Min') },
+    { label: t('moreThanHour'), value: t('moreThanHour') },
 ]
 
 const timeTags = [
-    { label: t('upTo15Min'), value: 'до 15 мин' },
-    { label: t('15to30Min'), value: '15-30 мин' },
-    { label: t('30to60Min'), value: '30-60 мин' },
-    { label: t('moreThanHour'), value: 'Более часа' },
+	{ label: t('anyTime'), value: t('anyTime') },
+    { label: t('upTo15Min'), value: t('upTo15Min') },
+    { label: t('15to30Min'), value: t('15to30Min') },
+    { label: t('30to60Min'), value: t('30to60Min') },
+    { label: t('moreThanHour'), value: t('moreThanHour') },
 ]
 
 const toggleDropdown = () => {
@@ -278,7 +280,6 @@ const selectTime = (time: string) => {
 }
 
 .border-slide {
-    border: 1px solid #E1E1E1;
-    border-radius: 8px;
+    border: 1px solid rgba(49, 154, 110, 0.2);
 }
 </style>

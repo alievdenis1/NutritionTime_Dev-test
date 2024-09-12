@@ -26,6 +26,7 @@
 
 		<VAccordion
 			:title="t('mainParameters')"
+			:is-open="true"
 			class="flex-grow overflow-y-auto p-4 recipe-search"
 		>
 			<div class="mb-6">

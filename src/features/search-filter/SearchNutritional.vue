@@ -22,6 +22,12 @@
 							class="w-full h-[56px] pt-[26px] pb-[10px] pl-[12px] border rounded-md"
 							@input="updateValue(key, 'start')"
 						>
+						<span
+							class="absolute unit-position"
+							:style="getNutritientStyle(nutrient.start)"
+						>
+							{{ nutrient.unit }}
+						</span>
 					</div>
 					<div class="flex-1 relative">
 						<span class="absolute top-[6px] left-[12px] text-xs text-gray">
@@ -36,6 +42,12 @@
 							class="w-full h-[56px] pt-[26px] pb-[10px] pl-[12px] border  rounded-md"
 							@input="updateValue(key, 'end')"
 						>
+						<span
+							class="absolute unit-position"
+							:style="getNutritientStyle(nutrient.end)"
+						>
+							{{ nutrient.unit }}
+						</span>
 					</div>
 				</div>
 				<VSlider
@@ -79,7 +91,7 @@ const nutrients = reactive<Record<string, Nutrient>>({
         start: 10,
         end: 1250,
         value: [10, 1250],
-        unit: 'ккал'
+        unit: t('caloriesUnit')
     },
     protein: {
         title: 'proteinPer100g',
@@ -89,7 +101,7 @@ const nutrients = reactive<Record<string, Nutrient>>({
         start: 1,
         end: 24,
         value: [1, 24],
-        unit: 'г.'
+        unit: t('gramUnit')
     },
     fat: {
         title: 'fatPer100g',
@@ -99,7 +111,7 @@ const nutrients = reactive<Record<string, Nutrient>>({
         start: 1,
         end: 24,
         value: [1, 24],
-        unit: 'г.'
+        unit: t('gramUnit')
     },
     carbs: {
         title: 'carbsPer100g',
@@ -109,9 +121,22 @@ const nutrients = reactive<Record<string, Nutrient>>({
         start: 1,
         end: 24,
         value: [1, 24],
-        unit: 'г.'
+        unit: t('gramUnit')
     }
 })
+
+const getNutritientStyle = (nutrientValue: number) => {
+    const nutrientBlockPaddingLeft = 13
+    let marginLeft = Number(String(nutrientValue).length) * 11
+
+    if (marginLeft > 40) {
+        marginLeft = marginLeft - 3
+    }
+
+    return {
+        left: `${marginLeft + nutrientBlockPaddingLeft}px`
+    }
+}
 
 const updateValue = (nutrientKey: string, type: 'start' | 'end') => {
     const nutrient = nutrients[nutrientKey]
@@ -135,5 +160,10 @@ Object.keys(nutrients).forEach(key => {
 <style scoped>
 .border{
     border: 1px solid #319A6E33;
+}
+
+.unit-position {
+    bottom: 7px;
+    left: 50px;
 }
 </style>
