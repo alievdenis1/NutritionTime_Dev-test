@@ -1,20 +1,31 @@
 <template>
 	<VAccordion :title="t('ingredients')">
 		<div class="mt-4">
-			<div class="flex flex-wrap gap-2 mb-4 p-4 border border-gray-200 rounded-lg">
-				<div
-					v-for="ingredient in selectedIngredients"
-					:key="ingredient"
-					class="flex items-center bg-gray-100 rounded-full px-4 py-2"
-				>
-					<span class="mr-2 text-sm">{{ ingredient }}</span>
-					<button
-						class="text-gray-400 hover:text-gray-600"
-						@click="removeIngredient(ingredient)"
+			<div v-if="selectedIngredients.length">
+				<div class="flex flex-wrap gap-2 mb-4 p-4 border border-gray-200 rounded-lg">
+					<div
+						v-for="ingredient in selectedIngredients"
+						:key="ingredient"
+						class="flex items-center bg-gray-100 rounded-full px-4 py-2"
 					>
-						<IconClose class="w-4 h-4" />
-					</button>
+						<span class="mr-2 text-sm">{{ ingredient }}</span>
+						<button
+							class="text-gray-400 hover:text-gray-600"
+							@click="removeIngredient(ingredient)"
+						>
+							<IconClose class="w-4 h-4" />
+						</button>
+					</div>
 				</div>
+			</div>
+
+			<div
+				v-else
+				class="flex flex-wrap gap-2 mb-4 p-4 border border-gray-200 rounded-lg"
+			>
+				<span class="text-gray-400">
+					{{ t('requiredIngredients') }}
+				</span>
 			</div>
 
 			<button

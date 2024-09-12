@@ -6,6 +6,7 @@
         "cuisine": "Кухня",
         "dietType": "Тип диеты",
         "cookingTime": "Время приготовления",
+        "anyTime": "Любое время",
         "upTo15Min": "до 15 мин",
         "15to30Min": "15-30 мин",
         "30to60Min": "30-60 мин",
@@ -14,6 +15,7 @@
         "addIngredient": "Добавить ингредиент",
         "excludeIngredients": "Исключить ингредиенты",
         "includeIngredients": "Включить ингредиенты",
+        "requiredIngredients": "Обязательные ингредиенты",
         "nutritionalValue": "Пищевая ценность",
         "caloriesPer100g": "Калорийность на 100 г.",
         "proteinPer100g": "Белки на 100 г.",
@@ -24,7 +26,9 @@
         "to": "До",
         "cookingDifficulty": "Сложность приготовления",
         "dishRating": "Рейтинг блюда",
-        "recipes": "рецептов"
+        "recipes": "рецептов",
+        "gramUnit": "г.",
+        "caloriesUnit": "ккал"
     },
     "en": {
         "filters": "Filters",
@@ -33,6 +37,7 @@
         "cuisine": "Cuisine",
         "dietType": "Diet Type",
         "cookingTime": "Cooking Time",
+        "anyTime": "Any time",
         "upTo15Min": "up to 15 min",
         "15to30Min": "15-30 min",
         "30to60Min": "30-60 min",
@@ -41,6 +46,7 @@
         "addIngredient": "Add ingredient",
         "excludeIngredients": "Exclude ingredients",
         "includeIngredients": "Include ingredients",
+        "requiredIngredients": "Required ingredients",
         "nutritionalValue": "Nutritional Value",
         "caloriesPer100g": "Calories per 100g",
         "proteinPer100g": "Protein per 100g",
@@ -51,6 +57,8 @@
         "to": "To",
         "cookingDifficulty": "Cooking Difficulty",
         "dishRating": "Dish Rating",
-        "recipes": "recipes"
+        "recipes": "recipes",
+        "gramUnit": "g",
+        "caloriesUnit": "kcal"
     }
 }
