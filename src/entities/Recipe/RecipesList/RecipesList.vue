@@ -60,10 +60,13 @@
 						>
 						{{ recipe.author.name }}
 					</div>
-					<p class="flex justify-center items-center gap-[4px] text-[#535353]">
+					<button
+						class="flex justify-center items-center gap-[4px] text-[#535353] cursor-pointer"
+						@click="router.push(`/all-comment/${recipe.id}`)"
+					>
 						<IconComment />
 						{{ recipe.commentsCount }}
-					</p>
+					</button>
 				</div>
 				<div class="flex items-center justify-between gap-[16px]">
 					<IconFavorites

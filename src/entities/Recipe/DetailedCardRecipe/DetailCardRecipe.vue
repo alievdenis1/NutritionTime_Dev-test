@@ -35,7 +35,7 @@
 						<component
 							:is="icon.component"
 							:class="icon.iconClass"
-							:is-liked="Number(icon.text) > 0"
+							:is-liked="Number(icon.text) > 0 || icon.isActive"
 							:active-color="icon.activeColor || '#319A6E'"
 						/>
 						<span
@@ -328,6 +328,7 @@
 				</div>
 			</div>
 		</VModal>
+		<CreateCollection />
 	</div>
 </template>
 
@@ -340,12 +341,17 @@ import Localization from './DetailCardRecipe.localization.json'
 import { useTranslation } from 'shared/lib/i18n'
 import { VModal } from 'shared/components/Modal'
 import { useRecipeStore } from '../DetailedCardRecipe/stores/recipeStore'
+import { useSearchStore } from '../Search/store/search-store'
 import { VAddPhoto } from 'shared/components/AddPhoto'
 import { useRouter } from 'vue-router'
 import { Recipe } from './types/recipe'
 
+import CreateCollection from '../Search/modal/CreateCollection.vue'
+
 const store = useRecipeStore()
+const searchStore = useSearchStore()
 const router = useRouter()
+
 const recipe: Ref<Recipe | undefined> = ref(store.currentRecipe)
 
 const { t } = useTranslation(Localization)
@@ -392,16 +398,40 @@ onUnmounted(() => {
 })
 
 const icons = ref([
-	{ component: IconShare, class: 'w-[44px] h-[44px]', iconClass: 'w-[17px] h-[14px]' },
-	{ component: IconFavorites, class: 'w-[44px] h-[44px]', iconClass: 'w-[24px] h-[20px]', isActive: false, activeColor: '#319A6E' },
-	{ component: IconHeart, class: 'w-[62px] h-[44px]', iconClass: 'w-[20px] h-[20px]', text: '24', isActive: false, activeColor: '#319A6E' }
+	{
+		component: IconShare,
+		class: 'w-[44px] h-[44px]',
+		iconClass: 'w-[17px] h-[14px]'
+	},
+	{
+		component: IconFavorites,
+		class: 'w-[44px] h-[44px]',
+		iconClass: 'w-[24px] h-[20px]',
+		isActive: false,
+		activeColor: '#319A6E',
+		onClick: () => searchStore.toggleModalOpen(),
+	},
+	{
+		component: IconHeart,
+		class: 'w-[62px] h-[44px]',
+		iconClass: 'w-[20px] h-[20px]',
+		text: '24',
+		isActive: false,
+		activeColor: '#319A6E',
+	}
 ])
 
 const toggleIcon = (index: number) => {
+	const icon = icons.value[index]
+
 	if (index === 0) return
-	icons.value[index].isActive = !icons.value[index].isActive
+	icon.isActive = !icon.isActive
 	if (index === 2) {
-		icons.value[index].text = icons.value[index].isActive ? '25' : '24'
+		icon.text = icon.isActive ? '25' : '24'
+	}
+
+	if(icon.onClick) {
+		icon.onClick()
 	}
 }
 
@@ -454,6 +484,7 @@ const submitReview = () => {
 		author: 'Пользователь',
 		text: review.value,
 		likes: 0,
+		rating: rating.value,
 		image: reviewImage.value,
 		authorImage: '/image/denis.svg'
 	}

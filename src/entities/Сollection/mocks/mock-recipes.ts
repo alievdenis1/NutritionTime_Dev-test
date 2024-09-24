@@ -21,6 +21,7 @@ export const mockRecipes: RecipesList = [
         commentsCount: 0,
         cookingTime: 35, // Добавлено поле cookingTime
         liked: false,
+        favourited: false,
         likes: 2,
         savedToCollection: false // Добавлено новое поле для сохранения в коллекцию
     },
@@ -39,6 +40,7 @@ export const mockRecipes: RecipesList = [
         commentsCount: 0,
         cookingTime: 35,
         liked: false,
+        favourited: false,
         likes: 2,
         savedToCollection: false
     },
@@ -57,6 +59,7 @@ export const mockRecipes: RecipesList = [
         commentsCount: 0,
         cookingTime: 35,
         liked: false,
+        favourited: false,
         likes: 2,
         savedToCollection: false
     },
@@ -75,6 +78,7 @@ export const mockRecipes: RecipesList = [
         commentsCount: 0,
         cookingTime: 35,
         liked: false,
+        favourited: false,
         likes: 2,
         savedToCollection: false
     },

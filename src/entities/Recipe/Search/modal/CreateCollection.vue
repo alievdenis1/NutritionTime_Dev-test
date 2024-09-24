@@ -68,7 +68,7 @@
 			<VButton
 				:color="ButtonColors.Green"
 				class="mt-[8px]"
-				@click="store.toggleModalClose()"
+				@click="onSaveRecipeToFavourite"
 			>
 				{{ t('save') }}
 			</VButton>
@@ -122,11 +122,14 @@ import { ref, computed } from 'vue'
 import { VModal } from 'shared/components/Modal'
 import { IconClose, IconArrow, IconArrowRight } from 'shared/components/Icon'
 import { useSearchStore } from '../store/search-store'
+import { useRecipeStore } from '../../DetailedCardRecipe/stores/recipeStore'
 import { useTranslation } from 'shared/lib/i18n'
 import { VInput } from 'shared/components/Input'
 import Localization from './CreateCollection.localization.json'
 import { VButton, ButtonColors } from 'shared/components/Button'
+
 const store = useSearchStore()
+const recipeStore = useRecipeStore()
 const isOpen = ref(false)
 
 const { t } = useTranslation(Localization)
@@ -161,6 +164,11 @@ const selectCollection = (collection: string) => {
 const openSecondModal = () => {
 	store.toggleModalClose() // Закрываем первую модалку
 	store.toggleSecondModalOpen() // Открываем вторую модалку
+}
+
+const onSaveRecipeToFavourite = () => {
+	store.toggleModalClose()
+	recipeStore.toggleRecipeFavourited(true)
 }
 
 // Вернуться к первой модалке

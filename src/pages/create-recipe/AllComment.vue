@@ -22,7 +22,7 @@
 				</span>
 
 				<div class="text-lg text-darkGray">
-					{{ recipe?.reviewsCount }}
+					{{ recipe?.comments.length }}
 					{{ t('plural') }}
 				</div>
 			</div>
@@ -205,6 +205,7 @@ const submitReview = () => {
 		author: 'Пользователь',
 		text: review.value,
 		likes: 0,
+		rating: rating.value,
 		image: reviewImage.value,
 		authorImage: '/image/denis.svg'
 	}

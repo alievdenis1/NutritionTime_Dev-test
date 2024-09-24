@@ -15,6 +15,7 @@ export interface RecipesItem {
 	commentsCount: number;
 	cookingTime: number;
 	liked: boolean;
+	favourited: boolean,
 	likes: number;
 	likesCount?: number;
 	savedToCollection: boolean; // Новое поле для иконки сохранения в коллекцию
