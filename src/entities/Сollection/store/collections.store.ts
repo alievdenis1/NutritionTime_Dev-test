@@ -9,7 +9,7 @@ export const useModalStore = defineStore('modal', () => {
   const inputValue = ref<string>('')
   const initialInputValue = ref<string>('')
   const collectionId = ref<number | null>(null)
-  const savedCollections = ref<DragTypes[]>(JSON.parse(localStorage.getItem('collections') || ''))
+  const savedCollections = ref<DragTypes[]>(JSON.parse(localStorage.getItem('collections') || 'null'))
 
   const dragAndDropItems = ref<DragTypes[]>(
     savedCollections.value || [{ id: 1, label: 'Мне понравилось', isActiveEdit: false, count: 5 }]
