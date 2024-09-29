@@ -9,10 +9,11 @@ export const useModalStore = defineStore('modal', () => {
   const inputValue = ref<string>('')
   const initialInputValue = ref<string>('')
   const collectionId = ref<number | null>(null)
+  const savedCollections = ref<DragTypes[]>(JSON.parse(localStorage.getItem('collections') || 'null'))
 
-  const dragAndDropItems = ref<DragTypes[]>([
-    { id: 1, label: 'Мне понравилось', isActiveEdit: false, count: 5 },
-  ])
+  const dragAndDropItems = ref<DragTypes[]>(
+    savedCollections.value || [{ id: 1, label: 'Мне понравилось', isActiveEdit: false, count: 5 }]
+  )
 
   const currentCollection = computed(() =>
     dragAndDropItems.value.find(item => item.id === collectionId.value)
@@ -50,6 +51,8 @@ export const useModalStore = defineStore('modal', () => {
           isActiveEdit: true,
           count: 0
         })
+
+        localStorage.setItem('collections', JSON.stringify(dragAndDropItems.value))
       } else {
         const index = dragAndDropItems.value.findIndex(item => item.id === collectionId.value)
         if (index !== -1) {
@@ -62,6 +65,7 @@ export const useModalStore = defineStore('modal', () => {
 
   const deleteCollection = () => {
       dragAndDropItems.value = dragAndDropItems.value.filter(item => item.id !== collectionId.value)
+      localStorage.setItem('collections', JSON.stringify(dragAndDropItems.value))
       collectionId.value = null
   }
 

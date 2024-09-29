@@ -18,6 +18,7 @@ export const mockRecipe = ref<Recipe[]>([
         },
         rating: 5.0,
         reviewsCount: 12,
+        favourited: false,
         ingredients: [
             { name: 'Булочка для бургера', amount: '1 шт.', type: 'quantity' },
             { name: 'Говядина', amount: '300 г.', type: 'weight' },
@@ -77,6 +78,7 @@ export const mockRecipe = ref<Recipe[]>([
                 author: 'Игнат Балышев',
                 text: 'Рецепт классный, получилось с первого раза и очень вкусно! Автору респект',
                 likes: 0,
+                rating: 5,
                 image: addPrefix('/image/recipes2.png'),
             },
             {
@@ -84,6 +86,7 @@ export const mockRecipe = ref<Recipe[]>([
                 author: 'Игнат Балышев',
                 text: 'Рецепт классный, получилось с первого раза и очень вкусно! Автору респект',
                 likes: 12,
+                rating: 5,
                 image: null,
             },
             {
@@ -91,6 +94,7 @@ export const mockRecipe = ref<Recipe[]>([
                 author: 'Игнат Балышев',
                 text: 'Рецепт классный, получилось с первого раза и очень вкусно! Автору респект',
                 likes: 24,
+                rating: 5,
                 image: addPrefix('/image/recipes2.png'),
             }
         ],
@@ -104,6 +108,7 @@ export const mockRecipe = ref<Recipe[]>([
         title: 'Ещё один вкусный рецепт',
         description: 'Описание второго вкусного рецепта',
         image: addPrefix('/image/recipes3.png'),
+        favourited: false,
         author: {
             name: 'Иван Иванов',
             image: addPrefix('/image/CatIllustration.png')
@@ -156,6 +161,7 @@ export const mockRecipe = ref<Recipe[]>([
                 author: 'Петр Петров',
                 text: 'Отличный рецепт, очень понравилось!',
                 likes: 5,
+                rating: 5,
                 image: addPrefix('/image/recipes3.png'),
             },
             {
@@ -163,6 +169,7 @@ export const mockRecipe = ref<Recipe[]>([
                 author: 'Анна Смирнова',
                 text: 'Очень вкусно, спасибо!',
                 likes: 10,
+                rating: 5,
                 image: null,
             }
         ],

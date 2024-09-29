@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { IconHome, IconPlus, IconSearch } from 'shared/components/Icon'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { computed } from 'vue'
 import { useTranslation } from '@/shared/lib/i18n'
 import Localization from './FooterWidget.localization.json'
@@ -42,6 +42,7 @@ import { ModalCreateRecipe } from 'entities/Recipe/CreateRecipe/modal-create/ui'
 import { useModalCreateStore } from 'entities/Recipe/CreateRecipe/modal-create/model/model-store'
 const store = useModalCreateStore()
 const router = useRouter()
+const route = useRoute()
 const { t } = useTranslation(Localization)
 
 const openModalCreateRecipe = () => {
@@ -56,6 +57,9 @@ const isCreateRecipeRoute = computed(() => {
 })
 
 const navigateToHome = () => {
+	if (route.path === '/') {
+		router.go(0)
+	}
 	router.push('/')
 }
 

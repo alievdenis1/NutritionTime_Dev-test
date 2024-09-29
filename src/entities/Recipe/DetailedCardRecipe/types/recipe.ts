@@ -39,6 +39,7 @@ export interface Recipe {
         image: string;
     };
     rating: number;
+    favourited: boolean,
     reviewsCount: number;
     ingredients: Array<{ name: string, amount: string, type: 'weight' | 'quantity' }>;
     totalWeight: number;
@@ -52,6 +53,7 @@ export interface Recipe {
         text: string;
         likes: number;
         image: string | null;
+        rating: number,
         authorImage?: string | null;
     }>;
     nftOwner: {

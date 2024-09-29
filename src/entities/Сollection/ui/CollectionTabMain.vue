@@ -38,6 +38,7 @@
 				:button-text="t('buttonCreate')"
 				button-class="bg-orange text-white flex-row-reverse"
 				:button-icon="IconPlus"
+				@button-click="openModalCreateRecipe"
 			/>
 		</TabsContent>
 	</TabsMain>
@@ -58,6 +59,9 @@ import { IconArrowRight, IconPlus, } from 'shared/components/Icon'
 import { useModalStore } from '../store/collections.store'
 import ModalCollection from '../../Сollection/modal/ModalCollection.vue'
 
+import { useModalCreateStore } from '../../Recipe/CreateRecipe/modal-create/model/model-store'
+const modalCreateStore = useModalCreateStore()
+
 const store = useModalStore()
 const { t } = useTranslation(Localization)
 const recipesList = ref(mockRecipes)
@@ -65,6 +69,10 @@ const recipesList = ref(mockRecipes)
 const onEdit = (tab: DragTypes) => {
 	store.collectionId = tab.id
 	store.openModal('edit')
+}
+
+const openModalCreateRecipe = () => {
+	modalCreateStore.openModalRecipe()
 }
 
 const onDelete = async (tab: DragTypes) => {
