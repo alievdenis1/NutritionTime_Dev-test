@@ -7,7 +7,7 @@ type State = {
 	currentLocale: Ref<Locales>,
     selectedLocale: ComputedRef<Locales>,
     setLocale: (newLocale: Locales) => void,
-    initializeLocale: () => void
+    initializeLocale: (initialLocale?: Locales) => void
 }
 
 export const useLocaleStore = defineStore('locale', (): State => {
@@ -20,9 +20,11 @@ export const useLocaleStore = defineStore('locale', (): State => {
         i18n.global.locale.value = newLocale
     }
 
-    const initializeLocale = (): void => {
-        currentLocale.value = selectedLocale.value
-        i18n.global.locale.value = selectedLocale.value
+    const initializeLocale = (initialLocale?: Locales): void => {
+        const initLocale = initialLocale || selectedLocale.value
+
+        currentLocale.value = initLocale
+        i18n.global.locale.value = initLocale
     }
 
     return {

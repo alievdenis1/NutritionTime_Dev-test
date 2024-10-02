@@ -1,113 +1,115 @@
-<template>
-	<div class="sensitivity-settings">
-		<TabsMain :default-value="activeTab">
-			<TabsList>
-				<TabsTrigger value="shake">
-					Настройки тряски
-				</TabsTrigger>
-				<TabsTrigger value="voice">
-					Настройки голоса
-				</TabsTrigger>
-			</TabsList>
-			<TabsContent value="shake">
-				<div class="settings-grid">
-					<SensitivityCell
-						v-for="level in shakeLevels"
-						:key="level.value"
-						:label="level.label"
-						:value="level.value"
-						:active="shakeLevel === level.value"
-						@click="setShakeLevel(level.value)"
-					/>
-				</div>
-				<div class="mt-4">
-					<p>Текущий порог тряски: {{ CLICKER_CONFIG.shake.thresholdLow }}</p>
-				</div>
-			</TabsContent>
-			<TabsContent value="voice">
-				<div class="settings-grid">
-					<SensitivityCell
-						v-for="level in voiceLevels"
-						:key="level.value"
-						:label="level.label"
-						:value="level.value"
-						:active="voiceLevel === level.value"
-						@click="setVoiceLevel(level.value)"
-					/>
-				</div>
-			</TabsContent>
-		</TabsMain>
-	</div>
-</template>
+<!--<template>-->
+<!--	<div class="sensitivity-settings">-->
+<!--		<TabsMain :default-value="activeTab">-->
+<!--			<TabsList>-->
+<!--				<TabsTrigger value="shake">-->
+<!--					Настройки тряски-->
+<!--				</TabsTrigger>-->
+<!--				<TabsTrigger value="voice">-->
+<!--					Настройки мяу-->
+<!--				</TabsTrigger>-->
+<!--			</TabsList>-->
+<!--			<TabsContent value="shake">-->
+<!--				<div class="settings-grid">-->
+<!--					<SensitivityCell-->
+<!--						v-for="level in shakeLevels"-->
+<!--						:key="level.value"-->
+<!--						:label="level.label"-->
+<!--						:value="level.value"-->
+<!--						:active="shakeLevel === level.value"-->
+<!--						@click="setShakeLevel(level.value)"-->
+<!--					/>-->
+<!--				</div>-->
+<!--			</TabsContent>-->
+<!--			<TabsContent value="voice">-->
+<!--				<div class="settings-grid">-->
+<!--					<SensitivityCell-->
+<!--						v-for="level in voiceLevels"-->
+<!--						:key="level.value"-->
+<!--						:label="level.label"-->
+<!--						:value="level.value"-->
+<!--						:active="voiceLevel === level.value"-->
+<!--						@click="setVoiceLevel(level.value)"-->
+<!--					/>-->
+<!--				</div>-->
+<!--			</TabsContent>-->
+<!--		</TabsMain>-->
+<!--	</div>-->
+<!--</template>-->
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { TabsMain, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
-import SensitivityCell from './SensitivityCell.vue'
-import { useCatClickerStore, CLICKER_CONFIG } from 'entities/Wallet/wallet-balance/CatClicker'
+<!--<script setup lang="ts">-->
+<!--import { ref, onMounted } from 'vue'-->
+<!--import { TabsMain, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'-->
+<!--import SensitivityCell from './SensitivityCell.vue'-->
+<!--import { useCatClickerStore, CLICKER_CONFIG } from 'entities/Wallet/wallet-balance/CatClicker'-->
 
-const store = useCatClickerStore()
+<!--const store = useCatClickerStore()-->
 
-const activeTab = ref('shake')
-const shakeLevel = ref(store.shakeLevel || 'medium')
-const voiceLevel = ref(store.shoutLevel || 'medium')
+<!--defineProps<{-->
+<!--	shakeLevel: string,-->
+<!--}>()-->
 
-const shakeLevels = [
-    { label: 'Низкая', value: 'low', threshold: 20 },
-    { label: 'Средняя', value: 'medium', threshold: 40 },
-    { label: 'Высокая', value: 'high', threshold: 60 },
-]
+<!--const emit = defineEmits(['update:level'])-->
 
-const voiceLevels = [
-    { label: 'Низкая', value: 'low', threshold: 0.00001 },
-    { label: 'Средняя', value: 'medium', threshold: 5 },
-    { label: 'Высокая', value: 'high', threshold: 10 },
-]
+<!--const activeTab = ref('shake')-->
+<!--const voiceLevel = ref(store.shoutLevel || 'medium')-->
 
-const setShakeLevel = (level: string) => {
-    shakeLevel.value = level
-    store.setShakeLevel(level)
-    const selectedLevel = shakeLevels.find(l => l.value === level)
-    if (selectedLevel) {
-        CLICKER_CONFIG.shake.thresholdLow = selectedLevel.threshold
-    }
-}
+<!--const shakeLevels = [-->
+<!--    { label: 'Низкая', value: 'low', threshold: 18 },-->
+<!--    { label: 'Средняя', value: 'medium', threshold: 23 },-->
+<!--    { label: 'Высокая', value: 'high', threshold: 31 },-->
+<!--]-->
 
-const setVoiceLevel = (level: string) => {
-    voiceLevel.value = level
-    store.setShoutLevel(level)
-    const selectedLevel = voiceLevels.find(l => l.value === level)
-    if (selectedLevel) {
-        CLICKER_CONFIG.sound.thresholdLow = selectedLevel.threshold
-    }
-}
+<!--const voiceLevels = [-->
+<!--    { label: 'Низкая', value: 'low', threshold: 3.3 },-->
+<!--    { label: 'Средняя', value: 'medium', threshold: 3.75 },-->
+<!--    { label: 'Высокая', value: 'high', threshold: 3.95 },-->
+<!--]-->
 
-const initializeLevels = () => {
-    const currentShakeLevel = shakeLevels.find(l => l.threshold === CLICKER_CONFIG.shake.thresholdLow)
-    if (currentShakeLevel) {
-        shakeLevel.value = currentShakeLevel.value
-    }
+<!--const setShakeLevel = (level: string) => {-->
+<!--    emit('update:level', level)-->
+<!--    store.setShakeLevel(level)-->
+<!--    const selectedLevel = shakeLevels.find(l => l.value === level)-->
+<!--    if (selectedLevel) {-->
+<!--        CLICKER_CONFIG.shake.thresholdLow = selectedLevel.threshold-->
+<!--    }-->
+<!--}-->
 
-    const currentVoiceLevel = voiceLevels.find(l => l.threshold === CLICKER_CONFIG.sound.thresholdLow)
-    if (currentVoiceLevel) {
-        voiceLevel.value = currentVoiceLevel.value
-    }
-}
+<!--const setVoiceLevel = (level: string) => {-->
+<!--    voiceLevel.value = level-->
+<!--    store.setShoutLevel(level)-->
+<!--    const selectedLevel = voiceLevels.find(l => l.value === level)-->
+<!--    if (selectedLevel) {-->
+<!--        CLICKER_CONFIG.sound.thresholdLow = selectedLevel.threshold-->
+<!--    }-->
+<!--}-->
 
-onMounted(() => {
-    initializeLevels()
-})
-</script>
+<!--const initializeLevels = () => {-->
+<!--    const currentShakeLevel = shakeLevels.find(l => l.threshold === CLICKER_CONFIG.shake.thresholdLow)-->
+<!--    if (currentShakeLevel) {-->
+<!--		emit('update:level', currentShakeLevel.value)-->
+<!--    }-->
 
-<style scoped lang="scss">
-.sensitivity-settings {
-    margin-top: 20px;
-}
+<!--    const currentVoiceLevel = voiceLevels.find(l => l.threshold === CLICKER_CONFIG.sound.thresholdLow)-->
+<!--    if (currentVoiceLevel) {-->
+<!--        voiceLevel.value = currentVoiceLevel.value-->
+<!--    }-->
+<!--}-->
 
-.settings-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 20px;
-}
-</style>
+<!--onMounted(() => {-->
+<!--    initializeLevels()-->
+<!--})-->
+<!--</script>-->
+
+<!--<style scoped lang="scss">-->
+<!--.sensitivity-settings {-->
+<!--    margin-top: 20px;-->
+<!--}-->
+
+<!--.settings-grid {-->
+<!--    display: grid;-->
+<!--    grid-template-columns: repeat(3, 1fr);-->
+<!--    gap: 10px;-->
+<!--    margin-top: 20px;-->
+<!--}-->
+<!--</style>-->

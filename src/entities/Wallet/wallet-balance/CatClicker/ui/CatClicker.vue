@@ -3,7 +3,11 @@
 		<div
 			ref="imgContainer"
 			class="img-container flex items-center justify-center h-[280px] mt-[35px] max-w-max m-auto mb-[16px] relative min-w-[280px] min-h-[280px]"
-			:class="{ 'bg-transparentGreen': !store.isRapidClicking, 'bg-rapidClickColor': store.isRapidClicking }"
+			:class="{
+				'bg-transparentGreen': !store.isRapidClicking,
+				'bg-rapidClickColor': store.isRapidClicking,
+				'cursor-not-allowed': !canClick
+			}"
 			@click="handleClick"
 		>
 			<div class="img-wrapper">
@@ -40,38 +44,15 @@
 				</TransitionGroup>
 			</div>
 		</div>
-		<button
-			v-if="showPermissionButton"
-			class="permission-button bg-forestGreen text-white py-2 px-4 rounded-full mb-4"
-			@click="requestMotionPermission"
-		>
-			{{ t('enableShakeDetection') }}
-		</button>
-		<SensitivitySettings />
-		<ConfigPanel />
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { IconGold } from '@/shared/components/Icon'
-import SensitivitySettings from './SensitivitySettings.vue'
-import { CLICKER_CONFIG } from '../config/clickerConfig'
-import { useAudioAnalysis, } from '../composables/useAudioAnalysis'
-import { useCards } from '../composables/useCards'
-import { useCatClickerStore } from '../model/cat-clicker-store'
-import ConfigPanel from './ConfigPanel.vue'
-import { useTranslation } from '@/shared/lib/i18n'
+import { CLICKER_CONFIG, useAudioAnalysis, useCards, useCatClickerStore } from 'entities/Wallet/wallet-balance/CatClicker'
+
 const store = useCatClickerStore()
-import Localization from './CatClicker.localization.json'
-
-const { t } = useTranslation(Localization)
-const props = defineProps<{
-  initialEnergyCurrency: number,
-  initialCurrency: number
-}>()
-
-const emit = defineEmits(['update:currency', 'update:energyCurrent'])
 
 const {
   startAudioAnalysis,
@@ -92,65 +73,71 @@ const permissionGranted = ref(false)
 const eventCount = ref(0)
 const lastError = ref('')
 const isDeviceMotionSupported = ref(false)
-const shakeLevel = ref('medium')
+const isPermissionRequested = ref(false)
+
+const canClick = computed(() => Number(store.energyCurrent) > 0)
 
 const handleClick = (event: MouseEvent) => {
-  addCardAndAnimate(event)
-  if (imgContainer.value) {
-    animateClick(event.clientX - imgContainer.value.offsetLeft, event.clientY - imgContainer.value.offsetTop, imgContainer.value)
+  if (!store.canClick) return
+
+  if (!isPermissionRequested.value) {
+    requestMotionPermission()
+    isPermissionRequested.value = true
   }
 
-  if (!isAudioInitialized.value && !errorMessage.value) {
-    startAudioAnalysis()
+  let energySpent = 1
+  let shakeClicks = store.isShaking ? 1 : 0
+  let shoutClicks = store.isShouting ? 1 : 0
+
+  // Мультитап не вычисляется здесь, а просто передается текущее состояние
+  const isMultiClick = !!store.stats?.multi_tap_enabled
+
+  let multiplier = 1
+  if (store.isShouting) {
+    multiplier = 4
+  } else if (store.isShaking) {
+    multiplier = 2
   }
 
-  // Альтернативный метод обнаружения тряски для устройств без акселерометра
-  if (!isDeviceMotionSupported.value) {
-    simulateShake()
-  }
-}
+  const clickResult = store.click(energySpent, isMultiClick, shakeClicks, shoutClicks)
 
-const simulateShake = () => {
-  const randomChance = Math.random()
-  if (randomChance < 0.1) { // 10% шанс симуляции тряски при каждом клике
-    store.setShaking(true)
-    setTimeout(() => {
-      store.setShaking(false)
-    }, CLICKER_CONFIG.shake.timeout)
+  if (clickResult) {
+    if (imgContainer.value) {
+      const rect = imgContainer.value.getBoundingClientRect()
+      const x = event.clientX - rect.left
+      const y = event.clientY - rect.top
+      animateClick(x, y, imgContainer.value)
+      addCardAndAnimate(x, y, multiplier)
+    }
+
+    if (!isAudioInitialized.value && !errorMessage.value) {
+      startAudioAnalysis()
+    }
   }
 }
 
 const handleDeviceMotion = (event: DeviceMotionEvent) => {
   try {
     eventCount.value++
+    console.log('Device motion event received', event)
 
     const { accelerationIncludingGravity } = event
+
     if (accelerationIncludingGravity) {
       const acceleration = Math.sqrt(
-        Math.pow(accelerationIncludingGravity.x || 0, 2) +
-        Math.pow(accelerationIncludingGravity.y || 0, 2) +
-        Math.pow(accelerationIncludingGravity.z || 0, 2)
+          Math.pow(accelerationIncludingGravity.x || 0, 2) +
+          Math.pow(accelerationIncludingGravity.y || 0, 2) +
+          Math.pow(accelerationIncludingGravity.z || 0, 2)
       ) - 9.81
 
       debugAcceleration.value = acceleration
+      console.log('Calculated acceleration:', acceleration)
 
-      let threshold
-      switch (shakeLevel.value) {
-        case 'low':
-          threshold = CLICKER_CONFIG.shake.thresholdLow
-          break
-        case 'high':
-          threshold = CLICKER_CONFIG.shake.thresholdHigh
-          break
-        default:
-          threshold = CLICKER_CONFIG.shake.thresholdMedium
-      }
+      let threshold = CLICKER_CONFIG.shake.thresholdMedium
 
       if (acceleration > threshold) {
+        console.log('Shake detected!')
         store.setShaking(true)
-
-        // Добавляем логику для увеличения счетчика или другие действия при тряске
-        // store.addCurrency(CLICKER_CONFIG.shake.rewardMultiplier)
 
         if (shakeTimeout) clearTimeout(shakeTimeout)
         shakeTimeout = window.setTimeout(() => {
@@ -160,7 +147,7 @@ const handleDeviceMotion = (event: DeviceMotionEvent) => {
     }
   } catch (error) {
     console.error('Error in handleDeviceMotion:', error)
-    // store.setLastError(error instanceof Error ? error.message : 'Unknown error in handleDeviceMotion')
+    lastError.value = error instanceof Error ? error.message : 'Unknown error in handleDeviceMotion'
   }
 }
 
@@ -171,23 +158,26 @@ const requestMotionPermission = async () => {
       if (permissionState === 'granted') {
         permissionGranted.value = true
         window.addEventListener('devicemotion', handleDeviceMotion)
+        console.log('Motion permission granted')
       } else {
         console.error('Motion permission denied')
         lastError.value = 'Motion permission denied. Please enable it in your device settings.'
       }
     } else {
-      // Для устройств, не требующих явного разрешения
       permissionGranted.value = true
       window.addEventListener('devicemotion', handleDeviceMotion)
+      console.log('Motion listener added without permission request')
     }
   } catch (error: any) {
     console.error('Error requesting motion permission:', error)
     lastError.value = error.message
   }
+  showPermissionButton.value = false
 }
 
 const checkDeviceMotionSupport = () => {
   isDeviceMotionSupported.value = 'DeviceMotionEvent' in window
+  console.log('Device motion supported:', isDeviceMotionSupported.value)
   if (!isDeviceMotionSupported.value) {
     lastError.value = 'Device motion is not supported on this device. Using alternative shake detection.'
   }
@@ -203,18 +193,21 @@ const handleVisibilityChange = () => {
 
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
 
-onMounted(() => {
+onMounted(async () => {
+  console.log('Component mounted')
   window.addEventListener('visibilitychange', handleVisibilityChange)
   checkDeviceMotionSupport()
   if (isDeviceMotionSupported.value) {
     if (isIOS && typeof (DeviceMotionEvent as any).requestPermission === 'function') {
       showPermissionButton.value = true
+      console.log('Permission button shown for iOS device')
     } else {
-      requestMotionPermission()
+      await requestMotionPermission()
     }
+  } else {
+    console.log('Using alternative shake detection method')
   }
-  store.setCurrency(props.initialCurrency)
-  store.setEnergyCurrent(props.initialEnergyCurrency)
+  await store.syncWithBackend()
 })
 
 onUnmounted(() => {
@@ -222,14 +215,6 @@ onUnmounted(() => {
   window.removeEventListener('devicemotion', handleDeviceMotion)
   if (shakeTimeout) clearTimeout(shakeTimeout)
   stopAudioAnalysis()
-})
-
-watch(() => store.currency, (newValue) => {
-  emit('update:currency', newValue)
-})
-
-watch(() => store.energyCurrent, (newValue) => {
-  emit('update:energyCurrent', newValue)
 })
 </script>
 
