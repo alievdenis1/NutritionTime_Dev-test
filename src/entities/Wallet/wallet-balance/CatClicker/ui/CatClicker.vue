@@ -67,6 +67,7 @@ const imgContainer = ref<HTMLElement | null>(null)
 let shakeTimeout: number | null = null
 const visibleCards = computed(() => cards.value.slice(-20))
 
+const syncWithBackendIntervalId = ref<NodeJS.Timeout>()
 const showPermissionButton = ref(true)
 const debugAcceleration = ref(0)
 const permissionGranted = ref(false)
@@ -193,8 +194,21 @@ const handleVisibilityChange = () => {
 
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
 
+onMounted(() => {
+  const { initialStatsRequest, syncWithBackend, syncInterval } = store
+
+  initialStatsRequest()
+
+  syncWithBackendIntervalId.value = setInterval(syncWithBackend, syncInterval)
+})
+
+onUnmounted(() => {
+  if (syncWithBackendIntervalId.value) {
+    clearInterval(syncWithBackendIntervalId.value)
+  }
+})
+
 onMounted(async () => {
-  console.log('Component mounted')
   window.addEventListener('visibilitychange', handleVisibilityChange)
   checkDeviceMotionSupport()
   if (isDeviceMotionSupported.value) {
