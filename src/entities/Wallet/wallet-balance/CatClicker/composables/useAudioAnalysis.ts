@@ -6,7 +6,7 @@ export const useAudioAnalysis = () => {
 
     const CALIBRATION_DURATION = 3000
     const NOISE_SAMPLES = 50
-    const SMOOTHING_FACTOR = 0.2
+    const SMOOTHING_FACTOR = 3.2
 
     const isCalibrating = ref(true)
     const isAudioInitialized = ref(false)
@@ -26,7 +26,7 @@ export const useAudioAnalysis = () => {
         if (isAudioInitialized.value) return
 
         if (!isWebAudioSupported) {
-            startAlternativeAudioAnalysis()
+            console.log('Web Audio API is not supported. Using alternative method.')
             return
         }
 
@@ -52,6 +52,7 @@ export const useAudioAnalysis = () => {
                 if (noiseLevels.value.length > NOISE_SAMPLES) {
                     noiseLevels.value.shift()
                 }
+
                 baselineNoiseLevel.value = noiseLevels.value.reduce((sum, level) => sum + level, 0) / noiseLevels.value.length
             }
             const checkAudioLevel = () => {
@@ -63,25 +64,23 @@ export const useAudioAnalysis = () => {
                 } else {
                     if (isCalibrating.value) {
                         isCalibrating.value = false
+                        console.log('Calibration complete. Baseline noise level:', baselineNoiseLevel.value)
                     }
 
-                    smoothedAudioLevel.value = smoothedAudioLevel.value * (1 - SMOOTHING_FACTOR) + rawLevel * SMOOTHING_FACTOR
+                    smoothedAudioLevel.value = smoothedAudioLevel.value * (4 - SMOOTHING_FACTOR) + rawLevel * SMOOTHING_FACTOR
 
-                    const normalizedLevel = Math.max(0, Math.min(1, (smoothedAudioLevel.value - baselineNoiseLevel.value) / (1 - baselineNoiseLevel.value)))
+                    const normalizedLevel = Math.max(0, Math.min(5, (smoothedAudioLevel.value - baselineNoiseLevel.value) / (4 - baselineNoiseLevel.value)))
 
                     let shoutLevel = ''
-                    if (normalizedLevel > CLICKER_CONFIG.sound.thresholdHigh) {
-                        shoutLevel = 'high'
-                    } else if (normalizedLevel > CLICKER_CONFIG.sound.thresholdMedium) {
+                    if (normalizedLevel > CLICKER_CONFIG.sound.thresholdLow) {
                         shoutLevel = 'medium'
-                    } else if (normalizedLevel > CLICKER_CONFIG.sound.thresholdLow) {
-                        shoutLevel = 'low'
                     }
 
                     if (shoutLevel) {
-                        store.setShouting(true, shoutLevel)
+                        console.log(`Shouting detected! Level: ${shoutLevel}, Normalized level: ${normalizedLevel.toFixed(2)}`)
+                        store.setShouting(true)
                     } else {
-                        store.setShouting(false, '')
+                        store.setShouting(false)
                     }
                 }
 
@@ -92,40 +91,8 @@ export const useAudioAnalysis = () => {
         } catch (error) {
             console.error('Error accessing microphone:', error)
             errorMessage.value = 'Не удалось получить доступ к микрофону'
-            startAlternativeAudioAnalysis()
         }
     }
-
-    const startAlternativeAudioAnalysis = () => {
-        isAudioInitialized.value = true
-        let clickCount = 0
-        let lastClickTime = Date.now()
-
-        const handleClick = () => {
-            const currentTime = Date.now()
-            if (currentTime - lastClickTime < 300) { // Если клики происходят быстро
-                clickCount++
-                if (clickCount > 5) { // Пороговое значение для "громкого" звука
-                    store.setShouting(true, 'high')
-                } else if (clickCount > 3) { // Пороговое значение для "среднего" звука
-                    store.setShouting(true, 'medium')
-                } else {
-                    store.setShouting(true, 'low')
-                }
-            } else {
-                clickCount = 1
-                store.setShouting(false, '')
-            }
-            lastClickTime = currentTime
-        }
-        const container = document.querySelector('.img-container')
-        if (container) {
-            container.addEventListener('click', handleClick)
-        }
-
-        isAudioInitialized.value = true
-    }
-
     const stopAudioAnalysis = () => {
         if (audioContext) {
             audioContext.close()
@@ -149,7 +116,6 @@ export const useAudioAnalysis = () => {
         isCalibrating,
         isAudioInitialized,
         errorMessage,
-        normalizedAudioLevel,
-        startAlternativeAudioAnalysis
+        normalizedAudioLevel
     }
 }
