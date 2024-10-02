@@ -20,6 +20,7 @@
 import { shallowRef, watch, type Component } from 'vue'
 import { useRoute } from 'vue-router'
 import { DefaultLayout } from './layouts'
+import { twa } from '@/shared/lib/api/twa'
 import { useLocaleStore } from '@/shared/lib/i18n'
 import { useAuthorization } from '@/features/Auth/log-in'
 import { useSessionStore } from '@/entities/Session'
@@ -40,6 +41,26 @@ const authUser = async () => {
     localeStore.initializeLocale(sessionStore.lang)
   }
 }
+
+// TODO: удалить консоль
+console.log('twa', twa)
+
+if (twa) {
+  twa.ready()
+  twa.enableClosingConfirmation()
+  twa.disableVerticalSwipes()
+  twa.expand()
+}
+
+// WebApp.enableClosingConfirmation()
+// WebApp.disableVerticalSwipes()
+// WebApp.expand()
+// WebApp.BackButton.show()
+// WebApp.HapticFeedback.impactOccurred('heavy')
+
+// onMounted(() => {
+
+// })
 
 authUser()
 
