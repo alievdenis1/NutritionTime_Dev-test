@@ -50,6 +50,12 @@ if (twa) {
   twa.enableClosingConfirmation()
   twa.disableVerticalSwipes()
   twa.expand()
+  twa.onEvent('viewportChanged', ({ isStateStable }) => {
+	console.log('isStateStable', isStateStable)
+	if (isStateStable) {
+		twa && twa.expand()
+	}
+  })
 }
 
 // WebApp.enableClosingConfirmation()
