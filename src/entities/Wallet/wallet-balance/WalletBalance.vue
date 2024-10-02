@@ -61,7 +61,7 @@
 		</div>
 		<CatClicker />
 
-		<div class="flex justify-between relative">
+		<div class="flex justify-between relative mt-8">
 			<div
 				class="flex gap-[4px] justify-center items-center shadow-custom rounded-[16px] max-w-max py-[6px] px-[12px] mr-2"
 			>
@@ -70,7 +70,7 @@
 			</div>
 
 			<div
-				class="flex items-center gap-[8px] bg-gray rounded-[16px]
+				class="flex items-center gap-[8px] bg-green rounded-[16px]
   max-w-max py-[10px] px-[20px] cursor-pointer h-[44px] relative lock-icon"
 			>
 				<div class="text-white text-sm">
@@ -103,7 +103,7 @@ import { useCatClickerStore } from './CatClicker/model/cat-clicker-store'
 
 const { t } = useTranslation(Localization)
 
-const show = ref(false)
+const show = ref(true)
 const loading = ref(true)
 
 const openModal = () => {
@@ -150,7 +150,6 @@ const formattedCurrency = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.5);
   border-radius: inherit;
   font-size: 24px;
 }
