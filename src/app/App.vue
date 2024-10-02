@@ -43,12 +43,12 @@ const authUser = async () => {
 
 authUser()
 
+watch(() => route?.path, () => {
+	authUser()
+})
+
 watch(() => route?.meta?.layout, (newLayoutComponent) => {
 	layout.value = newLayoutComponent || DefaultLayout
-
-	// TODO: мы сейчас вызываем эту функцию только когда layout изменяется?
-	// Точно ли так нужно?
-	authUser()
 })
 </script>
 
