@@ -51,6 +51,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { IconGold } from '@/shared/components/Icon'
 import { CLICKER_CONFIG, useAudioAnalysis, useCards, useCatClickerStore } from 'entities/Wallet/wallet-balance/CatClicker'
+import twa from '@/shared/lib/api/twa'
 
 const store = useCatClickerStore()
 
@@ -69,7 +70,6 @@ const visibleCards = computed(() => cards.value.slice(-20))
 
 const syncWithBackendIntervalId = ref<NodeJS.Timeout>()
 const showPermissionButton = ref(true)
-const debugAcceleration = ref(0)
 const permissionGranted = ref(false)
 const eventCount = ref(0)
 const lastError = ref('')
@@ -131,7 +131,6 @@ const handleDeviceMotion = (event: DeviceMotionEvent) => {
           Math.pow(accelerationIncludingGravity.z || 0, 2)
       ) - 9.81
 
-      debugAcceleration.value = acceleration
       console.log('Calculated acceleration:', acceleration)
 
       let threshold = CLICKER_CONFIG.shake.thresholdMedium
@@ -139,6 +138,8 @@ const handleDeviceMotion = (event: DeviceMotionEvent) => {
       if (acceleration > threshold) {
         console.log('Shake detected!')
         store.setShaking(true)
+        // TODO: проверить работоспособность
+        twa && twa.HapticFeedback.impactOccurred('heavy')
 
         if (shakeTimeout) clearTimeout(shakeTimeout)
         shakeTimeout = window.setTimeout(() => {
