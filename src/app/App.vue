@@ -42,16 +42,12 @@ const authUser = async () => {
   }
 }
 
-// TODO: удалить консоль
-console.log('twa', twa)
-
 if (twa) {
   twa.ready()
   twa.enableClosingConfirmation()
   twa.disableVerticalSwipes()
   twa.expand()
   twa.onEvent('viewportChanged', ({ isStateStable }) => {
-	console.log('isStateStable', isStateStable)
 	if (isStateStable) {
 		twa && twa.expand()
 	}
