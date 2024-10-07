@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="flex flex-row justify-end mt-[12px]">
+		<div class="relative z-10 flex flex-row justify-end mt-[12px]">
 			<button
 				class="flex justify-center items-center shadow-custom rounded-[16px] max-w-max py-[6px] px-[6px] mr-2 text-xxl cursor-pointer"
 				:class="{
@@ -13,7 +13,7 @@
 		</div>
 		<div
 			ref="imgContainer"
-			class="img-container flex items-center justify-center h-[280px] max-w-max m-auto mb-[16px] relative min-w-[280px] min-h-[280px]"
+			class="img-container flex items-center justify-center h-[280px] max-w-max m-auto mt-[-20px] mb-[16px] relative min-w-[280px] min-h-[280px]"
 			:class="{
 				'bg-transparentGreen': !store.isRapidClicking,
 				'bg-rapidClickColor': store.isRapidClicking,
