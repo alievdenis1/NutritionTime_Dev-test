@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { shallowRef, watch, type Component } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { DefaultLayout } from './layouts'
 import { twa } from '@/shared/lib/api/twa'
 import { useLocaleStore } from '@/shared/lib/i18n'
@@ -28,6 +28,7 @@ import { useSessionStore } from '@/entities/Session'
 import { VConfirm } from '@/shared/components/Confirm'
 
 const route = useRoute()
+const router = useRouter()
 
 const layout = shallowRef<Component>(DefaultLayout)
 
@@ -54,16 +55,6 @@ if (twa) {
   })
 }
 
-// WebApp.enableClosingConfirmation()
-// WebApp.disableVerticalSwipes()
-// WebApp.expand()
-// WebApp.BackButton.show()
-// WebApp.HapticFeedback.impactOccurred('heavy')
-
-// onMounted(() => {
-
-// })
-
 authUser()
 
 watch(() => route?.path, () => {
@@ -72,6 +63,20 @@ watch(() => route?.path, () => {
 
 watch(() => route?.meta?.layout, (newLayoutComponent) => {
 	layout.value = newLayoutComponent || DefaultLayout
+})
+
+watch(() => route?.path, () => {
+	const hasBackButton = route?.meta?.backButton
+
+	if (twa && hasBackButton) {
+		const BackButton = twa.BackButton
+		BackButton.show()
+
+		BackButton.onClick(() => {
+			router.go(-1)
+			BackButton.hide()
+		})
+	}
 })
 </script>
 

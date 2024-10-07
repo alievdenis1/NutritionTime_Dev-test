@@ -22,4 +22,8 @@ Object.entries(ElementPlusIcons).forEach(([key, icon]) => {
 	app.component(`ElIcon${key}`, icon)
 })
 
+if (import.meta.env.VITE_USE_TWA_MOCK) {
+    import('eruda').then(eruda => eruda.default.init())
+}
+
 app.mount('#app')

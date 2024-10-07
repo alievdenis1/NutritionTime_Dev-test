@@ -1,5 +1,5 @@
 <template>
-	<div class="relative flex flex-col gap-[16px] mt-[16px] mb-[60px]">
+	<div class="relative flex flex-col gap-[16px] mt-[16px] mb-[160px]">
 		<CreateRecipeBasicInfo ref="basicInfo" />
 		<CreateRecipeGradation />
 		<CreateRecipeTime />

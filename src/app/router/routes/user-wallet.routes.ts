@@ -8,7 +8,8 @@ export default [
         path: '/wallet',
         meta: {
             title: 'Wallet',
-            layout: DefaultLayout
+            layout: DefaultLayout,
+            backButton: true,
         }
     }
 ] as RouteRecordRaw[]

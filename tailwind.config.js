@@ -63,7 +63,7 @@ export default {
         red: '#E75854',
         yellow: '#FFD274',
         blue: {
-          DEFAULT: '0069A5',
+          DEFAULT: '#0069A5',
           100: '#019FB5'
         },
         borderRadius: {

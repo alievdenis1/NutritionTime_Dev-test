@@ -2,17 +2,10 @@
 	<div class="p-[16px]">
 		<VLoading v-if="loading" />
 		<div v-else>
-			<div class="flex justify-between items-center mb-[16px]">
-				<button
-					class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
-					@click="router.go(-1)"
-				>
-					<IconArrowRight icon-color="#1C1C1C" />
-				</button>
+			<div class="flex justify-center items-center mb-[16px] min-h-[44px]">
 				<h2 class="text-center text-lg text-darkGray">
 					{{ t('chooseRecipe') }}
 				</h2>
-				<div />
 			</div>
 			<div class="mb-[80px] mt-[24px]">
 				<div
@@ -59,7 +52,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { IconFire, IconTime, IconArrowRight } from 'shared/components/Icon'
+import { IconFire, IconTime } from 'shared/components/Icon'
 import { VLoading } from 'shared/components/Loading'
 import { useRouter } from 'vue-router'
 

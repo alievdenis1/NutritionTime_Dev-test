@@ -1,19 +1,10 @@
 <template>
 	<div class="flex flex-col bg-white mb-[100px] gap-[24px]">
-		<div class="flex justify-between items-center p-[16px]">
-			<div class="w-[70px]">
-				<button
-					class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
-					@click="router.go(-1)"
-				>
-					<IconArrowRight icon-color="#1C1C1C" />
-				</button>
-			</div>
-
-			<h2 class="text-center text-lg text-darkGray">
+		<div class="grid grid-cols-3 items-center p-[16px]">
+			<h2 class="col-start-2 col-end-3 text-center text-lg text-darkGray">
 				{{ t('filters') }}
 			</h2>
-			<div class="w-[70px]">
+			<div class="col-start-3 col-end-4 text-end">
 				<div
 					v-if="showResetButton"
 					class="cursor-pointer text-slateGray text-sm"
@@ -94,7 +85,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { IconArrowRight, IconCheck } from 'shared/components/Icon'
+import { IconCheck } from 'shared/components/Icon'
 import { VAccordion } from 'shared/components/Accordion'
 import { VButton, ButtonColors } from 'shared/components/Button'
 import { SearchSlider, SearchIngredients, SearchNutritional } from 'features/search-filter'
