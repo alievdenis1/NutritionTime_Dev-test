@@ -1,30 +1,26 @@
 <template>
-	<div class="flex justify-between items-center p-[16px]">
-		<button
-			class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
-			@click="router.go(-1)"
-		>
-			<IconArrowRight icon-color="#1C1C1C" />
-		</button>
-		<h2 class="text-center text-lg text-darkGray">
-			{{ t('editTitle') }}
-		</h2>
-		<div />
-	</div>
-	<div class="flex flex-col gap-[16px]  mb-[60px] p-[16px]">
-		<CreateRecipeBasicInfo />
-		<CreateRecipeGradation />
-		<CreateRecipeTime />
-		<CreateRecipeIngredients
-			:title="t('ingredientsTitle')"
-			:desc="t('ingredientsDescription')"
-		/>
-		<CreateRecipeNutritional />
-		<StepByStepRecipe />
-		<KitchenToolsRecipe />
-		<TagsRecipe />
+	<div class="flex flex-col p-[16px] gap-[20px] min-h-screen">
+		<div class="flex justify-center items-center min-h-[44px]">
+			<h2 class="text-center text-lg text-darkGray">
+				{{ t('editTitle') }}
+			</h2>
+		</div>
+		<div class="flex flex-col gap-[16px]">
+			<CreateRecipeBasicInfo />
+			<CreateRecipeGradation />
+			<CreateRecipeTime />
+			<CreateRecipeIngredients
+				:title="t('ingredientsTitle')"
+				:desc="t('ingredientsDescription')"
+			/>
+			<CreateRecipeNutritional />
+			<StepByStepRecipe />
+			<KitchenToolsRecipe />
+			<TagsRecipe />
+		</div>
 		<VButton
 			:color="ButtonColors.Green"
+			class="mt-auto"
 			@click="saveRecipe"
 		>
 			<div class="flex gap-[12px] items-center">

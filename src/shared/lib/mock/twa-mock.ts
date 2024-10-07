@@ -81,10 +81,10 @@ export const mockTWA: TWA = {
     BackButton: {
         isVisible: false,
         onClick: (callback: () => void) => {
-            callback()
+            console.log('BackButton onClick: ', callback)
         },
         offClick: (callback: () => void) => {
-            callback()
+            console.log('BackButton offClick: ', callback)
         },
         show: () => {
             console.log('Showing BackButton')

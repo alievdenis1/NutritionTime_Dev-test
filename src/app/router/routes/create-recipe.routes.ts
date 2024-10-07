@@ -8,7 +8,8 @@ export default [
 		path: '/create-recipe',
 		meta: {
 			title: 'Create Recipe',
-			layout: DefaultLayout
+			layout: DefaultLayout,
+			backButton: true,
 		}
 	},
 	{
@@ -17,7 +18,8 @@ export default [
 		path: '/check-recipe',
 		meta: {
 			title: 'Check Recipe',
-			layout: DefaultLayout
+			layout: DefaultLayout,
+			backButton: true,
 		}
 	},
 	{
@@ -26,7 +28,8 @@ export default [
 		path: '/tag-recipe',
 		meta: {
 			title: 'Tags Recipe',
-			layout: DefaultLayout
+			layout: DefaultLayout,
+			backButton: true,
 		}
 	},
 	{
@@ -35,7 +38,8 @@ export default [
 		path: '/select-recipe',
 		meta: {
 			title: 'Select Recipe',
-			layout: DefaultLayout
+			layout: DefaultLayout,
+			backButton: true,
 		}
 	},
 	{
@@ -44,7 +48,8 @@ export default [
 		path: '/ideas-recipe',
 		meta: {
 			title: 'Select Recipe',
-			layout: DefaultLayout
+			layout: DefaultLayout,
+			backButton: true,
 		}
 	},
 	{
@@ -53,13 +58,19 @@ export default [
 		path: '/ingredient-recipe',
 		meta: {
 			title: 'Select Recipe',
-			layout: DefaultLayout
+			layout: DefaultLayout,
+			backButton: true,
 		}
 	},
 	{
 		name: 'details-recipe',
 		component: () => import('pages/create-recipe/CardRecipe.vue'),
 		path: '/recipe/:id',
+		meta: {
+			title: 'Recipe',
+			layout: DefaultLayout,
+			backButton: true,
+		}
 	},
 	{
 		name: 'all-comment',
@@ -67,7 +78,8 @@ export default [
 		path: '/all-comment/:id',
 		meta: {
 			title: 'All Comment',
-			layout: DefaultLayout
+			layout: DefaultLayout,
+			backButton: true,
 		}
 	},
 	{
@@ -76,7 +88,8 @@ export default [
 		path: '/recipe/:id/edit',
 		meta: {
 			title: 'Editing Recipe',
-			layout: DefaultLayout
+			layout: DefaultLayout,
+			backButton: true,
 		}
 	},
 ] as RouteRecordRaw[]

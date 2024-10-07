@@ -17,13 +17,7 @@
 			class="fixed top-0 left-0 z-50 w-full transition-all duration-300"
 			:class="{ 'bg-white': !isHeaderTransparent }"
 		>
-			<div class="flex justify-between items-center p-[16px]">
-				<button
-					class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
-					@click="router.go(-1)"
-				>
-					<IconArrowRight icon-color="#1C1C1C" />
-				</button>
+			<div class="flex justify-end items-center p-[16px]">
 				<div class="flex space-x-2">
 					<button
 						v-for="(icon, index) in icons"

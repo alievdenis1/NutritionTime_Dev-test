@@ -1,16 +1,9 @@
 <template>
 	<div class="p-[16px]">
-		<div class="flex justify-between items-center mb-[16px]">
-			<button
-				class="p-[12px] rotate-180 shadow-2xl bg-white rounded-[50%] shadow-custom cursor-pointer"
-				@click="router.go(-1)"
-			>
-				<IconArrowRight icon-color="#1C1C1C" />
-			</button>
+		<div class="flex justify-center items-center mb-[16px] min-h-[44px]">
 			<h2 class="text-center text-lg text-darkGray">
 				{{ titleText }}
 			</h2>
-			<div />
 		</div>
 		<div class="mb-4">
 			<h2 class="text-base font-semibold mb-[12px]">
@@ -47,9 +40,8 @@ import { IconArrowRight } from '@/shared/components/Icon'
 import { ButtonColors } from '@/shared/components/Button'
 import { VButton } from '@/shared/components/Button'
 import localizations from './CheckRecipe.localization.json'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 
-const router = useRouter()
 const route = useRoute()
 const { t } = useTranslation(localizations)
 

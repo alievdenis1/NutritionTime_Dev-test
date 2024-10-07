@@ -17,7 +17,8 @@ export default [
 		path: '/filter',
 		meta: {
 			title: 'Editing Recipe',
-			layout: DefaultLayout
+			layout: DefaultLayout,
+			backButton: true,
 		}
 	}
 ] as RouteRecordRaw[]
