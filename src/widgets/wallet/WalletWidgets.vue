@@ -17,10 +17,7 @@
 			<WalletBalance />
 		</TabsContent>
 		<TabsContent value="history">
-			<div class="mt-5">
-				{{ t('preparingRelease') }}
-			</div>
-			<!--			<WalletHistory />-->
+			<WalletHistory />
 		</TabsContent>
 	</TabsMain>
 </template>
@@ -28,7 +25,7 @@
 <script setup lang="ts">
 import { TabsMain, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { WalletBalance } from 'entities/Wallet/wallet-balance'
-// import { WalletHistory } from 'entities/Wallet/wallet-history'
+import { WalletHistory } from 'entities/Wallet/wallet-history'
 import { useTranslation } from '@/shared/lib/i18n'
 import localizations from './WalletWidgets.localization.json'
 const { t } = useTranslation(localizations)

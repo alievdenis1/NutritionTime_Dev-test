@@ -12,14 +12,14 @@
 			<transition name="modal">
 				<div
 					v-show="isVisible"
-					class="bg-white transition-all p-4 rounded-t-xl width-custom max-w-md relative z-50"
+					class="bg-white transition-all p-4 rounded-t-xl width-custom max-w-md relative z-50 modal-content"
 					:class="{'rounded-b-xl': props.lifted}"
 					:style="{ transform: `translateY(-${liftedHeight}px)`}"
 					@click.stop
 				>
 					<button
 						v-if="!props.hideCloseIcon"
-						class="absolute right-4 top-4 cursor-pointer px-[13px] py-[13px] rounded-[100px] bg-lightGray ml-[8px]"
+						class="absolute z-10 right-4 top-4 cursor-pointer px-[13px] py-[13px] rounded-[100px] bg-lightGray ml-[8px]"
 						@click="closeModal"
 					>
 						<IconClose :icon-color="'#000000'" />
@@ -73,5 +73,8 @@ const enableScroll = () => {
 .width-custom{
 	max-width: 375px;
 	width: 100%;
+}
+.modal-content {
+	max-height: calc(100vh - 64px);
 }
 </style>
