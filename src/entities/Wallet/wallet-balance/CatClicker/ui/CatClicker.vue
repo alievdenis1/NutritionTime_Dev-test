@@ -2,7 +2,7 @@
 	<div>
 		<div class="relative z-10 flex flex-row justify-end mt-[12px]">
 			<button
-				class="flex justify-center items-center shadow-custom rounded-[16px] max-w-max py-[6px] px-[6px] mr-2 text-xxl cursor-pointer"
+				class="flex justify-center items-center shadow-custom rounded-[16px] min-w-[50px] max-w-max py-[6px] px-[6px] mr-2 text-xxl cursor-pointer"
 				:class="{
 					'bg-forestGreen': isMicrophoneAvailable,
 				}"
