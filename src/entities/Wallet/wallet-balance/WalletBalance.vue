@@ -107,7 +107,7 @@ import { useCatClickerStore } from './CatClicker/model/cat-clicker-store'
 
 const { t } = useTranslation(Localization)
 
-const show = ref(true)
+const show = ref(false)
 const loading = ref(true)
 
 const openModal = () => {
