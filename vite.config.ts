@@ -5,6 +5,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 import tailwind from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,6 +16,7 @@ export default defineConfig({
 	plugins: [
 		vue(),
 		eslint(),
+		nodePolyfills(),
 	],
 	css: {
 		postcss: {

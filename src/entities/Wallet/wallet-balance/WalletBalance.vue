@@ -71,6 +71,20 @@
 
 			<TonConnectButton />
 		</div>
+		<div
+			v-if="walletConnected"
+			class="mt-4"
+		>
+			<div v-if="checkingNFT">
+				Проверка наличия NFT...
+			</div>
+			<div v-else-if="hasNFT">
+				У вас есть NFT из нашей коллекции!
+			</div>
+			<div v-else>
+				У вас нет NFT из нашей коллекции.
+			</div>
+		</div>
 		<div class="mt-[16px]">
 			<Leaderboard />
 		</div>
@@ -78,58 +92,111 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
-import {
+ import { onMounted, ref, computed, watch } from 'vue'
+ import {
   IconGold,
   IconEnquiry,
   IconEnergy,
   IconClose,
-} from '@/shared/components/Icon'
-import { VModal } from '@/shared/components/Modal'
-import { VButton } from '@/shared/components/Button'
-import { ButtonColors } from '@/shared/components/Button'
-import { useAuthWalletButton } from '@/entities/Wallet/api/useAuthButton'
-import { useTranslation } from '@/shared/lib/i18n'
-import Localization from './WalletBalance.localization.json'
-import CatClicker from './CatClicker/ui/CatClicker.vue'
-import Leaderboard from './LeaderBoard/LeaderBoard.vue'
-import { useCatClickerStore } from './CatClicker/model/cat-clicker-store'
-import { TonConnectButton } from '@townsquarelabs/ui-vue'
+ } from '@/shared/components/Icon'
+ import { VModal } from '@/shared/components/Modal'
+ import { VButton } from '@/shared/components/Button'
+ import { ButtonColors } from '@/shared/components/Button'
+ import { useAuthWalletButton } from '@/entities/Wallet/api/useAuthButton'
+ import { useTranslation } from '@/shared/lib/i18n'
+ import Localization from './WalletBalance.localization.json'
+ import CatClicker from './CatClicker/ui/CatClicker.vue'
+ import Leaderboard from './LeaderBoard/LeaderBoard.vue'
+ import { useCatClickerStore } from './CatClicker/model/cat-clicker-store'
+ import { TonConnectButton, useTonAddress, useTonWallet } from '@townsquarelabs/ui-vue'
+ import TonWeb from 'tonweb'
 
-const { t } = useTranslation(Localization)
+ const { t } = useTranslation(Localization)
 
-const show = ref(false)
-const loading = ref(true)
+ const show = ref(false)
+ const loading = ref(true)
 
-const openModal = () => {
-	show.value = true
-}
+ const openModal = () => {
+  show.value = true
+ }
 
-const closeModal = () => {
-	show.value = false
-}
+ const closeModal = () => {
+  show.value = false
+ }
 
-onMounted(async () => {
+ onMounted(async () => {
   const isLocal = import.meta.env.VITE_USE_TWA_MOCK
 
   if (isLocal) {
-    console.warn('TWA is not available. Some features may not work correctly.')
+   console.warn('TWA is not available. Some features may not work correctly.')
   } else {
-    useAuthWalletButton()
+   useAuthWalletButton()
   }
 
   loading.value = false
-})
+ })
 
-const store = useCatClickerStore()
+ const store = useCatClickerStore()
 
-const currency = computed(() => store.currency)
-const energyCurrency = computed(() => store.energyCurrent)
+ const currency = computed(() => store.currency)
+ const energyCurrency = computed(() => store.energyCurrent)
 
-const formattedCurrency = computed(() => {
+ const formattedCurrency = computed(() => {
   const value = currency.value ?? 0
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-})
+ })
+
+ // Новый код для проверки NFT
+
+ const address = useTonAddress()
+ const wallet = useTonWallet()
+ const hasNFT = ref(false)
+ const checkingNFT = ref(false)
+ const walletConnected = computed(() => !!wallet.value)
+
+ const NFT_COLLECTION_ADDRESS = 'EQDERkmRDrXxzEbZUMMgo3uDJwe24qUYpnasJ83WpQZaqjJ1'
+
+ const tonweb = new TonWeb(new TonWeb.HttpProvider('https://toncenter.com/api/v2/jsonRPC', {
+  apiKey: import.meta.env.VITE_TONCENTER_API_KEY
+ }))
+
+ const checkNFTOwnership = async (userAddress: string) => {
+  checkingNFT.value = true
+  hasNFT.value = false
+
+  try {
+   const nftCollection = new TonWeb.token.nft.NftCollection(tonweb.provider, { address: NFT_COLLECTION_ADDRESS })
+   const collectionData = await nftCollection.getCollectionData()
+   const nextItemIndex = collectionData.next_item_index
+
+   // Проверяем первые 100 NFT в коллекции (или меньше, если их меньше 100)
+   const itemsToCheck = Math.min(nextItemIndex, 100)
+
+   for (let i = 0; i < itemsToCheck; i++) {
+    const nftItemAddress = await nftCollection.getNftItemAddressByIndex(i)
+    const nftItem = new TonWeb.token.nft.NftItem(tonweb.provider, { address: nftItemAddress })
+    const nftData = await nftItem.getData()
+
+    if (nftData.owner?.toString() === userAddress) {
+     hasNFT.value = true
+     break
+    }
+   }
+  } catch (error) {
+   console.error('Ошибка при проверке NFT:', error)
+  } finally {
+   checkingNFT.value = false
+  }
+ }
+
+ watch(wallet, (newWallet) => {
+  if (newWallet && address.value) {
+   checkNFTOwnership(address.value)
+  } else {
+   hasNFT.value = false
+   checkingNFT.value = false
+  }
+ })
 </script>
 
 <style scoped lang="scss">
