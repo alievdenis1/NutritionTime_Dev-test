@@ -150,8 +150,6 @@
   try {
    const rawAddress = Address.parseFriendly(userAddress.value).address
 
-   // Используем адрес как есть, без преобразования
-   console.log(rawAddress)
    const nftItems = await api.accounts.getAccountNftItems(rawAddress, {
     collection: collectionAddress,
     limit: 1,
