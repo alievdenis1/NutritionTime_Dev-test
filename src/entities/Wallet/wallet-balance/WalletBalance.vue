@@ -59,7 +59,10 @@
 				</VButton>
 			</VModal>
 		</div>
-		<CatClicker />
+		<CatClicker
+			:wallet-connected="walletConnected"
+			:has-nft="hasNFT"
+		/>
 
 		<div class="flex justify-between relative mt-8 mb-auto">
 			<div
@@ -70,20 +73,6 @@
 			</div>
 
 			<TonConnectButton />
-		</div>
-		<div
-			v-if="walletConnected"
-			class="mt-4"
-		>
-			<div v-if="checkingNFT">
-				Проверка наличия NFT...
-			</div>
-			<div v-else-if="hasNFT">
-				У вас есть NFT из нашей коллекции!
-			</div>
-			<div v-else>
-				У вас нет NFT из нашей коллекции.
-			</div>
 		</div>
 		<div class="mt-[16px]">
 			<Leaderboard />
@@ -143,7 +132,7 @@
  const wallet = useTonWallet()
 
  const COLLECTION_ADDRESS = 'EQDERkmRDrXxzEbZUMMgo3uDJwe24qUYpnasJ83WpQZaqjJ1'
-const collectionAddress = Address.parseFriendly(COLLECTION_ADDRESS).address
+ const collectionAddress = Address.parseFriendly(COLLECTION_ADDRESS).address
  // Инициализация TonAPI клиента
  const http = new TonApiClient({
   baseUrl: 'https://tonapi.io',
@@ -169,7 +158,7 @@ const collectionAddress = Address.parseFriendly(COLLECTION_ADDRESS).address
     offset: 0
    })
 
-   hasNFT.value = nftItems?.nft_items?.length > 0
+   hasNFT.value = nftItems.nftItems?.length > 0
   } catch (error) {
    console.error('Error checking NFT:', error)
   } finally {
@@ -216,6 +205,9 @@ const collectionAddress = Address.parseFriendly(COLLECTION_ADDRESS).address
 :deep(#ton-connect-button) {
  button {
   background-color: #319A6E !important;
+ }
+ button > div {
+  @apply text-white font-normal text-sm
  }
 }
 </style>
