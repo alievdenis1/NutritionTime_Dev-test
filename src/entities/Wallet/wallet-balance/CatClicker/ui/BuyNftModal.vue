@@ -50,7 +50,11 @@ const handleCloseBuyNftModal = () => {
 }
 
 const buyNft = () => {
-    window.open(import.meta.env.VITE_NFT_COLLECTION_LINK, '_blank')
+    window.open(
+        import.meta.env.VITE_NFT_COLLECTION_LINK
+            || 'https://getgems.io/collection/EQDERkmRDrXxzEbZUMMgo3uDJwe24qUYpnasJ83WpQZaqjJ1',
+        '_blank'
+    )
 }
 
 watch(() => props.hasNft, (hasNft) => {
