@@ -1,5 +1,5 @@
 <template>
-	<div class="p-[16px]">
+	<div class="p-[16px] pb-14">
 		<WalletWidgets />
 	</div>
 </template>

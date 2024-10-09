@@ -69,16 +69,7 @@
 				<IconEnergy />
 			</div>
 
-			<div
-				class="flex items-center gap-[8px] bg-green rounded-[16px]
-  max-w-max py-[10px] px-[20px] cursor-pointer h-[44px] relative lock-icon"
-			>
-				<div class="text-white text-sm">
-					{{ t('connectWalletPrompt') }}
-				</div>
-
-				<IconArrowRight v-if="!isSmallScreen" />
-			</div>
+			<TonConnectButton />
 		</div>
 		<div class="mt-[16px]">
 			<Leaderboard />
@@ -92,7 +83,6 @@ import {
   IconGold,
   IconEnquiry,
   IconEnergy,
-  IconArrowRight,
   IconClose,
 } from '@/shared/components/Icon'
 import { VModal } from '@/shared/components/Modal'
@@ -104,6 +94,7 @@ import Localization from './WalletBalance.localization.json'
 import CatClicker from './CatClicker/ui/CatClicker.vue'
 import Leaderboard from './LeaderBoard/LeaderBoard.vue'
 import { useCatClickerStore } from './CatClicker/model/cat-clicker-store'
+import { TonConnectButton } from '@townsquarelabs/ui-vue'
 
 const { t } = useTranslation(Localization)
 
@@ -117,8 +108,6 @@ const openModal = () => {
 const closeModal = () => {
 	show.value = false
 }
-
-const isSmallScreen = ref(window.innerWidth <= 380)
 
 onMounted(async () => {
   const isLocal = import.meta.env.VITE_USE_TWA_MOCK
@@ -150,17 +139,9 @@ const formattedCurrency = computed(() => {
 	flex-direction: column;
 }
 
-.lock-icon::after {
-  content: '🔒';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: inherit;
-  font-size: 24px;
+:deep(#ton-connect-button) {
+ button {
+  background-color: #319A6E !important;
+ }
 }
 </style>
