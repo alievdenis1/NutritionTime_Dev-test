@@ -109,7 +109,8 @@
  import Leaderboard from './LeaderBoard/LeaderBoard.vue'
  import { useCatClickerStore } from './CatClicker/model/cat-clicker-store'
  import { TonConnectButton, useTonAddress, useTonWallet } from '@townsquarelabs/ui-vue'
- import TonWeb from 'tonweb'
+ import { TonApiClient, Api } from '@ton-api/client'
+ import { Address } from '@ton/core'
 
  const { t } = useTranslation(Localization)
 
@@ -124,18 +125,6 @@
   show.value = false
  }
 
- onMounted(async () => {
-  const isLocal = import.meta.env.VITE_USE_TWA_MOCK
-
-  if (isLocal) {
-   console.warn('TWA is not available. Some features may not work correctly.')
-  } else {
-   useAuthWalletButton()
-  }
-
-  loading.value = false
- })
-
  const store = useCatClickerStore()
 
  const currency = computed(() => store.currency)
@@ -146,55 +135,73 @@
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
  })
 
- // Новый код для проверки NFT
-
- const address = useTonAddress()
- const wallet = useTonWallet()
- const hasNFT = ref(false)
+ // Новый код для проверки NFT с использованием TonAPI.io
+ const walletConnected = ref(false)
  const checkingNFT = ref(false)
- const walletConnected = computed(() => !!wallet.value)
+ const hasNFT = ref(false)
+ const userAddress = useTonAddress()
+ const wallet = useTonWallet()
 
- const NFT_COLLECTION_ADDRESS = 'EQDERkmRDrXxzEbZUMMgo3uDJwe24qUYpnasJ83WpQZaqjJ1'
+ const COLLECTION_ADDRESS = 'EQDERkmRDrXxzEbZUMMgo3uDJwe24qUYpnasJ83WpQZaqjJ1'
+const collectionAddress = Address.parseFriendly(COLLECTION_ADDRESS).address
+ // Инициализация TonAPI клиента
+ const http = new TonApiClient({
+  baseUrl: 'https://tonapi.io',
+  // Замените на ваш реальный API ключ
+  apiKey: 'AETW5XNUWGGPIXIAAAALJJJMZJTWRBAW6Q4EAFV5IMZRIK2I564PKELKZZFXT35BWJTNZYA'
+ })
+ const api = new Api(http)
 
- const tonweb = new TonWeb(new TonWeb.HttpProvider('https://toncenter.com/api/v2/jsonRPC', {
-  apiKey: import.meta.env.VITE_TONCENTER_API_KEY
- }))
+ async function checkNFT() {
+  if (!userAddress.value) return
 
- const checkNFTOwnership = async (userAddress: string) => {
   checkingNFT.value = true
   hasNFT.value = false
 
   try {
-   const nftCollection = new TonWeb.token.nft.NftCollection(tonweb.provider, { address: NFT_COLLECTION_ADDRESS })
-   const collectionData = await nftCollection.getCollectionData()
-   const nextItemIndex = collectionData.next_item_index
+   const rawAddress = Address.parseFriendly(userAddress.value).address
 
-   // Проверяем первые 100 NFT в коллекции (или меньше, если их меньше 100)
-   const itemsToCheck = Math.min(nextItemIndex, 100)
+   // Используем адрес как есть, без преобразования
+   console.log(rawAddress)
+   const nftItems = await api.accounts.getAccountNftItems(rawAddress, {
+    collection: collectionAddress,
+    limit: 1,
+    offset: 0
+   })
 
-   for (let i = 0; i < itemsToCheck; i++) {
-    const nftItemAddress = await nftCollection.getNftItemAddressByIndex(i)
-    const nftItem = new TonWeb.token.nft.NftItem(tonweb.provider, { address: nftItemAddress })
-    const nftData = await nftItem.getData()
-
-    if (nftData.owner?.toString() === userAddress) {
-     hasNFT.value = true
-     break
-    }
-   }
+   hasNFT.value = nftItems.nft_items.length > 0
   } catch (error) {
-   console.error('Ошибка при проверке NFT:', error)
+   console.error('Error checking NFT:', error)
   } finally {
    checkingNFT.value = false
   }
  }
 
+ // Следим за изменением кошелька
  watch(wallet, (newWallet) => {
-  if (newWallet && address.value) {
-   checkNFTOwnership(address.value)
+  walletConnected.value = !!newWallet
+  if (newWallet) {
+   checkNFT()
   } else {
    hasNFT.value = false
-   checkingNFT.value = false
+  }
+ })
+
+ onMounted(async () => {
+  const isLocal = import.meta.env.VITE_USE_TWA_MOCK
+
+  if (isLocal) {
+   console.warn('TWA is not available. Some features may not work correctly.')
+  } else {
+   useAuthWalletButton()
+  }
+
+  loading.value = false
+
+  // Проверяем NFT при монтировании, если кошелек уже подключен
+  if (wallet.value) {
+   walletConnected.value = true
+   checkNFT()
   }
  })
 </script>
