@@ -148,7 +148,7 @@ const collectionAddress = Address.parseFriendly(COLLECTION_ADDRESS).address
  const http = new TonApiClient({
   baseUrl: 'https://tonapi.io',
   // Замените на ваш реальный API ключ
-  apiKey: 'AETW5XNUWGGPIXIAAAALJJJMZJTWRBAW6Q4EAFV5IMZRIK2I564PKELKZZFXT35BWJTNZYA'
+  apiKey: 'AHHT737POV45FDIAAAAETF62HOODTD6YZHYXOLDBRN56L6DKRI6KJE3FMCRWSOFDSKQ77XY'
  })
  const api = new Api(http)
 
@@ -169,7 +169,7 @@ const collectionAddress = Address.parseFriendly(COLLECTION_ADDRESS).address
     offset: 0
    })
 
-   hasNFT.value = nftItems.nft_items.length > 0
+   hasNFT.value = nftItems?.nft_items?.length > 0
   } catch (error) {
    console.error('Error checking NFT:', error)
   } finally {
