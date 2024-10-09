@@ -71,6 +71,20 @@
 
 			<TonConnectButton />
 		</div>
+		<div
+			v-if="walletConnected"
+			class="mt-4"
+		>
+			<div v-if="checkingNFT">
+				Проверка наличия NFT...
+			</div>
+			<div v-else-if="hasNFT">
+				У вас есть NFT из нашей коллекции!
+			</div>
+			<div v-else>
+				У вас нет NFT из нашей коллекции.
+			</div>
+		</div>
 		<div class="mt-[16px]">
 			<Leaderboard />
 		</div>
@@ -78,58 +92,118 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
-import {
+ import { onMounted, ref, computed, watch } from 'vue'
+ import {
   IconGold,
   IconEnquiry,
   IconEnergy,
   IconClose,
-} from '@/shared/components/Icon'
-import { VModal } from '@/shared/components/Modal'
-import { VButton } from '@/shared/components/Button'
-import { ButtonColors } from '@/shared/components/Button'
-import { useAuthWalletButton } from '@/entities/Wallet/api/useAuthButton'
-import { useTranslation } from '@/shared/lib/i18n'
-import Localization from './WalletBalance.localization.json'
-import CatClicker from './CatClicker/ui/CatClicker.vue'
-import Leaderboard from './LeaderBoard/LeaderBoard.vue'
-import { useCatClickerStore } from './CatClicker/model/cat-clicker-store'
-import { TonConnectButton } from '@townsquarelabs/ui-vue'
+ } from '@/shared/components/Icon'
+ import { VModal } from '@/shared/components/Modal'
+ import { VButton } from '@/shared/components/Button'
+ import { ButtonColors } from '@/shared/components/Button'
+ import { useAuthWalletButton } from '@/entities/Wallet/api/useAuthButton'
+ import { useTranslation } from '@/shared/lib/i18n'
+ import Localization from './WalletBalance.localization.json'
+ import CatClicker from './CatClicker/ui/CatClicker.vue'
+ import Leaderboard from './LeaderBoard/LeaderBoard.vue'
+ import { useCatClickerStore } from './CatClicker/model/cat-clicker-store'
+ import { TonConnectButton, useTonAddress, useTonWallet } from '@townsquarelabs/ui-vue'
+ import { TonApiClient, Api } from '@ton-api/client'
+ import { Address } from '@ton/core'
 
-const { t } = useTranslation(Localization)
+ const { t } = useTranslation(Localization)
 
-const show = ref(false)
-const loading = ref(true)
+ const show = ref(false)
+ const loading = ref(true)
 
-const openModal = () => {
-	show.value = true
-}
+ const openModal = () => {
+  show.value = true
+ }
 
-const closeModal = () => {
-	show.value = false
-}
+ const closeModal = () => {
+  show.value = false
+ }
 
-onMounted(async () => {
+ const store = useCatClickerStore()
+
+ const currency = computed(() => store.currency)
+ const energyCurrency = computed(() => store.energyCurrent)
+
+ const formattedCurrency = computed(() => {
+  const value = currency.value ?? 0
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+ })
+
+ // Новый код для проверки NFT с использованием TonAPI.io
+ const walletConnected = ref(false)
+ const checkingNFT = ref(false)
+ const hasNFT = ref(false)
+ const userAddress = useTonAddress()
+ const wallet = useTonWallet()
+
+ const COLLECTION_ADDRESS = 'EQDERkmRDrXxzEbZUMMgo3uDJwe24qUYpnasJ83WpQZaqjJ1'
+const collectionAddress = Address.parseFriendly(COLLECTION_ADDRESS).address
+ // Инициализация TonAPI клиента
+ const http = new TonApiClient({
+  baseUrl: 'https://tonapi.io',
+  // Замените на ваш реальный API ключ
+  apiKey: 'AETW5XNUWGGPIXIAAAALJJJMZJTWRBAW6Q4EAFV5IMZRIK2I564PKELKZZFXT35BWJTNZYA'
+ })
+ const api = new Api(http)
+
+ async function checkNFT() {
+  if (!userAddress.value) return
+
+  checkingNFT.value = true
+  hasNFT.value = false
+
+  try {
+   const rawAddress = Address.parseFriendly(userAddress.value).address
+
+   // Используем адрес как есть, без преобразования
+   console.log(rawAddress)
+   const nftItems = await api.accounts.getAccountNftItems(rawAddress, {
+    collection: collectionAddress,
+    limit: 1,
+    offset: 0
+   })
+
+   hasNFT.value = nftItems.nft_items.length > 0
+  } catch (error) {
+   console.error('Error checking NFT:', error)
+  } finally {
+   checkingNFT.value = false
+  }
+ }
+
+ // Следим за изменением кошелька
+ watch(wallet, (newWallet) => {
+  walletConnected.value = !!newWallet
+  if (newWallet) {
+   checkNFT()
+  } else {
+   hasNFT.value = false
+  }
+ })
+
+ onMounted(async () => {
   const isLocal = import.meta.env.VITE_USE_TWA_MOCK
 
   if (isLocal) {
-    console.warn('TWA is not available. Some features may not work correctly.')
+   console.warn('TWA is not available. Some features may not work correctly.')
   } else {
-    useAuthWalletButton()
+   useAuthWalletButton()
   }
 
   loading.value = false
-})
 
-const store = useCatClickerStore()
-
-const currency = computed(() => store.currency)
-const energyCurrency = computed(() => store.energyCurrent)
-
-const formattedCurrency = computed(() => {
-  const value = currency.value ?? 0
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-})
+  // Проверяем NFT при монтировании, если кошелек уже подключен
+  if (wallet.value) {
+   walletConnected.value = true
+   checkNFT()
+  }
+ })
 </script>
 
 <style scoped lang="scss">
