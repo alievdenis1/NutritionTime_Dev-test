@@ -161,15 +161,13 @@ const collectionAddress = Address.parseFriendly(COLLECTION_ADDRESS).address
   try {
    const rawAddress = Address.parseFriendly(userAddress.value).address
 
-   // Используем адрес как есть, без преобразования
-   console.log(rawAddress)
    const nftItems = await api.accounts.getAccountNftItems(rawAddress, {
     collection: collectionAddress,
     limit: 1,
     offset: 0
    })
 
-   hasNFT.value = nftItems?.nft_items?.length > 0
+   hasNFT.value = nftItems.nftItems?.length > 0
   } catch (error) {
    console.error('Error checking NFT:', error)
   } finally {
