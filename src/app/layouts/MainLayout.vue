@@ -3,17 +3,17 @@
 	<main
 		v-show="isLoading"
 		id="main"
-		:class="`layout pb-[50px] bg-mainBg`"
+		class="layout layout--main pb-[100px] bg-mainBg"
 	>
 		<slot />
 	</main>
 	<footer-widget
 		v-show="isLoading"
-		class="sticky bottom-0"
+		class="sticky bottom-[20px]"
 	/>
 	<VSkeletonLocalization
 		v-show="!isLoading"
-		class="p-[16px]"
+		class="p-[16px] bg-mainBg skeletonContainer"
 	/>
 </template>
 
@@ -43,3 +43,9 @@ watch(currentLocale, () => {
 
 startLoading()
 </script>
+
+<style lang="scss" scoped>
+	.skeletonContainer {
+		min-height: calc(100vh - 64px);
+	}
+</style>

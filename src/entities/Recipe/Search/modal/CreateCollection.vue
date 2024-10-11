@@ -36,7 +36,7 @@
 						@click="toggleDropdown"
 					>
 					<IconArrow
-						:class="['absolute right-[12px] top-1/2 transform -translate-y-1/2 transition-transform w-[24px] h-[24px]', { 'rotate-180': isOpen }]"
+						:class="['absolute right-[12px] top-1/2 transform -translate-y-1/2 transition-transform w-[24px] h-[24px] pointer-events-none', { 'rotate-180': isOpen }]"
 						icon-color="#1C1C1C"
 					/>
 				</div>
