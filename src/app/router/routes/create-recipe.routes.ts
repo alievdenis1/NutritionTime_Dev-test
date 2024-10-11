@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
-import { DefaultLayout } from 'app/layouts'
+import { DefaultLayout, NavigateLayout } from 'app/layouts'
 
 export default [
 	{
@@ -8,7 +8,7 @@ export default [
 		path: '/create-recipe',
 		meta: {
 			title: 'Create Recipe',
-			layout: DefaultLayout,
+			layout: NavigateLayout,
 			backButton: true,
 		}
 	},
@@ -18,7 +18,7 @@ export default [
 		path: '/check-recipe',
 		meta: {
 			title: 'Check Recipe',
-			layout: DefaultLayout,
+			layout: NavigateLayout,
 			backButton: true,
 		}
 	},
@@ -48,7 +48,7 @@ export default [
 		path: '/ideas-recipe',
 		meta: {
 			title: 'Select Recipe',
-			layout: DefaultLayout,
+			layout: NavigateLayout,
 			backButton: true,
 		}
 	},
@@ -58,7 +58,7 @@ export default [
 		path: '/ingredient-recipe',
 		meta: {
 			title: 'Select Recipe',
-			layout: DefaultLayout,
+			layout: NavigateLayout,
 			backButton: true,
 		}
 	},
@@ -68,7 +68,7 @@ export default [
 		path: '/recipe/:id',
 		meta: {
 			title: 'Recipe',
-			layout: DefaultLayout,
+			layout: NavigateLayout,
 			backButton: true,
 		}
 	},
@@ -78,7 +78,7 @@ export default [
 		path: '/all-comment/:id',
 		meta: {
 			title: 'All Comment',
-			layout: DefaultLayout,
+			layout: NavigateLayout,
 			backButton: true,
 		}
 	},

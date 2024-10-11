@@ -1,5 +1,5 @@
 <template>
-	<div class="p-[16px]">
+	<div class="p-[16px] mb-[80px]">
 		<div ref="searchBarRef" />
 		<div
 			:class="[
@@ -18,7 +18,6 @@
 			class="scrollable"
 			@scroll="handleScroll"
 		>
-			<QuickSearchTag v-if="!showQuickSearchTag" />
 			<RecipePreviewSearch
 				v-if="!store.isLoading"
 				:recipes="store.recipes"

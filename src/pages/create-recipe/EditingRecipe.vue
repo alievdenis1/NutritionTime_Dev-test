@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col p-[16px] gap-[20px] min-h-screen">
+	<div class="flex flex-col p-[16px] pb-[86px] gap-[20px]">
 		<div class="flex justify-center items-center min-h-[44px]">
 			<h2 class="text-center text-lg text-darkGray">
 				{{ t('editTitle') }}
@@ -18,16 +18,18 @@
 			<KitchenToolsRecipe />
 			<TagsRecipe />
 		</div>
-		<VButton
-			:color="ButtonColors.Green"
-			class="mt-auto"
-			@click="saveRecipe"
-		>
-			<div class="flex gap-[12px] items-center">
-				<div> {{ t('further') }}</div>
-				<IconArrowRight icon-color="#FFFFFF" />
-			</div>
-		</VButton>
+		<div class="fixed bottom-[20px] left-[16px] right-[16px] flex justify-between flex-col gap-[12px]">
+			<VButton
+				:color="ButtonColors.Green"
+				class="mt-auto"
+				@click="saveRecipe"
+			>
+				<div class="flex gap-[12px] items-center">
+					<div> {{ t('further') }}</div>
+					<IconArrowRight icon-color="#FFFFFF" />
+				</div>
+			</VButton>
+		</div>
 	</div>
 </template>
 

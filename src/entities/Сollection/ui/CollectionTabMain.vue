@@ -32,7 +32,7 @@
 		</TabsContent>
 		<TabsContent value="recipes">
 			<VContentBlock
-				class="mt-[65px]"
+				class="mt-[65px] mb-[80px]"
 				:image="addPrefix('/image/CatIllustration.png')"
 				:text="t('create')"
 				:button-text="t('buttonCreate')"

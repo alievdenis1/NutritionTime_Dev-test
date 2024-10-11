@@ -1,5 +1,5 @@
 <template>
-	<div class="p-[16px]">
+	<div class="p-[16px] pb-[62px]">
 		<div class="flex justify-center items-center mb-[16px] min-h-[44px]">
 			<h2 class="text-center text-lg text-darkGray">
 				{{ t('addRecipe') }}
@@ -38,7 +38,7 @@
 				</p>
 			</div>
 		</div>
-		<div class="fixed bottom-[100px] left-[16px] right-[16px] flex justify-between flex-col gap-[12px]">
+		<div class="fixed bottom-[112px] left-[16px] right-[16px] flex justify-between flex-col gap-[12px]">
 			<VButton
 				:color="ButtonColors.Green"
 				class="flex-grow"
@@ -56,13 +56,11 @@
 				</div>
 			</VButton>
 		</div>
-		<footer-widget	class="fixed bottom-0 left-0" />
 	</div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { FooterWidget } from 'widgets/footer'
 import { IconAi } from 'shared/components/Icon'
 import { VButton, ButtonColors } from 'shared/components/Button'
 import { useRouter } from 'vue-router'

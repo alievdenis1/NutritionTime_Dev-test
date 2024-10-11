@@ -1,5 +1,5 @@
 <template>
-	<div class="relative flex flex-col gap-[16px] mt-[16px] mb-[160px]">
+	<div class="relative flex flex-col gap-[16px] mt-[16px] mb-[62px]">
 		<CreateRecipeBasicInfo ref="basicInfo" />
 		<CreateRecipeGradation />
 		<CreateRecipeTime />
@@ -11,7 +11,7 @@
 		<StepByStepRecipe />
 		<KitchenToolsRecipe />
 		<TagsRecipe />
-		<div class="px-[16px] fixed bottom-[100px] left-0 w-full">
+		<div class="px-[16px] fixed bottom-[112px] left-0 w-full">
 			<v-button
 				:color="ButtonColors.Green"
 				@click="CheckRecipe"

@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-[20px] p-[16px]">
+	<div class="flex flex-col gap-[20px] p-[16px] pb-[78px]">
 		<div class="flex justify-center items-center min-h-[44px]">
 			<h2 class="text-center text-lg text-darkGray">
 				{{ t('addRecipe') }}
@@ -55,11 +55,11 @@
 			:desc="t('excludeIngredientsDesc')"
 		/>
 
-		<div class="fixed bottom-[100px] left-[16px] right-[16px] flex justify-between flex-col gap-[12px]">
+		<div class="fixed bottom-[110px] left-[16px] right-[16px] flex justify-between flex-col gap-[12px]">
 			<VButton
 				:color="ButtonColors.Green"
 				class="flex-grow"
-				:class="['flex items-center justify-center block w-full mt-4 px-[20px] h-[50px] rounded-xl text-white text-sm text-center cursor-pointer']"
+				:class="['flex items-center justify-center block w-full px-[20px] h-[50px] rounded-xl text-white text-sm text-center cursor-pointer']"
 				@click="TagChangedRoute"
 			>
 				<div class="flex items-center gap-[4px] text-sm">
@@ -70,13 +70,11 @@
 				</div>
 			</VButton>
 		</div>
-		<footer-widget	class="fixed bottom-0 left-0" />
 	</div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FooterWidget } from 'widgets/footer'
 import { CreateRecipeIngredients } from 'entities/Recipe/CreateRecipe/recipe-models'
 import { IconCamera, IconAi } from 'shared/components/Icon'
 import { VAddPhoto } from 'shared/components/AddPhoto'

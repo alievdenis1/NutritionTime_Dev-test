@@ -1,5 +1,5 @@
 <template>
-	<div class="p-[16px]">
+	<div class="p-[16px] pb-[124px]">
 		<div class="flex justify-center items-center mb-[16px] min-h-[44px]">
 			<h2 class="text-center text-lg text-darkGray">
 				{{ t('clarificationTitle') }}
@@ -18,12 +18,12 @@
 			:modal-selected-tags="modalSelectedTags"
 			@tag-changed="handleTagChanged"
 		/>
-		<div class="fixed bottom-[12px] left-[16px] right-[16px] flex justify-between flex-col gap-[12px]">
+		<div class="fixed bottom-[20px] left-[16px] right-[16px] flex justify-between flex-col gap-[12px]">
 			<button
 				:color="ButtonColors.Green"
 				class="flex-grow"
 				:disabled="modalWatchTags"
-				:class="['flex items-center justify-center block w-full mt-4 px-[20px] h-[50px] rounded-xl text-white text-sm text-center cursor-pointer', buttonClass]"
+				:class="['flex items-center justify-center block w-full px-[20px] h-[50px] rounded-xl text-white text-sm text-center cursor-pointer', buttonClass]"
 				@click="TakingIntoMarked"
 			>
 				<div class="flex items-center gap-[4px]">

@@ -13,7 +13,7 @@
 				{{ descriptionText }}
 			</p>
 		</div>
-		<div class="bg-lightGray rounded-[16px] h-[450px] flex items-center justify-center flex-col">
+		<div class="bg-lightGray mb-[66px] rounded-[16px] h-[450px] flex items-center justify-center flex-col">
 			<div class="text-gray text-center text-xs">
 				{{ t('recipeCardPlaceholderTop') }}
 			</div>
@@ -21,15 +21,17 @@
 				{{ t('recipeCardPlaceholderButton') }}
 			</div>
 		</div>
-		<v-button
-			:color="ButtonColors.Green"
-			class="mt-6 mb-10"
-		>
-			<div class="flex gap-3 justify-center items-center w-full text-sm">
-				<div>{{ t('createNftAndPublishRecipe') }}</div>
-				<IconArrowRight icon-color="#FFFFFF" />
-			</div>
-		</v-button>
+		<div class="fixed left-0 right-0 bottom-[112px] px-[16px]">
+			<v-button
+				:color="ButtonColors.Green"
+				class="mt-auto"
+			>
+				<div class="flex gap-3 justify-center items-center w-full text-sm">
+					<div>{{ t('createNftAndPublishRecipe') }}</div>
+					<IconArrowRight icon-color="#FFFFFF" />
+				</div>
+			</v-button>
+		</div>
 	</div>
 </template>
 
