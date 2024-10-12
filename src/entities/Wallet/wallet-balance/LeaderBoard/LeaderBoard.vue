@@ -41,13 +41,14 @@
 	</VModal>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+ import { onMounted, ref } from 'vue'
 import { VButton, ButtonColors } from '@/shared/components/Button'
 import { VModal } from '@/shared/components/Modal'
 import { useTranslation } from '@/shared/lib/i18n'
 import { IconGold } from 'shared/components/Icon'
 import Localization from './LeaderBoard.localization.json'
 import { LEADERS } from './mock'
+import { getLeaderboard, getProfile } from '../../api'
 
 interface ILeader {
     rank: number;
@@ -67,6 +68,12 @@ const openLeaderboardModal = () => {
 const closeLeaderboardModal = () => {
     isShowLeaderboardModal.value = false
 }
+
+onMounted(async () => {
+ const { execute } = getLeaderboard()
+ await execute()
+})
+
 </script>
 
 <style scoped>
