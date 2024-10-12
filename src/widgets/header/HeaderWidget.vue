@@ -3,7 +3,7 @@
 		ref="target"
 		class="grid"
 	>
-		<header class="flex items-center gap-5 w-full justify-between pt-[16px] pr-[16px] pl-[16px]">
+		<header class="flex bg-mainBg items-center gap-5 w-full justify-between pt-[16px] pr-[16px] pl-[16px]">
 			<img
 				alt="Logo"
 				height="34"

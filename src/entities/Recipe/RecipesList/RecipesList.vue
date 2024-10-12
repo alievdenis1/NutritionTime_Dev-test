@@ -1,15 +1,15 @@
 <template>
 	<div
 		v-if="recipesData && recipesData.length > 0"
-		class="mb-[80px] mt-[24px]"
+		class="mt-[24px]"
 	>
 		<div
 			v-for="recipe in recipesData"
 			:key="recipe.id"
-			class="max-w-md mx-auto rounded-[20px] overflow-hidden md:max-w-2xl mb-4 px-[2px] py-[2px] cursor-pointer"
+			class="max-w-md mx-auto rounded-[20px] overflow-hidden md:max-w-2xl [&:not(:last-of-type)]:mb-4 px-[2px] py-[2px] cursor-pointer"
 			@click="router.push(`/recipe/${recipe.id}`)"
 		>
-			<div class="flex  border-custom">
+			<div class="flex bg-white border-custom">
 				<div class="relative">
 					<img
 						class="img object-cover rounded-[20px]"
@@ -90,8 +90,8 @@
 				</div>
 			</div>
 		</div>
-		<CreateCollection />
 	</div>
+	<CreateCollection />
 </template>
 
 <script setup lang="ts">

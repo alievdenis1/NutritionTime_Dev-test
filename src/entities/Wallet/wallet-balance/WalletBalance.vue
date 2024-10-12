@@ -204,5 +204,8 @@
  button > div {
   @apply text-white font-normal text-sm
  }
+ button path {
+	fill: #fff
+ }
 }
 </style>

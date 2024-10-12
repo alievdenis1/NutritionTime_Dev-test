@@ -246,7 +246,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="px-[16px] mt-[24px] mb-[124px]">
+		<div class="px-[16px] mt-[24px] mb-[16px]">
 			<VButton
 				:color="ButtonColors.White"
 				@click="exportToPDF"

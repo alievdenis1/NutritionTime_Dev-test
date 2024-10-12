@@ -13,7 +13,10 @@
 				>
 				<span class="text-sm text-gray-600">{{ recipe.author.name }}</span>
 			</div>
-			<div class="relative">
+			<div
+				class="relative"
+				@click="router.push(`/recipe/${recipe.id}`)"
+			>
 				<img
 					class="w-full h-[343px] object-cover rounded-[12px]"
 					:src="recipe.image"
@@ -73,12 +76,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { IconComment, IconFire, IconHeart, IconTime, IconFavorites } from 'shared/components/Icon'
 import type { RecipesItem } from '../RecipesList/type'
 import CreateCollection from '../Search/modal/CreateCollection.vue'
 import { useTranslation } from 'shared/lib/i18n'
 import localization from './SearchBar.localization.json'
 import { useSearchStore } from './store/search-store'
+
+const router = useRouter()
 const { t } = useTranslation(localization)
 const store = useSearchStore()
 
@@ -97,7 +103,6 @@ props.recipes.forEach(recipe => {
 const toggleFavorite = (recipeId: number) => {
 	store.toggleModalOpen()
 	favoritesState.value[recipeId] = !favoritesState.value[recipeId]
-
 }
 
 const toggleLike = (recipeId: number) => {
@@ -114,6 +119,7 @@ const toggleLike = (recipeId: number) => {
 	border-bottom: 1px solid #1C1C1C0D;
 	padding: 12px 16px;
 	margin-top: 24px;
+	border-radius: 16px;
 }
 
 .recipe-card-inner {

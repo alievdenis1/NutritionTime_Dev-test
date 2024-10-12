@@ -11,9 +11,7 @@
 					<v-loading />
 				</div>
 			</div>
-			<div v-else>
-				<router-view />
-			</div>
+			<router-view v-else />
 		</component>
 	</TonConnectUIProvider>
 </template>
