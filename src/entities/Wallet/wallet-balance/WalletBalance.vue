@@ -91,7 +91,6 @@
  import { VModal } from '@/shared/components/Modal'
  import { VButton } from '@/shared/components/Button'
  import { ButtonColors } from '@/shared/components/Button'
- import { useAuthWalletButton } from '@/entities/Wallet/api/useAuthButton'
  import { useTranslation } from '@/shared/lib/i18n'
  import Localization from './WalletBalance.localization.json'
  import CatClicker from './CatClicker/ui/CatClicker.vue'
@@ -179,8 +178,6 @@
 
   if (isLocal) {
    console.warn('TWA is not available. Some features may not work correctly.')
-  } else {
-   useAuthWalletButton()
   }
 
   loading.value = false
@@ -188,7 +185,7 @@
   // Проверяем NFT при монтировании, если кошелек уже подключен
   if (wallet.value) {
    walletConnected.value = true
-   checkNFT()
+   await checkNFT()
   }
  })
 </script>
