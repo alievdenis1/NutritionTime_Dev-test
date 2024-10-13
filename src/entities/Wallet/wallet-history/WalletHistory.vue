@@ -40,7 +40,7 @@
 			<div
 				v-for="transaction in walletHistory?.transactions"
 				:key="transaction.user_id"
-				class="flex justify-between items-end p-[16px] bg-white rounded-[16px]"
+				class="flex gap-[8px] justify-between items-end p-[16px] bg-white rounded-[16px]"
 			>
 				<div class="flex flex-col gap-[8px]">
 					<div class="flex items-center">
@@ -49,16 +49,15 @@
 							:class="getClass(transaction)"
 						>
 							{{ getSymbol(transaction) }}
-							{{ Math.abs(transaction.amount) }}
+							{{ Math.abs(Number(transaction.amount)) }}
 						</span>
 						<IconGold class="w-[24px] h-[24px]" />
 					</div>
-					<span>{{ transaction.description }}</span>
+					<span>{{ getDescription(transaction) }}</span>
 				</div>
-				<!-- TODO: удалить или добавить время -->
-				<!-- <div class="flex flex-col">
-					<span class="text-slateGray">{{ transaction.date }}</span>
-				</div> -->
+				<div class="flex flex-col">
+					<span class="text-slateGray">{{ new Date(transaction.created_at).toLocaleDateString() }}</span>
+				</div>
 			</div>
 		</div>
 		<div
@@ -103,15 +102,42 @@ onMounted(async () => {
 })
 
 const getClass = (transaction: ITransaction) => {
-	if (transaction.amount === 0) return
+	const amount = Number(transaction.amount)
 
-	return transaction.amount > 0 ? 'text-tealGreen' : 'text-coralRed'
+	if (amount === 0) return
+
+	return amount > 0 ? 'text-tealGreen' : 'text-coralRed'
 }
 
 const getSymbol = (transaction: ITransaction) => {
-	if (transaction.amount === 0) return
+	const amount = Number(transaction.amount)
 
-	return transaction.amount > 0 ? '+' : '-'
+	if (amount === 0) return
+
+	return amount > 0 ? '+' : '-'
+}
+
+const getReferralDescription = (transaction: ITransaction) => {
+	const description = transaction.description
+
+	const templateString = 'Referral reward for inviting'
+
+	const invitedUserName = description.replace(templateString, '').trim()
+
+	return t('referral', { invitedUserName })
+}
+
+const getDescription = (transaction: ITransaction) => {
+	const type = transaction.type
+	const description = transaction.description
+
+	const selectDescriptionGetter: Record<string, (transaction: ITransaction) => string> = {
+		referral: getReferralDescription
+	}
+
+	const descriptionGetter = selectDescriptionGetter[type]
+
+	return descriptionGetter ? descriptionGetter(transaction) : description
 }
 
 const shareMessage = async () => {
@@ -121,6 +147,7 @@ const shareMessage = async () => {
 				title: t('invitation'),
 				text: t('invitationDescription'),
 				// TODO: проверить, что при запуске приложения через бота - ключ тоже передаётся
+				// (не передаётся, нужно использовать приложение, а не бота)
 				url: `https://t.me/devnutritiontime_bot?startapp=${userInfo?.referral_code || ''}` // Заменить на реальный URL
 				// TODO: возможно тут в ссылку в хэш добавлять id или userName текущего пользователя
 				// А потом, когда другой пользователь перейдет по этой ссылке

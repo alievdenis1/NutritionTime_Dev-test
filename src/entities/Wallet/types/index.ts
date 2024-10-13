@@ -19,9 +19,12 @@ export interface ILeader {
 
 export interface ITransaction {
     user_id: number;
-    amount: number;
+    amount: string;
     type: string;
     description: string;
+    id: number;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface IWalletHistory {
