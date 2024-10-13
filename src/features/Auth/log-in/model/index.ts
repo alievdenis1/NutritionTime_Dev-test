@@ -16,8 +16,6 @@ export const useAuthorization = () => {
 
         isLoading.value = true
         try {
-            // TODO: удалить, использовать twa.ready при инициализации приложения
-            // await twa.ready()
             const twaUser = twa.initDataUnsafe.user
 
             if (!twaUser) {
@@ -29,10 +27,14 @@ export const useAuthorization = () => {
                 sessionStore.setLang(twaUser.language_code as Locales)
             }
 
+            // TODO: убрать
+            console.log('twa.initDataUnsafe.start_param', twa.initDataUnsafe.start_param)
+
             const { data, error: loginError, execute } = login({
                 telegram_id: twaUser.id.toString(),
                 first_name: twaUser.first_name,
                 last_name: twaUser.last_name || '',
+                referral_code: twa.initDataUnsafe?.start_param || null,
             })
 
             await execute()
