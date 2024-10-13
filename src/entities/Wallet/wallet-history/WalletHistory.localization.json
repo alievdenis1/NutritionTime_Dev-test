@@ -9,7 +9,7 @@
         "transactionHistory": "Здесь будет храниться история зачислений",
         "invitation": "Приглашение",
         "invitationDescription": "Приглашаю тебя присоединиться к Nutrition Time!",
-        "referral": "Награда за приглашение {{invitedUserName}}"
+        "referral": "Награда за приглашение: {{invitedUserName}}"
     },
     "en": {
         "inviteFriends": "Invite friends",
