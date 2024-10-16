@@ -17,7 +17,8 @@
 			:class="{
 				'bg-transparentGreen': !store.isRapidClicking,
 				'bg-rapidClickColor': store.isRapidClicking,
-				'cursor-not-allowed': !canClick
+				'cursor-not-allowed': !canClick,
+				'opacity-30': !canClick
 			}"
 			@click="handleClick"
 		>
@@ -203,8 +204,26 @@ const checkClickerAvailability = () => {
 	return true
 }
 
+const debounceFetch = () => {
+    let timer: NodeJS.Timeout
+
+    const { syncWithBackend } = store
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer)
+      }
+      timer = setTimeout(() => {
+        syncWithBackend()
+      }, 700)
+    }
+  }
+
+const syncFetch = debounceFetch()
+
 const handleClick = (event: MouseEvent) => {
   // TODO: вернуть
+  // TODO: ВЕРНУТЬ!!!!!!!!!!!!!!!
   // if (!checkClickerAvailability()) return
 
   if (!canClick.value) return
@@ -243,6 +262,9 @@ const handleClick = (event: MouseEvent) => {
       startAudioAnalysis()
     }
   }
+
+  // TODO: for testing
+  syncFetch()
 }
 
 const handleDeviceMotion = (event: DeviceMotionEvent) => {
@@ -321,17 +343,29 @@ const handleVisibilityChange = () => {
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
 
 onMounted(() => {
-  const { initialStatsRequest, syncWithBackend, syncInterval } = store
+  const fetch = async () => {
+    const { initialStatsRequest, syncInterval, regenerateEnergy } = store
 
-  initialStatsRequest()
+    await initialStatsRequest()
 
-  syncWithBackendIntervalId.value = setInterval(syncWithBackend, syncInterval)
+    syncWithBackendIntervalId.value = setInterval(() => {
+      regenerateEnergy()
+      // TODO: вернуть
+      // syncWithBackend()
+    }, syncInterval)
+  }
+
+  fetch()
 })
 
 onUnmounted(() => {
+  const { resetLastEnergyUpdateTimestamp } = store
+
   if (syncWithBackendIntervalId.value) {
     clearInterval(syncWithBackendIntervalId.value)
   }
+
+  resetLastEnergyUpdateTimestamp()
 })
 
 onMounted(async () => {

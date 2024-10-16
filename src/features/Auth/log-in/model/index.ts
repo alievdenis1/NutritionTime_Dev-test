@@ -22,13 +22,9 @@ export const useAuthorization = () => {
                 throw new Error('User data is not available from TWA')
             }
 
-            // console.log('TWA', twaUser)
             if (twaUser.language_code != undefined) {
                 sessionStore.setLang(twaUser.language_code as Locales)
             }
-
-            // TODO: убрать
-            console.log('twa.initDataUnsafe.start_param', twa.initDataUnsafe.start_param)
 
             const { data, error: loginError, execute } = login({
                 telegram_id: twaUser.id.toString(),
