@@ -19,8 +19,8 @@ export const useCatClickerStore = defineStore('catClicker', () => {
     const energyStatus = ref<EnergyStatus | null>(null)
     const lastEnergyUpdateTimestamp = ref<number>()
     const pendingClicks = ref<{ energy_spent: number, is_multi_click: boolean, shake_clicks: number, shout_clicks: number }[]>([])
-    // const lastSyncTime = ref(Date.now())
     const syncInterval = 2000
+    const requestForSyncEnabled = ref(false)
 
     const currency = computed(() => Number(stats.value?.balance ?? 0).toFixed(2))
     const energyCurrent = computed(() => Number(energyStatus.value?.current_energy ?? 0).toFixed(2))
@@ -92,29 +92,42 @@ export const useCatClickerStore = defineStore('catClicker', () => {
         }
     }
 
+    function updateTheNeedOfSync(prevEnergy: number, currentEnergy: number) {
+        const ENERGY_THRESHOLD_FOR_SYNC = 20
+
+        if (prevEnergy > ENERGY_THRESHOLD_FOR_SYNC && currentEnergy <= ENERGY_THRESHOLD_FOR_SYNC) {
+            requestForSyncEnabled.value = true
+        } else {
+            requestForSyncEnabled.value = false
+        }
+    }
+
     function click(energySpent = 1, isMultiClick = false, shakeClicks = 0, shoutClicks = 0) {
         if (!canClick.value) return false
+
+        shakeClicks = shoutClicks ? 0 : shakeClicks
 
         pendingClicks.value.push({ energy_spent: energySpent, is_multi_click: isMultiClick, shake_clicks: shakeClicks, shout_clicks: shoutClicks })
 
         // Оптимистичное обновление
         if (energyStatus.value) {
-            energyStatus.value.current_energy = Math.max(0, Number(energyStatus.value.current_energy) - energySpent)
+            const prevEnergy = energyStatus.value.current_energy
+            const currentEnergy = Math.max(0, Number(energyStatus.value.current_energy) - energySpent)
+
+            updateTheNeedOfSync(prevEnergy, currentEnergy)
+
+            energyStatus.value.current_energy = currentEnergy
         }
         if (stats.value) {
             // TODO: эту логику можно вынести отдельно, чтобы в при ошибке можно было посчитать сколько
             // было потрачено энергии и накоплено монет
-            // TODO: TESTING
             const normalClicks = energySpent - shakeClicks - shoutClicks
-            if (normalClicks < 0) return
-            const baseReward = normalClicks * 0.01
-            const shakeMultiplier = shakeClicks * 0.01 * 2 // Пример: 1% бонус за каждую тряску
-            const shoutMultiplier = shoutClicks * 0.01 * 4// Пример: 2% бонус за каждый крик
-            // const baseReward = Number(stats.value.click_reward) * energySpent
-            // const shakeMultiplier = 1 + (shakeClicks * 0.01) // Пример: 1% бонус за каждую тряску
-            // const shoutMultiplier = 1 + (shoutClicks * 0.02) // Пример: 2% бонус за каждый крик
 
-            // const totalReward = baseReward * shakeMultiplier * shoutMultiplier
+            // todo: 0.01 === stats.value.click_reward
+            const baseReward = normalClicks * 0.01
+            const shakeMultiplier = shakeClicks * 0.01 * 2
+            const shoutMultiplier = shoutClicks * 0.01 * 4
+
             const totalReward = baseReward + shakeMultiplier + shoutMultiplier
 
             stats.value.balance = Number(stats.value.balance) + totalReward
@@ -126,39 +139,52 @@ export const useCatClickerStore = defineStore('catClicker', () => {
     }
 
     async function syncWithBackend() {
-        // TODO: вернуть
-        // const now = Date.now()
-        // if (now - lastSyncTime.value < syncInterval) return
-
         if (pendingClicks.value.length > 0) {
-            // TODO: вместо трех циклов можно сделать один
-            const totalEnergySpent = pendingClicks.value.reduce((sum, click) => sum + click.energy_spent, 0)
-            const totalShakeClicks = pendingClicks.value.reduce((sum, click) => sum + click.shake_clicks, 0)
-            const totalShoutClicks = pendingClicks.value.reduce((sum, click) => sum + click.shout_clicks, 0)
+            const { totalEnergySpent, totalShakeClicks, totalShoutClicks } = pendingClicks.value.reduce((sum, click) => {
+                return ({
+                    totalEnergySpent: sum.totalEnergySpent + click.energy_spent,
+                    totalShakeClicks: sum.totalShakeClicks + click.shake_clicks,
+                    totalShoutClicks: sum.totalShoutClicks + click.shout_clicks,
+                })
+            }, {
+                totalEnergySpent: 0,
+                totalShakeClicks: 0,
+                totalShoutClicks: 0,
+            })
             const isMultiClick = pendingClicks.value[0].is_multi_click // Берем значение из первого клика
 
             const clickRequest: ClickRequest = {
-                energy_spent: totalEnergySpent,
+                energy_spent: totalEnergySpent > ConfigClicker.defaultMaxEnergy ? ConfigClicker.defaultMaxEnergy : totalEnergySpent,
                 is_multi_click: isMultiClick,
                 shake_clicks: totalShakeClicks,
                 shout_clicks: totalShoutClicks
             }
+
+            const isSyncRequest = requestForSyncEnabled.value
 
             pendingClicks.value = []
             const { data, error, execute } = processClick(clickRequest)
             await execute()
 
             if (data.value && !error.value) {
-                if (!pendingClicks.value.length) {
+                if (!pendingClicks.value.length || isSyncRequest) {
                     updateStatsFromClickResponse(data.value)
+
+                    if (isSyncRequest) {
+                        pendingClicks.value = []
+                    }
                 }
             } else {
                 console.error('Error processing clicks:', error.value)
                 pendingClicks.value = []
             }
         }
-        // TODO: вернуть
-        // lastSyncTime.value = now
+    }
+
+    function energyThresholdSyncRequest() {
+        if (requestForSyncEnabled.value) {
+            syncWithBackend()
+        }
     }
 
     async function initialStatsRequest() {
@@ -232,6 +258,7 @@ export const useCatClickerStore = defineStore('catClicker', () => {
         setShaking,
         setShouting,
         setRapidClicking,
+        energyThresholdSyncRequest,
         regenerateEnergy,
         resetLastEnergyUpdateTimestamp,
         isShaking,

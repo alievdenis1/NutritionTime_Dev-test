@@ -20,7 +20,7 @@
 				'cursor-not-allowed': !canClick,
 				'opacity-30': !canClick
 			}"
-			@click="handleClick"
+			@click="handleClickAndSync"
 		>
 			<div class="img-wrapper">
 				<img
@@ -135,7 +135,7 @@ const imgContainer = ref<HTMLElement | null>(null)
 let shakeTimeout: number | null = null
 const visibleCards = computed(() => cards.value.slice(-20))
 
-const syncWithBackendIntervalId = ref<NodeJS.Timeout>()
+const regenerateEnergyIntervalId = ref<NodeJS.Timeout>()
 const eventCount = ref(0)
 const lastError = ref('')
 const isDeviceMotionSupported = ref(false)
@@ -204,7 +204,7 @@ const checkClickerAvailability = () => {
 	return true
 }
 
-const debounceFetch = () => {
+const debounceSyncWithBackend = () => {
     let timer: NodeJS.Timeout
 
     const { syncWithBackend } = store
@@ -217,13 +217,11 @@ const debounceFetch = () => {
         syncWithBackend()
       }, 700)
     }
-  }
+}
 
-const syncFetch = debounceFetch()
+const syncWithBackendFetch = debounceSyncWithBackend()
 
 const handleClick = (event: MouseEvent) => {
-  // TODO: вернуть
-  // TODO: ВЕРНУТЬ!!!!!!!!!!!!!!!
   // if (!checkClickerAvailability()) return
 
   if (!canClick.value) return
@@ -262,9 +260,16 @@ const handleClick = (event: MouseEvent) => {
       startAudioAnalysis()
     }
   }
+}
 
-  // TODO: for testing
-  syncFetch()
+const handleClickAndSync = (event: MouseEvent) => {
+  const { energyThresholdSyncRequest } = store
+
+  handleClick(event)
+
+  energyThresholdSyncRequest()
+
+  syncWithBackendFetch()
 }
 
 const handleDeviceMotion = (event: DeviceMotionEvent) => {
@@ -348,10 +353,8 @@ onMounted(() => {
 
     await initialStatsRequest()
 
-    syncWithBackendIntervalId.value = setInterval(() => {
+    regenerateEnergyIntervalId.value = setInterval(() => {
       regenerateEnergy()
-      // TODO: вернуть
-      // syncWithBackend()
     }, syncInterval)
   }
 
@@ -361,8 +364,8 @@ onMounted(() => {
 onUnmounted(() => {
   const { resetLastEnergyUpdateTimestamp } = store
 
-  if (syncWithBackendIntervalId.value) {
-    clearInterval(syncWithBackendIntervalId.value)
+  if (regenerateEnergyIntervalId.value) {
+    clearInterval(regenerateEnergyIntervalId.value)
   }
 
   resetLastEnergyUpdateTimestamp()
