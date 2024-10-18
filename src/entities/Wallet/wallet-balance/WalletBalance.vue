@@ -122,7 +122,7 @@
  const checkingNFT = ref(false)
  const hasNFT = ref(false)
  const userAddress = useTonAddress()
- const wallet = useTonWallet()
+//  const wallet = useTonWallet()
 
  const COLLECTION_ADDRESS = 'EQDERkmRDrXxzEbZUMMgo3uDJwe24qUYpnasJ83WpQZaqjJ1'
  const collectionAddress = Address.parseFriendly(COLLECTION_ADDRESS).address
@@ -157,7 +157,7 @@
   }
  }
 
- console.log('wallet', wallet.value?.account.address)
+//  console.log('wallet', wallet.value?.account.address)
  console.log('userAddress', userAddress.value)
  // Следим за изменением кошелька
  watch(userAddress, (newUserAddress) => {
@@ -168,16 +168,18 @@
   } else {
    hasNFT.value = false
   }
+ }, {
+	immediate: true,
  })
 
- onMounted(async () => {
-  console.log('onMounted', wallet.value?.account.address)
-  // Проверяем NFT при монтировании, если кошелек уже подключен
-  if (wallet.value) {
-   walletConnected.value = true
-   await checkNFT()
-  }
- })
+//  onMounted(async () => {
+//   console.log('onMounted', wallet.value?.account.address)
+//   // Проверяем NFT при монтировании, если кошелек уже подключен
+//   if (wallet.value) {
+//    walletConnected.value = true
+//    await checkNFT()
+//   }
+//  })
 </script>
 
 <style scoped lang="scss">
