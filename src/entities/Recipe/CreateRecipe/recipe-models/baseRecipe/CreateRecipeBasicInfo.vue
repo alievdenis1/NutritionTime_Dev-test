@@ -1,7 +1,7 @@
 <template>
 	<VAccordion
 		:title="t('basicInformation')"
-		open-by-default
+		is-open
 	>
 		<div
 			class="mt-[20px]"
@@ -26,7 +26,7 @@
 			</p>
 			<div class="form-section flex flex-col gap-4">
 				<VInput
-					v-model:value="values.title"
+					v-model="values.title"
 					:title="t('recipeTitlePlaceholder')"
 					:error="!!errors?.title"
 					:error-message="errors?.title?.message"
@@ -34,7 +34,7 @@
 					@focusout="validateField('title')"
 				/>
 				<VInput
-					v-model:value="values.description"
+					v-model="values.description"
 					:title="t('recipeDescriptionPlaceholder')"
 					textarea
 					:error="!!errors?.description"
@@ -50,11 +50,14 @@
 					:key="category"
 				>
 					<VInput
-						v-model:value="selectedCategory[category]"
+						v-model="values[category]"
 						:title="t(category)"
 						class="cursor-pointer"
+						:error="!!errors?.[category]"
+						:error-message="errors?.[category]?.message"
 						readonly
 						@click="openCategoryModal(category)"
+						@focusout="validateField(category)"
 					>
 						<template #right-icon>
 							<IconArrowRight
@@ -85,7 +88,7 @@
 			</div>
 			<div class="relative">
 				<VInput
-					v-model:value="searchQuery"
+					v-model="searchQuery"
 					:title="t('searchCategory')"
 					class="mb-4"
 					clearable
@@ -105,7 +108,11 @@
 					class="category-item p-2 border-b cursor-pointer flex items-center gap-[8px]"
 					@click="selectCategory(item)"
 				>
-					<IconRadio icon-color="#ffffff" />{{ item }}
+					<IconRadio
+						icon-color="#319a6e"
+						:active="item === selectedListItem"
+					/>
+					{{ item }}
 				</div>
 			</div>
 			<VButton
@@ -166,8 +173,10 @@ const { errors, values, validateField, validate } = useForm(createRecipeBasicInf
 		title: '',
 		description: '',
 		image: '',
+		dishCategory: '',
+		cuisine: '',
+		diet: '',
 	},
-	mode: 'eager'
 })
 
 const categoryTypes: (keyof Category)[] = ['dishCategory', 'cuisine', 'diet']
@@ -223,7 +232,19 @@ const handleImageUpload = (imageUrl: string | null) => {
 	}
 }
 
+const selectedListItem = computed(() => {
+	if (selectedType.value !== null) {
+		return selectedItem.value[selectedType.value]
+	}
+
+	return ''
+})
+
 const filteredCategories = computed(() => {
+	if (selectedListItem.value) {
+		return categories.value
+	}
+
 	return categories.value.filter(category => category.toLowerCase().includes(searchQuery.value.toLowerCase()))
 })
 
@@ -253,7 +274,7 @@ const closeModal = (): void => {
 const onSave = (): void => {
 	closeModal()
 	if (selectedType.value !== null) {
-		selectedCategory.value[selectedType.value] = selectedItem.value[selectedType.value]
+		values[selectedType.value] = selectedItem.value[selectedType.value]
 	}
 }
 
@@ -269,16 +290,24 @@ const onValidate = (): boolean => {
 
 defineExpose({ onValidate })
 
+watch(selectedListItem, () => {
+	if (selectedListItem.value) {
+		searchQuery.value = selectedListItem.value
+	} else {
+		searchQuery.value = ''
+	}
+})
+
 // Watch for changes and update store
-watch([values.title, values.description, values.image, selectedCategory], () => {
+watch(values, () => {
 	if (store.currentRecipe) {
 		store.currentRecipe.title = values.title
 		store.currentRecipe.description = values.description
 		store.currentRecipe.image = values.image
 		if (store.currentRecipe.recipeInfo) {
-			store.currentRecipe.recipeInfo['Категория'] = selectedCategory.value.dishCategory
-			store.currentRecipe.recipeInfo['Кухня'] = selectedCategory.value.cuisine
-			store.currentRecipe.recipeInfo['Тип диеты'] = selectedCategory.value.diet
+			store.currentRecipe.recipeInfo['Категория'] = values.dishCategory
+			store.currentRecipe.recipeInfo['Кухня'] = values.cuisine
+			store.currentRecipe.recipeInfo['Тип диеты'] = values.diet
 		}
 	}
 }, { deep: true })
