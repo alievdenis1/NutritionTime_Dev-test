@@ -8,7 +8,7 @@ const NUMBER_REGEX = /[0-9,.]+/g
 export const createRecipeBasicInfoSchema = object({
     title: string().required(t('required')).default('').max(100, `${t('max')} - 100`),
     description: string().required(t('required')).default('').max(500, `${t('max')} - 500`),
-    image: string().required(t('required')).default(''),
+    image: string().default(''),
     dishCategory: string().required(t('required')).default(''),
     cuisine: string().required(t('required')).default(''),
     diet: string().required(t('required')).default(''),
