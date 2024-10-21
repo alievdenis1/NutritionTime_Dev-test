@@ -23,7 +23,7 @@
 		</div>
 		<div
 			ref="imgContainer"
-			class="img-container flex items-center justify-center h-[280px] max-w-max m-auto mt-[-20px] mb-[16px] relative min-w-[280px] min-h-[280px]"
+			class="img-container flex items-center justify-center h-[280px] max-w-max m-auto mb-[16px] relative min-w-[280px] min-h-[280px]"
 			:class="{
 				'bg-transparentGreen': !store.isRapidClicking,
 				'bg-rapidClickColor': store.isRapidClicking,
@@ -70,7 +70,7 @@
 			:show="isShowMotionModal"
 			@close="closeMotionModal"
 		>
-			<div class="flex items-center justify-between">
+			<div class="flex items-center justify-between mb-[12px]">
 				<div class="text-xl text-darkGray">
 					{{ t(MOTION_MODAL_TITLE[motionStatus || 'Error']) }}
 				</div>
@@ -81,12 +81,11 @@
 					<IconClose />
 				</button>
 			</div>
-			<div>
+			<div class="mb-[20px]">
 				{{ t(MOTION_MODAL_DESCRIPTION[motionStatus || 'Error']) }}
 			</div>
 			<div class="max-w-md mx-auto">
 				<VButton
-					class="mt-[20px]"
 					:color="ButtonColors.Green"
 					@click="closeMotionModal"
 				>
@@ -98,7 +97,7 @@
 			:show="isShowMicrophoneModal"
 			@close="closeMicrophoneModal"
 		>
-			<div class="flex items-center justify-between">
+			<div class="flex items-center justify-between mb-[12px]">
 				<div class="text-xl text-darkGray">
 					{{ t(MICROPHONE_MODAL_TITLE[microphoneStatus || 'NotAllowedError']) }}
 				</div>
@@ -109,12 +108,11 @@
 					<IconClose />
 				</button>
 			</div>
-			<div>
+			<div class="mb-[20px]">
 				{{ t(MICROPHONE_MODAL_DESCRIPTION[microphoneStatus || 'NotAllowedError']) }}
 			</div>
 			<div class="max-w-md mx-auto">
 				<VButton
-					class="mt-[20px]"
 					:color="ButtonColors.Green"
 					@click="closeMicrophoneModal"
 				>
@@ -397,8 +395,6 @@ const handleVisibilityChange = () => {
     if (shakeTimeout) clearTimeout(shakeTimeout)
   }
 }
-
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
 
 onMounted(() => {
   const fetch = async () => {

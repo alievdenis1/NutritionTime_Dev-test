@@ -37,6 +37,9 @@
 					</div>
 					...
 				</template>
+				<div class="mt-[12px]">
+					{{ t('totalParticipants', { total: leaderData.total_users }) }}
+				</div>
 			</template>
 			<template v-else>
 				<VSkeleton class="w-full h-[32px] rounded-[16px] " />
