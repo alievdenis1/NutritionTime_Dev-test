@@ -2,7 +2,17 @@
 	<div>
 		<div class="relative z-10 flex flex-row justify-end mt-[12px]">
 			<button
+				v-if="isDeviceMotionSupported"
 				class="flex justify-center items-center shadow-custom rounded-[16px] min-w-[50px] max-w-max py-[6px] px-[6px] mr-2 text-xxl cursor-pointer"
+				:class="{
+					'bg-forestGreen': isMotionAvailable,
+				}"
+				@click="handleRequestMotion"
+			>
+				📳
+			</button>
+			<button
+				class="flex justify-center items-center shadow-custom rounded-[16px] min-w-[50px] max-w-max py-[6px] px-[6px] text-xxl cursor-pointer"
 				:class="{
 					'bg-forestGreen': isMicrophoneAvailable,
 				}"
@@ -57,6 +67,34 @@
 			</div>
 		</div>
 		<VModal
+			:show="isShowMotionModal"
+			@close="closeMotionModal"
+		>
+			<div class="flex items-center justify-between">
+				<div class="text-xl text-darkGray">
+					{{ t(MOTION_MODAL_TITLE[motionStatus || 'Error']) }}
+				</div>
+				<button
+					class="text-2xl w-[48px] h-[48px] bg-lightGray rounded-[50%] p-[14px] cursor-pointer"
+					@click="closeMotionModal"
+				>
+					<IconClose />
+				</button>
+			</div>
+			<div>
+				{{ t(MOTION_MODAL_DESCRIPTION[motionStatus || 'Error']) }}
+			</div>
+			<div class="max-w-md mx-auto">
+				<VButton
+					class="mt-[20px]"
+					:color="ButtonColors.Green"
+					@click="closeMotionModal"
+				>
+					{{ t('motionModalSubmit') }}
+				</VButton>
+			</div>
+		</VModal>
+		<VModal
 			:show="isShowMicrophoneModal"
 			@close="closeMicrophoneModal"
 		>
@@ -108,6 +146,7 @@ import { useTranslation } from '@/shared/lib/i18n'
 import ConnectWalletModal from './ConnectWalletModal.vue'
 import BuyNftModal from './BuyNftModal.vue'
 import Localization from '../CatClicker.localization.json'
+import { MICROPHONE_MODAL_DESCRIPTION, MICROPHONE_MODAL_TITLE, MOTION_MODAL_DESCRIPTION, MOTION_MODAL_TITLE } from '../constants'
 
 const { t } = useTranslation(Localization)
 
@@ -139,7 +178,6 @@ const regenerateEnergyIntervalId = ref<NodeJS.Timeout>()
 const eventCount = ref(0)
 const lastError = ref('')
 const isDeviceMotionSupported = ref(false)
-const isPermissionRequested = ref(false)
 
 const canClick = computed(() => store.canClick)
 
@@ -157,18 +195,6 @@ const closeBuyNftModal = () => {
 const isMicrophoneAvailable = ref(false)
 const isShowMicrophoneModal = ref(false)
 const microphoneStatus = ref<MicrophoneStatus | null>(null)
-const MICROPHONE_MODAL_DESCRIPTION = {
-  UnknownError: 'microphoneUnknownErrorDescription',
-  NotAllowedError: 'microphoneNotAllowedErrorDescription',
-  NotFoundError: 'microphoneNotFoundErrorDescription',
-  Success: '',
-}
-const MICROPHONE_MODAL_TITLE = {
-  UnknownError: 'microphoneErrorTitle',
-  NotAllowedError: 'microphoneTitle',
-  NotFoundError: 'microphoneErrorTitle',
-  Success: '',
-}
 
 const closeMicrophoneModal = () => {
   isShowMicrophoneModal.value = false
@@ -186,6 +212,30 @@ const handleRequestMicrophone = async () => {
   microphoneStatus.value = status
   isShowMicrophoneModal.value = status !== 'Success'
   isMicrophoneAvailable.value = status === 'Success'
+}
+
+const isMotionAvailable = ref(false)
+const isShowMotionModal = ref(false)
+const motionStatus = ref<'Success' | 'Error' | null>(null)
+
+const closeMotionModal = () => {
+  isShowMotionModal.value = false
+}
+
+const handleRequestMotion = async () => {
+  if (isMotionAvailable.value) {
+    resetDeviceMotion()
+    isMotionAvailable.value = false
+
+    return
+  }
+
+  if (isDeviceMotionSupported.value) {
+      const status = await requestMotionPermission()
+      motionStatus.value = status
+      isShowMotionModal.value = status !== 'Success'
+      isMotionAvailable.value = status === 'Success'
+  }
 }
 
 const checkClickerAvailability = () => {
@@ -225,11 +275,6 @@ const handleClick = (event: MouseEvent) => {
   if (!checkClickerAvailability()) return
 
   if (!canClick.value) return
-
-  if (!isPermissionRequested.value) {
-    requestMotionPermission()
-    isPermissionRequested.value = true
-  }
 
   let energySpent = 1
   let shakeClicks = store.isShaking ? 1 : 0
@@ -315,18 +360,26 @@ const requestMotionPermission = async () => {
       if (permissionState === 'granted') {
         window.addEventListener('devicemotion', handleDeviceMotion)
         console.log('Motion permission granted')
+        return 'Success'
       } else {
         console.error('Motion permission denied')
         lastError.value = 'Motion permission denied. Please enable it in your device settings.'
+        return 'Error'
       }
     } else {
       window.addEventListener('devicemotion', handleDeviceMotion)
       console.log('Motion listener added without permission request')
+      return 'Success'
     }
   } catch (error: any) {
     console.error('Error requesting motion permission:', error)
     lastError.value = error.message
+    return 'Error'
   }
+}
+
+const resetDeviceMotion = () => {
+  window.removeEventListener('devicemotion', handleDeviceMotion)
 }
 
 const checkDeviceMotionSupport = () => {
@@ -374,16 +427,6 @@ onUnmounted(() => {
 onMounted(async () => {
   window.addEventListener('visibilitychange', handleVisibilityChange)
   checkDeviceMotionSupport()
-  if (isDeviceMotionSupported.value) {
-    if (isIOS && typeof (DeviceMotionEvent as any).requestPermission === 'function') {
-      console.log('Permission button shown for iOS device')
-    } else {
-      await requestMotionPermission()
-    }
-  } else {
-    console.log('Using alternative shake detection method')
-  }
-  await store.syncWithBackend()
 })
 
 onUnmounted(() => {

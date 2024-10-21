@@ -74,10 +74,10 @@ const closeLeaderboardModal = () => {
 const checkUserInTop = (leaderData: ILeader | null) => {
 	if (!leaderData) return false
 
-	const leaderboard = leaderData.leaderboard
-	const currentUser = leaderData.current_user
+	const leaderboardLength = leaderData.leaderboard?.length
+	const userRank = leaderData.user_rank
 
-	const userInTop = leaderboard.some((leader) => leader.id === currentUser.id)
+	const userInTop = userRank <= leaderboardLength
 
 	return userInTop
 }
@@ -121,5 +121,9 @@ watch(isShowLeaderboardModal, (isOpened) => {
 
 .row {
 	@apply grid gap-x-[10px] grid-cols-[60px_1fr_125px]
+}
+
+.row > div {
+	word-break: break-word;
 }
 </style>
