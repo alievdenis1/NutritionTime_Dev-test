@@ -5,17 +5,20 @@
 			:key="index"
 			class="mb-5"
 		>
-			<h3 class="mb-3.5 text-lg">
-				{{ category.name }}
+			<h3 :class="['mb-3.5 text-lg', {'text-sm': isSubtitle}]">
+				{{ category?.name }}
 			</h3>
 			<!-- Оборачиваем строки тегов в контейнер с боковым скроллом -->
-			<div class="overflow-x-auto custom-scrollbar">
+			<div>
 				<div class="tag-grid">
 					<div
-						v-for="rowTags in chunkTags(category.tags, 5)"
+						v-for="rowTags in chunkTags(category.tags, props.chunkAmount)"
 						:key="rowTags[0]"
 						class="tag-row mb-[10px]"
-						:class="{ 'has-active-tag': rowTags.some(tag => hasTag(tag) || tag.length > 8) }"
+						:class="{
+							'has-active-tag': rowTags.some(tag => hasTag(tag) || tag.length > 8),
+							'overflow-x-auto': !isSubtitle
+						}"
 					>
 						<div
 							v-for="tag in rowTags"
@@ -51,14 +54,19 @@ import { ref, toRefs, watch } from 'vue'
 import { IconClose } from 'shared/components/Icon'
 
 interface Category {
-	name: string;
+	name?: string;
 	tags: string[];
 }
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
 	categoriesTags: Category[];
 	modalSelectedTags: string[];
-}>()
+	isSubtitle?: boolean;
+	chunkAmount: number;
+}>(), {
+	isSubtitle: false,
+	chunkAmount: 5,
+})
 
 const emit = defineEmits<{
 	(event: 'tagChanged', tags: string[]): void;
@@ -107,9 +115,9 @@ const hasTag = (tag: string): boolean => selectedTags.value.includes(tag)
 
 .tag-row {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 8px;
 	justify-content: flex-start;
-	overflow-x: auto;
 }
 
 .tag-row.has-active-tag {

@@ -52,12 +52,22 @@
 						/>
 					</div>
 				</div>
-				<TagsCollectionsItem
-					class="flex-grow overflow-y-auto custom-scrollbar"
-					:categories-tags="categories"
-					:modal-selected-tags="modalSelectedTags"
-					@tag-changed="handleTagChanged"
-				/>
+				<div class="flex-grow overflow-y-auto custom-scrollbar">
+					<div
+						v-for="category in mockTags"
+						:key="category.id"
+					>
+						<span class="font-medium">{{ category.name }}</span>
+
+						<TagsCollectionsItem
+							:categories-tags="category.list"
+							:modal-selected-tags="modalSelectedTags"
+							:chunk-amount="100"
+							is-subtitle
+							@tag-changed="handleTagChanged"
+						/>
+					</div>
+				</div>
 				<button
 					:class="['block w-full mt-4 py-2 rounded-xl text-white text-center cursor-pointer', buttonClass]"
 					:disabled="isButtonDisabled"
@@ -72,6 +82,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
+import { mockTags } from '../mocks/mock-tags'
 import { VAccordion } from '@/shared/components/Accordion'
 import { VModal } from '@/shared/components/Modal'
 import { useTranslation } from '@/shared/lib/i18n'
@@ -88,14 +99,6 @@ const route = useRoute()
 const showModal = ref(false)
 const selectedTags = ref<string[]>([])
 const modalSelectedTags = ref<string[]>([])
-
-const categories = ref([
-	{ name: 'Категория 1', tags: Array.from([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]).map(i => i === 1 ? '#тег' : `#тег-${i}`) },
-	{ name: 'Категория 2', tags: Array.from([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]).map(i =>  `#тег-${i + 15}`) },
-	{ name: 'Категория 3', tags: Array.from([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]).map(i =>  `#тег-${i + 30}`) },
-	{ name: 'Категория 4', tags: Array.from([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]).map(i =>  `#тег-${i + 45}`) },
-	{ name: 'Категория 5', tags: Array.from([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]).map(i =>  `#тег-${i + 60}`) },
-])
 
 onMounted(() => {
 	loadTags()
