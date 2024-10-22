@@ -433,6 +433,7 @@ onUnmounted(() => {
   window.removeEventListener('visibilitychange', handleVisibilityChange)
   window.removeEventListener('devicemotion', handleDeviceMotion)
   if (shakeTimeout) clearTimeout(shakeTimeout)
+  resetMicrophonePermission()
   stopAudioAnalysis()
 })
 </script>
