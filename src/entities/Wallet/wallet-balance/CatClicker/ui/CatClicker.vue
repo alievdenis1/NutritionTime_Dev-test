@@ -152,7 +152,6 @@ const store = useCatClickerStore()
 
 const {
   startAudioAnalysis,
-  isAudioInitialized,
   stopAudioAnalysis,
   getMicrophonePermissionRequest,
   resetMicrophonePermission,
@@ -201,6 +200,7 @@ const closeMicrophoneModal = () => {
 const handleRequestMicrophone = async () => {
   if (isMicrophoneAvailable.value) {
     resetMicrophonePermission()
+    stopAudioAnalysis()
     isMicrophoneAvailable.value = false
 
     return
@@ -210,6 +210,10 @@ const handleRequestMicrophone = async () => {
   microphoneStatus.value = status
   isShowMicrophoneModal.value = status !== 'Success'
   isMicrophoneAvailable.value = status === 'Success'
+
+  if (status === 'Success') {
+    startAudioAnalysis()
+  }
 }
 
 const isMotionAvailable = ref(false)
@@ -299,9 +303,9 @@ const handleClick = (event: MouseEvent) => {
       addCardAndAnimate(x, y, multiplier)
     }
 
-    if (!isAudioInitialized.value && isMicrophoneAvailable.value) {
-      startAudioAnalysis()
-    }
+    // if (!isAudioInitialized.value && isMicrophoneAvailable.value) {
+    //   startAudioAnalysis()
+    // }
   }
 }
 

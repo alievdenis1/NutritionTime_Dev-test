@@ -10,7 +10,7 @@
 				</div>
 			</div>
 			<IconEnquiry
-				class="cursor-pointer"
+				class="cursor-pointer min-w-[24px]"
 				@click="openModal"
 			/>
 			<VModal
@@ -35,7 +35,7 @@
 							href="https://t.me/recipetonru"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="mt-5 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+							class="mt-5 flex min-h-[52px] items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
 						>
 							<svg
 								class="w-5 h-5 mr-2"
@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
- import { onMounted, ref, computed, watch } from 'vue'
+ import { ref, computed, watch } from 'vue'
  import {
   IconGold,
   IconEnquiry,
@@ -96,7 +96,7 @@
  import Leaderboard from './LeaderBoard/LeaderBoard.vue'
  import CurrencyBalance from './CurrencyBalance.vue'
  import { useCatClickerStore } from './CatClicker/model/cat-clicker-store'
- import { TonConnectButton, useTonAddress, useTonWallet } from '@townsquarelabs/ui-vue'
+ import { TonConnectButton, useTonAddress } from '@townsquarelabs/ui-vue'
  import { TonApiClient, Api } from '@ton-api/client'
  import { Address } from '@ton/core'
 
@@ -122,7 +122,6 @@
  const checkingNFT = ref(false)
  const hasNFT = ref(false)
  const userAddress = useTonAddress()
-//  const wallet = useTonWallet()
 
  const COLLECTION_ADDRESS = 'EQDERkmRDrXxzEbZUMMgo3uDJwe24qUYpnasJ83WpQZaqjJ1'
  const collectionAddress = Address.parseFriendly(COLLECTION_ADDRESS).address
@@ -157,11 +156,8 @@
   }
  }
 
-//  console.log('wallet', wallet.value?.account.address)
- console.log('userAddress', userAddress.value)
- // Следим за изменением кошелька
+ // Следим за изменением адреса кошелька
  watch(userAddress, (newUserAddress) => {
-  console.log('newUserAddress', newUserAddress)
   walletConnected.value = !!newUserAddress
   if (newUserAddress) {
    checkNFT()
@@ -169,17 +165,8 @@
    hasNFT.value = false
   }
  }, {
-	immediate: true,
+   immediate: true,
  })
-
-//  onMounted(async () => {
-//   console.log('onMounted', wallet.value?.account.address)
-//   // Проверяем NFT при монтировании, если кошелек уже подключен
-//   if (wallet.value) {
-//    walletConnected.value = true
-//    await checkNFT()
-//   }
-//  })
 </script>
 
 <style scoped lang="scss">

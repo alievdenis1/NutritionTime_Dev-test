@@ -37,7 +37,7 @@
 					</div>
 					...
 				</template>
-				<div class="mt-[12px]">
+				<div class="py-[12px]">
 					{{ t('totalParticipants', { total: leaderData.total_users }) }}
 				</div>
 			</template>
