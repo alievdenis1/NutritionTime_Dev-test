@@ -79,11 +79,13 @@ export type InputEmits = {
     'update:modelValue': [string]
     'update:error': [boolean]
     focusout: [void]
+    'clear:error': [string]
 }
 
 export interface InputProps {
     modelValue: string;
     title: string;
+    name: string;
     required?: boolean;
     error?: boolean;
     errorMessage?: string;
@@ -123,7 +125,7 @@ const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const inputRef = ref<HTMLInputElement | null>(null)
 const titleClasses = ref<string>('')
 
-const hasError = computed((): boolean => props.error && !!props.errorMessage)
+const hasError = computed((): boolean => props.error || (!!props.errorMessage && props.error))
 const titleZIndex = computed(() => {
     return props.zIndex ? `z-${+props.zIndex - 1}` : 'z-10'
 })
@@ -140,13 +142,17 @@ const inputClasses = computed(() => {
 
 const onInput = (event: Event): void => {
     let value = (event.target as HTMLInputElement).value
+
     if (props.noDigital) {
         value = value.replace(/\d/g, '')
     }
     if (props.digital) {
         value = value.replace(/[^\d]/g, '')
     }
+
+    (event.target as HTMLInputElement).value = value
     emits('update:modelValue', value)
+    emits('clear:error', props.name)
 }
 
 const setFocus = (value: boolean): void => {

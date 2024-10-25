@@ -52,8 +52,11 @@
 						autofocus
 						no-digital
 						searchable
+						:error="kitchenwareErrors?.name"
+						name="name"
 						:title="t('ingredientPlaceholderName')"
 						z-index="10"
+						@clear:error="clearFieldError"
 					>
 						<template #list>
 							<InputList
@@ -70,9 +73,12 @@
 						v-model="kitchenwareQuantity"
 						class="mb-4"
 						digital
+						:error="kitchenwareErrors?.quantity"
 						:title="t('ingredientPlaceholderQuantity')"
+						name="quantity"
 						z-index="1"
 						:max-length="4"
+						@clear:error="clearFieldError"
 					/>
 
 					<button
@@ -106,6 +112,7 @@ const kitchenwareQuantity = ref<string>('')
 const tryToSave = ref(false)
 const kitchenware = ref<{ name: string, quantity: string }[]>([])
 const kitchenwareNameInput = ref<typeof VInput>()
+const kitchenwareErrors = ref<{name: boolean, quantity: boolean}>({ name: false, quantity: false })
 
 const list: InputListItem[] = [
 	{
@@ -145,13 +152,38 @@ const openModal = () => {
 	showModal.value = true
 }
 
+const kitchenwareValidate = () => {
+	let errors = { name: false, quantity: false }
+
+	if (!kitchenwareName.value) {
+		errors.name = true
+	}
+
+	if (!kitchenwareQuantity.value) {
+		errors.quantity = true
+	}
+
+	return errors
+}
+
+const clearFieldError = (field: 'name' | 'quantity') => {
+	kitchenwareErrors.value[field] = false
+}
+
+const clearAllErrors = () => {
+	kitchenwareErrors.value = { name: false, quantity: false }
+}
+
 const addKitchenware = () => {
+	kitchenwareErrors.value = kitchenwareValidate()
+
 	tryToSave.value = true
 	if (kitchenwareName.value && kitchenwareQuantity.value) {
 		kitchenware.value.push({
 			name: kitchenwareName.value,
 			quantity: `${kitchenwareQuantity.value}`
 		})
+
 		updateKitchenware()
 		closeModal()
 	}
@@ -163,6 +195,8 @@ const removeKitchenware = (index: number) => {
 }
 
 const closeModal = () => {
+	clearAllErrors()
+
 	showModal.value = false
 	kitchenwareName.value = ''
 	kitchenwareQuantity.value = ''
