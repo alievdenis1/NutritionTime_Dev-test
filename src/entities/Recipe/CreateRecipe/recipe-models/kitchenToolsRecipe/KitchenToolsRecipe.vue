@@ -55,7 +55,6 @@
 						:error="kitchenwareErrors?.name"
 						name="name"
 						:title="t('ingredientPlaceholderName')"
-						z-index="10"
 						@clear:error="clearFieldError"
 					>
 						<template #list>
@@ -76,7 +75,6 @@
 						:error="kitchenwareErrors?.quantity"
 						:title="t('ingredientPlaceholderQuantity')"
 						name="quantity"
-						z-index="1"
 						:max-length="4"
 						@clear:error="clearFieldError"
 					/>

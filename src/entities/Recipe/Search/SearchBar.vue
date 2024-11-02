@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO: исправить background-color, чтобы был в цвет заднего фона -->
 	<div class="flex items-center w-full bg-white mt-[20px] mb-[12px]">
 		<div class="relative flex-grow">
 			<input

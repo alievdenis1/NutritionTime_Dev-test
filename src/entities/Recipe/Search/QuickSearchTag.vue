@@ -76,13 +76,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { IconTabs, IconClose } from 'shared/components/Icon'
 import { useTranslation } from 'shared/lib/i18n'
 import localization from './QuickSearchTag.localization.json'
 import { useSearchStore } from './store/search-store'
 import { VModal } from 'shared/components/Modal'
 import TagsCollectionsItem  from '../CreateRecipe/recipe-models/tagsRecipe/TagsCollectionsItem.vue'
+// TODO: вынести эту папку Search отдельно
+import { getCategoryList, CategoryList } from '@/entities/Category'
 
 const store = useSearchStore()
 const { t } = useTranslation(localization)
@@ -97,6 +99,8 @@ interface Tag {
 const showModal = ref(false)
 const modalSelectedTags = ref<string[]>([])
 const tabCount = ref(0)
+const activeCategoryId = ref<number | null>(null)
+const categoryList = ref<CategoryList | null>(null)
 
 const closeModal = () => {
 	showModal.value = false
@@ -150,6 +154,22 @@ const deselectTag = () => {
         tag.isActive = false
     })
 }
+
+const fetchCategoryList = async () => {
+	const { execute, data, error } = getCategoryList()
+
+	await execute()
+
+	if (data.value && !error.value) {
+		return data.value
+	}
+
+	return []
+}
+
+onMounted(async () => {
+	categoryList.value = await fetchCategoryList()
+})
 </script>
 
 <style scoped>

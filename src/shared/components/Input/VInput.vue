@@ -1,12 +1,5 @@
 <template>
 	<div class="wrapper">
-		<p
-			class="title"
-			:class="[titleClasses, titleZIndex]"
-		>
-			{{ props.title }}
-		</p>
-
 		<input
 			v-if="!textarea"
 			:id="useId()"
@@ -36,6 +29,13 @@
 			@focusout="setFocus(false)"
 			@scroll="onScroll"
 		/>
+
+		<p
+			class="title"
+			:class="[titleClasses]"
+		>
+			{{ props.title }}
+		</p>
 
 		<span
 			v-if="$slots['right-icon'] || props.clearable"
@@ -126,9 +126,7 @@ const inputRef = ref<HTMLInputElement | null>(null)
 const titleClasses = ref<string>('')
 
 const hasError = computed((): boolean => props.error || (!!props.errorMessage && props.error))
-const titleZIndex = computed(() => {
-    return props.zIndex ? `z-${+props.zIndex - 1}` : 'z-10'
-})
+
 const inputClasses = computed(() => {
     const classes = []
 

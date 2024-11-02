@@ -73,6 +73,18 @@ export default [
 		}
 	},
 	{
+		// TODO: не забыть удалить
+		// тестовый роут
+		name: 'recipe-card',
+		component: () => import('pages/recipe/ui/RecipeCard/RecipeCard.vue'),
+		path: '/recipe/test',
+		meta: {
+			title: 'Recipe',
+			layout: NavigateLayout,
+			backButton: true,
+		}
+	},
+	{
 		name: 'all-comment',
 		component: () => import('pages/create-recipe/AllComment.vue'),
 		path: '/all-comment/:id',

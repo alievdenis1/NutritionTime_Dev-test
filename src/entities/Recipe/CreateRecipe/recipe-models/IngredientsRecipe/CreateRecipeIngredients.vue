@@ -66,7 +66,6 @@
 						autofocus
 						no-digital
 						searchable
-						z-index="10"
 						:max-length="maxIngredientName.title.length"
 						@clear:error="clearFieldError"
 						@focus.stop="setModalLifted(true)"
@@ -91,7 +90,6 @@
 							:title="t('ingredientPlaceholderQuantity')"
 							:error="ingredientErrors?.quantity"
 							name="quantity"
-							z-index="1"
 							:max-length="10"
 							@clear:error="clearFieldError"
 							@focus.stop="setModalLifted(true)"
