@@ -1,0 +1,84 @@
+{
+  "ru": {
+    "statsTitle": "Статистика",
+    "startDate": "Начальная дата",
+    "endDate": "Конечная дата",
+    "update": "Обновить",
+    "tryAgain": "Попробовать снова",
+    "errorLoadingData": "Ошибка загрузки данных",
+    "details": "Подробнее",
+
+    "mainMetrics": "Основные показатели",
+    "mainMetricsDescription": "Ваши базовые показатели и цели",
+    "baseCalories": "Базовый расход калорий",
+    "targetCalories": "Целевые калории",
+    "goal": "Цель",
+    "activityLevel": "Уровень активности",
+
+    "nutritionStats": "Статистика питания",
+    "nutritionStatsDescription": "Средние показатели питания за период",
+    "avgCalories": "Среднее потребление калорий",
+    "avgProteins": "Средний белок",
+    "avgFats": "Средний жир",
+    "avgCarbs": "Средние углеводы",
+
+    "totalStats": "Общая статистика",
+    "totalStatsDescription": "Суммарные показатели за период",
+    "totalCalories": "Всего калорий",
+    "totalProteins": "Всего белков",
+    "totalFats": "Всего жиров",
+    "totalCarbs": "Всего углеводов",
+
+    "additionalInfo": "Дополнительная информация",
+    "additionalInfoDescription": "Дополнительные параметры и рекомендации",
+    "recommendedSteps": "Рекомендуемые шаги",
+    "waterIntake": "Потребление воды",
+    "lastUpdated": "Последнее обновление",
+    "dietType": "Тип диеты",
+
+    "kcal": "ккал",
+    "gram": "г",
+    "liter": "л"
+  },
+  "en": {
+    "statsTitle": "Статистика",
+    "startDate": "Начальная дата",
+    "endDate": "Конечная дата",
+    "update": "Обновить",
+    "tryAgain": "Попробовать снова",
+    "errorLoadingData": "Ошибка загрузки данных",
+    "details": "Подробнее",
+
+    "mainMetrics": "Основные показатели",
+    "mainMetricsDescription": "Ваши базовые показатели и цели",
+    "baseCalories": "Базовый расход калорий",
+    "targetCalories": "Целевые калории",
+    "goal": "Цель",
+    "activityLevel": "Уровень активности",
+
+    "nutritionStats": "Статистика питания",
+    "nutritionStatsDescription": "Средние показатели питания за период",
+    "avgCalories": "Среднее потребление калорий",
+    "avgProteins": "Средний белок",
+    "avgFats": "Средний жир",
+    "avgCarbs": "Средние углеводы",
+
+    "totalStats": "Общая статистика",
+    "totalStatsDescription": "Суммарные показатели за период",
+    "totalCalories": "Всего калорий",
+    "totalProteins": "Всего белков",
+    "totalFats": "Всего жиров",
+    "totalCarbs": "Всего углеводов",
+
+    "additionalInfo": "Дополнительная информация",
+    "additionalInfoDescription": "Дополнительные параметры и рекомендации",
+    "recommendedSteps": "Рекомендуемые шаги",
+    "waterIntake": "Потребление воды",
+    "lastUpdated": "Последнее обновление",
+    "dietType": "Тип диеты",
+
+    "kcal": "ккал",
+    "gram": "г",
+    "liter": "л"
+  }
+}
