@@ -1,11 +1,13 @@
 <template>
 	<div class="">
-		<SavedCollections />
+		<!--		<SavedCollections />-->
+		<ProfileStats />
 	</div>
 </template>
 
 <script setup lang="ts">
-import { SavedCollections } from '@/widgets/collection'
+// import { SavedCollections } from '@/widgets/collection'
+import { ProfileStats } from '@/entities/Profile'
 
 </script>
 
