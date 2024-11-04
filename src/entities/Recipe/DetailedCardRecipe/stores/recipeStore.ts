@@ -4,6 +4,9 @@ import { useRoute } from 'vue-router'
 import { Recipe } from '../types/recipe'
 import { mockRecipe } from '../mocks/mock-recipes-item'
 
+// TODO: похоже, что этот файл нужно перенести в Entity/Recipe/model/store.ts
+// Так как он много где используется
+
 const formatIngredientWeight = (ingredient: { name: string; amount: string; type: string }) => {
     const weight = ingredient.amount
 
@@ -40,6 +43,7 @@ const calculateRecipeRating = (comments:{
 
 export const useRecipeStore = defineStore('recipeStore', () => {
     const route = useRoute()
+    // TODO: recipes наверное нужно убрать
     const recipes = ref<Recipe[]>(mockRecipe.value)
 
     const currentRecipe = computed(() => {
@@ -56,18 +60,21 @@ export const useRecipeStore = defineStore('recipeStore', () => {
 
     })
 
+    // TODO: удалить, сделать корректное добавление в избранное, через feature
     const toggleRecipeFavourited = (isFavourited: boolean) => {
         if(currentRecipe.value) {
             currentRecipe.value.favourited = isFavourited
         }
     }
 
+    // TODO: удалить, не используется
     const setRecipeRating = (rate: number) => {
         if(currentRecipe.value) {
             currentRecipe.value.rating = (Number(currentRecipe.value?.rating) + rate) / 2
         }
     }
 
+    // TODO: удалить, переделать
     const setRecipeInfoField = (field: string, value: string) => {
         if (currentRecipe.value) {
             currentRecipe.value.recipeInfo[field] = value + currentRecipe.value.recipeInfo[field].slice(1)

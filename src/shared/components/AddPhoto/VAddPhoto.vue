@@ -60,6 +60,7 @@ import { AddPhoto, AddPhotoEmits } from './type.ts'
 const emits = defineEmits<AddPhotoEmits>()
 const props = withDefaults(defineProps<AddPhoto & {
 	initialImage?: string | null;
+	// TODO: переписать
 	onImageUploaded?: (imageUrl: string | null) => void;
 }>(), {
 	icon: IconPhoto,
@@ -97,7 +98,7 @@ const validateResult = (file: File): void => {
 
 	image.src = URL.createObjectURL(file)
 	uploadedImage.value = image.src
-	emits('upload:image', image.src)
+	emits('upload:image', image.src, file)
 }
 
 const handleFileUpload = (event: Event): void => {
@@ -121,6 +122,7 @@ const handleFileUpload = (event: Event): void => {
 
 const removeImage = () => {
 	uploadedImage.value = null
+	// TODO: переписать
 	if (props.onImageUploaded) {
 		props.onImageUploaded(null)
 	}

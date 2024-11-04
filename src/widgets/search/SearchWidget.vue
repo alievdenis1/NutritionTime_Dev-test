@@ -46,7 +46,7 @@ const searchBarHeight = ref(0)
 const scrollTop = ref(0)
 const lastScrollTop = ref(0)
 
-const showQuickSearchTag = ref(false)
+const showQuickSearchTag = ref(true)
 
 const handleScroll = (event: Event) => {
     const scrollPosition = (event.target as HTMLElement).scrollTop
@@ -104,4 +104,4 @@ onUnmounted(() => {
     right: 0;
     z-index: 1000;
 }
-</style>@/entities/Recipe/Search
+</style>

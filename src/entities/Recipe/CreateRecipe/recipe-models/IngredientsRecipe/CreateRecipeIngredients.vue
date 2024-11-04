@@ -51,70 +51,50 @@
 					class="p-4"
 					@click="handleModalClick"
 				>
-					<h2 class="text-lg mb-4">
-						{{ t('addIngredientTitle') }}
-					</h2>
 					<div
-						ref="ingredientNameContainer"
-						class="relative"
+						class="text-gray mb-4"
 					>
-						<span
-							v-if="ingredientName.length > 0"
-							class="absolute text-[12px] top-[6px] left-[12px] text-gray"
-						>
-							{{ t('ingredientPlaceholderName') }}
-						</span>
-						<input
-							ref="ingredientNameInput"
-							v-model="ingredientName"
-							type="text"
-							:placeholder="t('ingredientPlaceholderName')"
-							class="border rounded px-[12px] py-4 text-base w-full mb-4 h-[54px]"
-							:class="{ activeInput: activeInputName, filledInput: notEmptyIngredientName, 'pt-[26px]': notEmptyIngredientName }"
-							@focus.stop="setModalLifted(true)"
-							@blur.stop="setModalLifted(false)"
-							@input="handleIngredientNameInput"
-							@keydown.down="handleArrowDown"
-							@keydown.up="handleArrowUp"
-						>
-						<ul
-							v-if="filteredSuggestions.length > 0"
-							class="absolute z-10 w-full bg-white border border-gray-300 rounded-b-md shadow-lg max-h-60 overflow-auto"
-						>
-							<li
-								v-for="(suggestion, index) in filteredSuggestions"
-								:key="index"
-								:class="['px-4 py-2 cursor-pointer hover:bg-gray-100', { 'bg-gray-100': index === activeSuggestionIndex }]"
-								@click="selectSuggestion(suggestion)"
-							>
-								{{ suggestion }}
-							</li>
-						</ul>
+						{{ t('ingredientPlaceholderName') }}
 					</div>
+					<VInput
+						v-model="ingredientName"
+						type="text"
+						class="mb-4"
+						:title="t('ingredientPlaceholderName')"
+						:error="ingredientErrors?.name"
+						name="name"
+						autofocus
+						no-digital
+						searchable
+						:max-length="maxIngredientName.title.length"
+						@clear:error="clearFieldError"
+						@focus.stop="setModalLifted(true)"
+						@blur.stop="setModalLifted(false)"
+					>
+						<template #list>
+							<InputList
+								:list="filteredList"
+								@select="selectSuggestion"
+							/>
+						</template>
+					</VInput>
 					<div
 						v-if="!isExclusionMode"
 						class="relative"
 					>
-						<span
-							v-if="ingredientQuantity.length > 0"
-							class="absolute text-[12px] top-[6px] left-[12px] text-gray"
-						>
-							{{ t('ingredientPlaceholderQuantity') }}
-						</span>
-						<input
+						<VInput
 							v-model="ingredientQuantity"
 							type="text"
-							:placeholder="t('ingredientPlaceholderQuantity')"
-							class="border rounded px-[12px] py-4 text-base w-full mb-4 h-[54px]"
-							:class="{
-								activeInput: activeInputQuantity,
-								filledInput: notEmptyIngredientQuantity,
-								'pt-[26px]': notEmptyIngredientQuantity,
-							}"
-							@input="filterNumericInput"
+							class="mb-4"
+							digital
+							:title="t('ingredientPlaceholderQuantity')"
+							:error="ingredientErrors?.quantity"
+							name="quantity"
+							:max-length="10"
+							@clear:error="clearFieldError"
 							@focus.stop="setModalLifted(true)"
 							@blur.stop="setModalLifted(false)"
-						>
+						/>
 					</div>
 					<TabsMain
 						v-if="!isExclusionMode"
@@ -149,6 +129,7 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { useTranslation } from '@/shared/lib/i18n'
 import { VAccordion } from '@/shared/components/Accordion'
 import { VModal } from '@/shared/components/Modal'
+import { VInput, type InputListItem, InputList } from '@/shared/components/Input'
 import { IconClose, IconPlus } from 'shared/components/Icon'
 import localization from './CreateRecipeIngredients.localization.json'
 import { TabsMain, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
@@ -176,18 +157,34 @@ const ingredientQuantity = ref<string>('')
 const ingredients = ref<{ name: string; quantity?: string; type?: QuantityType }[]>([])
 const tryToSave = ref(false)
 const activeTab = ref<QuantityType>(QuantityType.WEIGHT)
-const ingredientNameInput = ref<HTMLInputElement | null>(null)
 const ingredientNameContainer = ref<HTMLElement | null>(null)
 const quantityLimitReached = ref(false)
 const isModalLifted = ref(false)
+const ingredientErrors = ref<{name: boolean, quantity: boolean}>({ name: false, quantity: false })
 
-const ingredientSuggestions = [
-	'Мука', 'Сахар', 'Соль', 'Яйца', 'Молоко', 'Масло', 'Картофель',
-	'Морковь', 'Лук', 'Чеснок', 'Помидоры', 'Огурцы', 'Перец', 'Курица',
-	'Говядина', 'Свинина', 'Рыба', 'Рис', 'Макароны', 'Сыр'
+const ingredientSuggestions:InputListItem[] = [
+	{ id: '1', title: 'Мука', value: 'Мука' },
+	{ id: '2', title: 'Сахар', value: 'Сахар' },
+	{ id: '3', title: 'Соль', value: 'Соль' },
+	{ id: '4', title: 'Яйца', value: 'Яйца' },
+	{ id: '5', title: 'Молоко', value: 'Молоко' },
+	{ id: '6', title: 'Масло', value: 'Масло' },
+	{ id: '7', title: 'Картофель', value: 'Картофель' },
+	{ id: '8', title: 'Морковь', value: 'Морковь' },
+	{ id: '9', title: 'Лук', value: 'Лук' },
+	{ id: '10', title: 'Чеснок', value: 'Чеснок' },
+	{ id: '11', title: 'Помидоры', value: 'Помидоры' },
+	{ id: '12', title: 'Огурцы', value: 'Огурцы' },
+	{ id: '13', title: 'Перец', value: 'Перец' },
+	{ id: '14', title: 'Курица', value: 'Курица' },
+	{ id: '15', title: 'Говядина', value: 'Говядина' },
+	{ id: '16', title: 'Свинина', value: 'Свинина' },
+	{ id: '17', title: 'Рыба', value: 'Рыба' },
+	{ id: '18', title: 'Рис', value: 'Рис' },
+	{ id: '19', title: 'Макароны', value: 'Макароны' },
+	{ id: '20', title: 'Сыр', value: 'Сыр' },
 ]
 
-const filteredSuggestions = ref<string[]>([])
 const activeSuggestionIndex = ref(-1)
 
 onMounted(() => {
@@ -205,7 +202,31 @@ const openModal = () => {
 	showModal.value = true
 }
 
+const ingredientValidate = () => {
+	let errors = { name: false, quantity: false }
+
+	if (!ingredientName.value) {
+		errors.name = true
+	}
+
+	if (!ingredientQuantity.value) {
+		errors.quantity = true
+	}
+
+	return errors
+}
+
+const clearFieldError = (field: 'name' | 'quantity') => {
+	ingredientErrors.value[field] = false
+}
+
+const clearAllErrors = () => {
+	ingredientErrors.value = { name: false, quantity: false }
+}
+
 const addIngredient = (): void => {
+	ingredientErrors.value = ingredientValidate()
+
 	tryToSave.value = true
 	if (ingredientName.value && (props.isExclusionMode || ingredientQuantity.value)) {
 		const newIngredient: { name: string; quantity?: string; type?: QuantityType } = {
@@ -225,67 +246,24 @@ const removeIngredient = (index: number) => {
 }
 
 const closeModal = () => {
+	clearAllErrors()
+
 	showModal.value = false
 	ingredientName.value = ''
 	ingredientQuantity.value = ''
 	tryToSave.value = false
-	filteredSuggestions.value = []
 	activeSuggestionIndex.value = -1
 	quantityLimitReached.value = false
 }
 
-const filterNumericInput = (event: Event) => {
-	const target = event.target as HTMLInputElement
-	let value = target.value.replace(/\D/g, '')
-
-	if (value.length > 10) {
-		value = value.slice(0, 10)
-		quantityLimitReached.value = true
-	} else {
-		quantityLimitReached.value = false
-	}
-
-	ingredientQuantity.value = value
-}
-
-const handleIngredientNameInput = () => {
-	validateIngredientName()
-	filteredSuggestions.value = ingredientSuggestions.filter(suggestion =>
-		suggestion.toLowerCase().startsWith(ingredientName.value.toLowerCase())
-	)
-	activeSuggestionIndex.value = -1
-}
-
-const handleArrowDown = () => {
-	if (activeSuggestionIndex.value < filteredSuggestions.value.length - 1) {
-		activeSuggestionIndex.value++
-	}
-}
-
-const handleArrowUp = () => {
-	if (activeSuggestionIndex.value > 0) {
-		activeSuggestionIndex.value--
-	}
-}
-
-const selectSuggestion = (suggestion?: string) => {
-	if (suggestion) {
-		ingredientName.value = suggestion
-	} else if (activeSuggestionIndex.value !== -1) {
-		ingredientName.value = filteredSuggestions.value[activeSuggestionIndex.value]
-	}
-	filteredSuggestions.value = []
-	activeSuggestionIndex.value = -1
-}
-
-const validateIngredientName = () => {
-	ingredientName.value = ingredientName.value.replace(/[^a-zA-Zа-яА-Я\s]/g, '')
+const selectSuggestion = (item: InputListItem): void => {
+	clearFieldError('name')
+	ingredientName.value = item.title
 }
 
 const handleModalClick = (event: MouseEvent) => {
 	const target = event.target as HTMLElement
 	if (ingredientNameContainer.value && !ingredientNameContainer.value.contains(target)) {
-		filteredSuggestions.value = []
 		activeSuggestionIndex.value = -1
 	}
 }
@@ -294,10 +272,15 @@ const setModalLifted= (isLifted: boolean) => {
 	isModalLifted.value = isLifted
 }
 
-const activeInputName = computed(() => tryToSave.value && !ingredientName.value)
-const notEmptyIngredientName = computed(() => ingredientName.value.length !== 0)
-const activeInputQuantity = computed(() => !props.isExclusionMode && tryToSave.value && !ingredientQuantity.value)
-const notEmptyIngredientQuantity = computed(() => ingredientQuantity.value.length !== 0)
+const maxIngredientName = computed(() => {
+	return ingredientSuggestions.reduce((longest: InputListItem, currentString: InputListItem) => {
+		return currentString.title.length > longest.title.length ? currentString : longest
+  })
+})
+
+const filteredList = computed((): InputListItem[] => {
+	return ingredientSuggestions.filter((item) => item.title.toLowerCase().includes(ingredientName.value.toLowerCase()))
+})
 
 watch(ingredients, () => {
 	if (store.currentRecipe) {

@@ -8,7 +8,8 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, watchEffect, watch, onUnmounted } from 'vue'
-import { autoTextSize } from 'auto-text-size'
+
+import { autoTextSize } from '@/shared/lib/auto-text-size'
 
 type DisconnectableFunction = {
   (): void;
