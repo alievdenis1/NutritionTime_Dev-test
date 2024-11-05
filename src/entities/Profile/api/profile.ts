@@ -1,5 +1,5 @@
 import useApi from '@/shared/lib/api/use-api'
-import type { Profile, Meal, MealStats, Payment, Notification } from '../model'
+import type { ProfileResponse, MealsResponse, MealStats, Payment, Notification } from '../model'
 
 interface GetMealsParams {
  start_date?: string;
@@ -7,11 +7,11 @@ interface GetMealsParams {
 }
 
 export function getProfile() {
- return useApi<Profile>('get', '/profile')
+ return useApi<ProfileResponse>('get', '/profile')
 }
 
 export function getMeals(params?: GetMealsParams) {
- return useApi<Meal[]>('get', '/meals', params)
+ return useApi<MealsResponse>('get', '/meals', params)
 }
 
 export function getMealStats(params?: GetMealsParams) {

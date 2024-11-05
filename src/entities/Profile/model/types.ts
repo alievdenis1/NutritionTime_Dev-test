@@ -1,4 +1,5 @@
 // entities/Profile/model/types.ts
+
 export interface Profile {
  gender: string;
  age: number;
@@ -21,6 +22,24 @@ export interface Profile {
  diet_type: string;
  recommended_steps: number;
  water_intake: number;
+ timezone: number;
+}
+
+export interface User {
+ id: number;
+ name: string;
+ telegram_id: number;
+ telegram_username: string | null;
+ email: string;
+ role: string;
+ wallet_address: string;
+ balance: string;
+ created_at: string;
+}
+
+export interface ProfileResponse {
+ user: User;
+ profile: Profile;
 }
 
 export interface Meal {
@@ -31,29 +50,64 @@ export interface Meal {
  proteins: number;
  fats: number;
  carbs: number;
- date_added: string;
+ created_at: string;
+}
+
+export interface MealTotals {
+ calories: number;
+ proteins: number;
+ fats: number;
+ carbs: number;
+ total_weight: number;
+}
+
+export interface MealDay {
+ meals: Meal[];
+ totals: MealTotals;
+}
+
+export interface MealsResponse {
+ [date: string]: MealDay;
 }
 
 export interface MealStats {
- total_calories: number;
- total_proteins: number;
- total_fats: number;
- total_carbs: number;
- avg_calories_per_day: number;
- avg_proteins_per_day: number;
- avg_fats_per_day: number;
- avg_carbs_per_day: number;
+ daily_averages: {
+  calories: number;
+  proteins: number;
+  fats: number;
+  carbs: number;
+  weight: number;
+  meals_count: number;
+ };
+ comparison_with_targets: {
+  calories_target_diff: number;
+  proteins_target_diff: number;
+  fats_target_diff: number;
+  carbs_target_diff: number;
+ };
+ daily_stats: Array<{
+  date: string;
+  total_calories: string;
+  total_proteins: string;
+  total_fats: string;
+  total_carbs: string;
+  total_weight: string;
+  meals_count: number;
+ }>;
 }
 
 export interface Payment {
  id: number;
- status: 'completed' | 'pending';
+ status: 'COMPLETED' | 'PENDING' | 'CANCELLED';
  wallet_address: string;
- message_id: string;
+ message_id: string | null;
  expires_at: string;
  completed_at: string | null;
  amount_ton: number;
  payment_comment: string;
+ ton_transaction_hash: string | null;
+ created_at: string;
+ updated_at: string;
 }
 
 export interface Notification {
@@ -61,5 +115,6 @@ export interface Notification {
  type: string;
  scheduled_for: string;
  message_text: string;
- sent_at: string;
+ sent_at: string | null;
+ created_at: string;
 }
