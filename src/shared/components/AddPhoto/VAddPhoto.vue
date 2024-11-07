@@ -25,6 +25,7 @@
 			v-else
 			class="photo-upload-label flex justify-center items-center"
 		>
+			<!-- TODO: добавить атрибуты для нужных типов файлов, для максимального количества файлов и тд -->
 			<input
 				ref="fileInput"
 				type="file"
@@ -32,6 +33,8 @@
 				@change="handleFileUpload"
 			>
 			<div class="photo-upload-content flex items-center gap-2">
+				<!-- TODO: добавить параметр maxUpload -->
+				<!-- И отображать иконку без текста, когда загружен хотя бы один файл -->
 				<component
 					:is="icon"
 					v-if="icon"

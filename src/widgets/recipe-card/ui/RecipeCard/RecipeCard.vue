@@ -8,11 +8,11 @@
 				<div class="flex space-x-2">
 					<!-- TODO: остальные кнопки добавить, когда будет функционал -->
 
-					<!-- TODO: нужно добавить свойство likes -->
 					<ToggleFavoriteButton
 						:bg-color="isImageVisible ? 'bg-white' : 'bg-lightGray'"
-						:likes="10"
+						:likes="recipe?.likes_count || 0"
 						:recipe-id="recipeId"
+						:is-favorite-init="recipe?.is_favorited || false"
 					/>
 				</div>
 			</div>
@@ -55,20 +55,16 @@
 				>
 				<span class="text-sm text-slateGray">{{ recipe?.author.name }}</span>
 				<div
-					v-if="recipe?.comments?.length && recipe.comments.length > 0"
+					v-if="recipe?.total_comments_count"
 					class=" ml-auto flex items-center"
 				>
 					<span class="text-xs text-slateGray mr-[8px]">
-						<!-- TODO: тут добавить поле total_comments_count -->
-						{{ recipe.comments.length }}
-						{{ t('reviewsCount') }}
+						{{ t('reviews', { count: recipe.total_comments_count }) }}
 					</span>
 					<span
 						class="text-sm text-white w-[32px] h-[32px] rounded-[50%] bg-forestGreen flex items-center justify-center"
 					>
-						<!-- TODO: тут добавить поле total_rating -->
-						<!-- {{ recipe?.rating.toFixed(1) }} -->
-						5.0
+						{{ recipe.average_rating }}
 					</span>
 				</div>
 			</div>
@@ -85,48 +81,40 @@
 				:total-weight="recipe?.total_weight || 0"
 			/>
 
-			<RecipeTabs :recipe="recipe" />
+			<RecipeTabs
+				:recipe="recipe"
+				class="mb-[40px]"
+			/>
 
-			<div class="shadow-custom mt-[40px] mb-[24px] p-[16px] rounded-[12px] flex items-center justify-between">
-				<div v-if="!!recipe?.comments?.length">
-					<span
-						class="text-sm text-white w-[32px] h-[32px] rounded-[50%] bg-forestGreen flex items-center justify-center mb-[12px]"
-					>
-						<!-- TODO: тут добавить поле total_rating -->
-						<!-- {{ recipe?.rating.toFixed(1) }} -->
-						5.0
-					</span>
-					<!-- TODO: тут добавить total_reviews поле -->
-					<!-- TODO: тут добавить поле total_comments_count -->
-					<span class="text-nowrap">{{ 3 }} {{ t('reviewsCount') }}</span>
-				</div>
-				<div
-					v-if="!recipe?.comments?.length"
-					class="text-sm text-darkGray"
-				>
-					{{ t('noReviews') }}
-				</div>
-				<div class="w-max">
-					<AddCommentButton />
-				</div>
-			</div>
+			<RecipeCommentsInfo
+				:recipe="recipe"
+				class="mb-[24px]"
+			>
+				<template #action>
+					<div class="w-max">
+						<AddCommentButton
+							:recipe-id="recipe?.id || 0"
+							@submit="handleSubmitComment"
+						/>
+					</div>
+				</template>
+			</RecipeCommentsInfo>
 			<div class="space-y-[12px]">
 				<CommentList>
 					<CommentItem
-						v-for="(comment, index) in recipe?.comments"
-						:key="index"
+						v-for="comment in recipe?.comments"
+						:key="comment.id"
 						:author-image="comment.user?.avatar"
 						:author-name="comment.user.name"
-						:image="comment?.image"
+						:images="comment?.images"
 						:text="comment.text"
 					>
-						<div class="flex items-center gap-1">
-							<!-- TODO: доработать -->
-							<!-- TODO: унести в feature -->
-							<!-- TODO: нужен метод для лайка комментария -->
-							<IconHeart />
-							<span class="text-slateGray text-xs">{{ comment.likes }}</span>
-						</div>
+						<ToggleComment
+							:comment-id="comment.id"
+							:recipe-id="recipe?.id || 0"
+							:likes="comment.likes_count"
+							:is-liked-init="comment.is_liked"
+						/>
 						<div class="w-full h-[1px] bg-[#1C1C1C0D]" />
 					</CommentItem>
 				</CommentList>
@@ -215,13 +203,14 @@ import { IconArrowRight, IconLoad, IconHeart } from '@/shared/components/Icon'
 import { VButton, ButtonColors } from '@/shared/components/Button'
 import { useTranslation } from '@/shared/lib/i18n'
 
-import { RecipeImage, getRecipe, Recipe } from '@/entities/Recipe'
+import { RecipeImage, RecipeCommentsInfo, getRecipe, Recipe } from '@/entities/Recipe'
 import { IngredientsBlock } from '@/entities/Ingredient'
 import { CommentItem, CommentList } from '@/entities/Comment'
 // TODO: нужен метод для получения списка комментариев по recipeId
 
 import { ToggleFavoriteButton } from '@/features/Recipe/addToFavorite'
 import { AddCommentButton } from '@/features/Comment/addComment'
+import { ToggleComment } from '@/features/Comment/toggleComment'
 
 import { useIntersectionObserver } from '../../lib/useIntersectionObserver'
 
@@ -251,7 +240,7 @@ const editingRecipe = () => {
 
 const allCommentPage = () => {
 	if (recipe.value) {
-		router.push(`/all-comment/${recipe.value.id}`)
+		router.push(`/all-comment/${recipe.value.id}/test`)
 	}
 }
 
@@ -264,6 +253,10 @@ const fetchRecipeData = async () => {
 
 	// recipe.value = data.value
 	recipe.value = mockRecipe[0]
+}
+
+const handleSubmitComment = () => {
+	fetchRecipeData()
 }
 
 onMounted(() => {

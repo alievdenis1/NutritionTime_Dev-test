@@ -7,7 +7,7 @@
 			v-for="recipe in recipesData"
 			:key="recipe.id"
 			class="max-w-md mx-auto rounded-[20px] overflow-hidden md:max-w-2xl [&:not(:last-of-type)]:mb-4 px-[2px] py-[2px] cursor-pointer"
-			@click="router.push(`/recipe/${recipe.id}`)"
+			@click="router.push(`/recipe/${recipe.id}/test`)"
 		>
 			<div class="flex bg-white border-custom">
 				<div class="relative">

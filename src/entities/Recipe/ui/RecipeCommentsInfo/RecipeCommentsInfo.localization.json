@@ -1,0 +1,10 @@
+{
+    "ru": {
+        "reviews": "{{count}} отзывов | {{count}} отзыв | {{count}} отзыва | {{count}} отзывов",
+        "noReviews":"Пока нет отзывов"
+    },
+    "en": {
+        "reviews": "0 reviews | {{count}} review | {{count}} reviews",
+        "noReviews": "No reviews yet"
+    }
+}

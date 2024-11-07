@@ -1,6 +1,6 @@
 {
     "ru": {
-        "reviewsCount": "отзывов",
+        "reviews": "{{count}} отзывов | {{count}} отзыв | {{count}} отзыва | {{count}} отзывов",
         "leaveReview": "Оставить отзыв",
         "allReviews": "Все отзывы",
         "recipeAuthor": "Автор рецепта",
@@ -13,7 +13,7 @@
         "noReviews":"Пока нет отзывов"
     },
     "en": {
-        "reviewsCount": "reviews",
+        "reviews": "{{count}} reviews | {{count}} review | {{count}} reviews",
         "leaveReview": "Leave a review",
         "allReviews": "All reviews",
         "recipeAuthor": "Recipe Author",

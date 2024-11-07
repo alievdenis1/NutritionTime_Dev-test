@@ -28,8 +28,10 @@ import type { User } from '@/entities/User/@x/Recipe'
 //     };
 // }
 
+type RatingKey = '1' | '2' | '3' | '4' | '5'
+
 export type Recipe = {
-    id: string;
+    id: number;
     title: string,
     description: string,
     image: string,
@@ -47,6 +49,11 @@ export type Recipe = {
     fats: number,
     carbohydrates: number,
     total_weight: number,
+    total_comments_count: number,
+    average_rating: number,
+    rating_stats?: Record<RatingKey, number>,
+    likes_count: number;
+    is_favorited: boolean;
     // TODO: нужно на бэке добавить поле total_rating, чтобы на фронте не высчитывать по комментам
     // TODO: нужно как-то обозначать есть ли этот рецепт в избранных у пользователя
 

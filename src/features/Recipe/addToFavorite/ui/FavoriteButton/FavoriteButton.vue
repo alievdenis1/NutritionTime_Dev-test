@@ -12,7 +12,7 @@
 		<span
 			:class="['text-slateGray text-sm font-medium', { 'text-green-500': isFavorite }]"
 		>
-			{{ props.likes }}
+			{{ likesAmount }}
 		</span>
 	</button>
 </template>
@@ -27,16 +27,28 @@ const props = withDefaults(defineProps<{
     bgColor?: string,
     recipeId: string,
     likes: number,
+	isFavoriteInit: boolean,
 }>(), {
     bgColor: 'bg-white',
 })
 
-const isFavorite = ref(false)
+const isFavorite = ref(props.isFavoriteInit || false)
+const likesAmount = ref(props.likes || 0)
 
-const { execute } = toggleFavorite({ recipeId: props.recipeId })
+const { data, execute } = toggleFavorite({ recipeId: props.recipeId })
 
-const handleClick = () => {
-    execute()
+const handleClick = async () => {
+	if (isFavorite.value) {
+        likesAmount.value--
+    } else {
+        likesAmount.value++
+    }
+    isFavorite.value = !isFavorite.value
+
+    await execute()
+
+    // isFavorite.value = data.value.is_Liked
+    // likesAmount.value = data.value.likes_count
 }
 </script>
 

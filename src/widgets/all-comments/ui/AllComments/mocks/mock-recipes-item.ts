@@ -11,6 +11,9 @@ export const mockRecipe: Recipe[] = [
         title: 'Вкуснейший домашний бургер',
         description: 'Это рецепт вкуснейшего домашнего бургера, который очень просто приготовить',
         image: addPrefix('/image/recipes1.png'),
+        average_rating: 4.5,
+        // rating_stats: {},
+        total_comments_count: 3,
         author: {
             id: 1,
             name: 'Денис Алиев',
@@ -90,10 +93,8 @@ export const mockRecipe: Recipe[] = [
         total_time: 60,
         kitchenware: [{ name: 'Сковородка', quantity: 1, id: 1 }],
         tags: [{ category: 'test', id: 1, name: 'tag1' }, { category: 'test', id: 2, name: 'tag2' }, { category: 'test', id: 3, name: 'tag3' }],
-        is_favorited: true,
-        likes_count: 10,
-        total_comments_count: 10,
-        average_rating: 4.5,
+        is_favorited: false,
+        likes_count: 5,
         comments: [
             {
                 user: {
@@ -109,7 +110,7 @@ export const mockRecipe: Recipe[] = [
                 images: [{
                     id: 1,
                     image_path: addPrefix('/image/recipes2.png'),
-                }, {
+                },{
                     id: 2,
                     image_path: addPrefix('/image/recipes2.png'),
                 }]
@@ -150,6 +151,8 @@ export const mockRecipe: Recipe[] = [
         title: 'Вкуснейший домашний бургер',
         description: 'Это рецепт вкуснейшего домашнего бургера, который очень просто приготовить',
         image: addPrefix('/image/recipes1.png'),
+        average_rating: 3.5,
+        total_comments_count: 10,
         author: {
             id: 1,
             name: 'Денис Алиев',
@@ -229,10 +232,8 @@ export const mockRecipe: Recipe[] = [
         total_time: 60,
         kitchenware: [{ name: 'Сковородка', quantity: 1, id: 1 }],
         tags: [{ category: 'test', id: 1, name: 'tag1' }, { category: 'test', id: 2, name: 'tag2' }, { category: 'test', id: 3, name: 'tag3' }],
-        average_rating: 5.0,
         is_favorited: false,
         likes_count: 5,
-        total_comments_count: 15,
         comments: [
             {
                 user: {
@@ -248,7 +249,7 @@ export const mockRecipe: Recipe[] = [
                 images: [{
                     id: 1,
                     image_path: addPrefix('/image/recipes2.png'),
-                }, {
+                },{
                     id: 2,
                     image_path: addPrefix('/image/recipes2.png'),
                 }]

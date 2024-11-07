@@ -12,24 +12,29 @@
 		<p class="text-darkGray">
 			{{ props.text }}
 		</p>
-		<img
-			v-if="props.image"
-			:src="props.image"
-			alt="image to comment"
-			class="w-full h-auto object-cover aspect-video rounded-lg"
-		>
+		<!-- TODO: проверить корректность списка фотографий -->
+		<div class="flex flex-col gap-[12px]">
+			<img
+				v-for="image in props.images"
+				:key="image.id"
+				:src="image.image_path"
+				alt="image to comment"
+				class="w-full h-auto object-cover aspect-video rounded-lg"
+			>
+		</div>
 		<slot />
 	</div>
 </template>
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
+import { Image } from '../../model'
 
 const props = defineProps<{
     authorName: string,
     authorImage?: string;
     text: string,
-    image?: string,
+    images?: Image[],
 }>()
 
 </script>

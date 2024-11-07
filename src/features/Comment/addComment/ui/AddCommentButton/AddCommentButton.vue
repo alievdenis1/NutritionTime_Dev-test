@@ -11,14 +11,14 @@
 		</div>
 	</VButton>
 	<!-- TODO: можно вынести в entity/Comment -->
+	<!-- А лучше вынести в соседний файл, так как модалка не будет переиспользоваться и нет смысла нести её в Entities -->
 	<VModal
 		:show="isReviewModalOpen"
 		@close="closeReviewModal"
 	>
 		<div class="flex items-center justify-between">
 			<div class="text-xl text-darkGray">
-				<!-- TODO: перевод -->
-				Отзыв о рецепте
+				{{ t('review') }}
 			</div>
 			<button
 				class="text-2xl w-[48px] h-[48px] bg-lightGray rounded-[50%] p-[14px] cursor-pointer"
@@ -47,22 +47,26 @@
 					<span class="text-xs text-slateGray truncate">{{ ratingText }}</span>
 				</div>
 
-				<!-- TODO: перевод -->
 				<textarea
 					v-model="review"
-					:placeholder="'Ваше мнение о рецепте'"
+					:placeholder="t('opinion')"
 					:maxlength="500"
 					class="border rounded px-2 py-4 text-base min-h-[122px] w-[100%] mt-[20px] mb-[12px]"
+					@change="handleChangeReview"
 				/>
 
-				<!-- TODO: перевод -->
+				<span
+					v-if="errorMessage"
+					class=""
+				>{{ errorMessage }}</span>
+
 				<!-- TODO: addPhotoKey обновляет компонент, нужно переделать -->
 				<VAddPhoto
 					:key="addPhotoKey"
 					:icon-color="'#1C1C1C'"
 					:width-image="54"
 					:height-image="54"
-					:title="'Прикрепить фото'"
+					:title="t('attachPhoto')"
 					:height-main="66"
 					backgrounds="#F3F3F3"
 					:icon="IconPhoto"
@@ -74,8 +78,7 @@
 					:color="ButtonColors.Green"
 					@click="submitReview"
 				>
-					<!-- TODO: перевод -->
-					Оставить отзыв
+					{{ t('submitButton') }}
 				</VButton>
 			</div>
 		</div>
@@ -83,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, withDefaults, ref, computed } from 'vue'
+import { defineEmits, defineProps, ref, computed } from 'vue'
 import { IconClose, IconPhoto, IconArrowRight } from '@/shared/components/Icon'
 import { VButton, ButtonColors } from 'shared/components/Button'
 import Localization from './AddCommentButton.localization.json'
@@ -92,44 +95,48 @@ import { VModal } from 'shared/components/Modal'
 import { VAddPhoto } from 'shared/components/AddPhoto'
 
 import { addComment } from '../../api'
-// import { useRouter } from 'vue-router'
-// import { Recipe } from './types/recipe'
 
 const { t } = useTranslation(Localization)
 
-// const props = withDefaults(defineProps<{
-//     bgColor?: string,
-//     recipeId: string,
-//     likes: number,
-// }>(), {
-//     bgColor: 'bg-white',
-// })
+const props = defineProps<{
+    recipeId: number,
+}>()
+
+const emit = defineEmits<{
+	(event: 'submit'): void;
+}>()
 
 // TODO: отрефакторить и разнести
 
 const isReviewModalOpen = ref(false)
 const rating = ref(0)
 const review = ref('')
-const reviewImage = ref<File | null>(null)
+const reviewImage = ref<File[] | null>(null)
 const addPhotoKey = ref(0)
+const errorMessage = ref('')
+
+const handleChangeReview = () => {
+	errorMessage.value = ''
+}
 
 const setRating = (value: number) => {
 	rating.value = value
+
+	errorMessage.value = ''
 }
 
-// TODO: добавить перевод
 const ratingText = computed(() => {
 	switch (rating.value) {
 		case 1:
-			return 'Плохой рецепт'
+			return t('rating_1')
 		case 2:
-			return 'Посредственный рецепт'
+			return t('rating_2')
 		case 3:
-			return 'Средний рецепт'
+			return t('rating_4')
 		case 4:
-			return 'Хороший рецепт'
+			return t('rating_4')
 		case 5:
-			return 'Отличный рецепт'
+			return t('rating_5')
 		default:
 			return ''
 	}
@@ -150,6 +157,7 @@ const resetReviewForm = () => {
 	review.value = ''
 	reviewImage.value = null
 	addPhotoKey.value++ // Это заставит компонент VAddPhoto пересоздаться
+	errorMessage.value = ''
 }
 
 // TODO: переписать
@@ -158,30 +166,34 @@ const handleImageUpload = () => {
 }
 
 const handleUploadImage = (_: string | null, imageFile: File) => {
-    reviewImage.value = imageFile
+    reviewImage.value?.push(imageFile)
 }
 
-const submitReview = () => {
+const submitReview = async () => {
 	if (rating.value === 0 || review.value.trim() === '') {
         // TODO: добавить нормальную валидацию
-		alert('Пожалуйста, поставьте оценку и напишите отзыв')
+		// Либо добавить переменную errorMessage
+		errorMessage.value = t('error')
 		return
 	}
+
+	// TODO: куда-то добавить проверку на максимальное кол-во файлов, проверку размера файла и типа файла
 
 	const newComment = {
 		text: review.value,
 		rating: rating.value,
         ...(reviewImage.value && {
-            image: reviewImage.value,
+            images: reviewImage.value,
         })
 	}
 
-    const { execute } = addComment({ recipeId: '1' }, newComment)
+    const { execute, loading } = addComment({ recipeId: props.recipeId }, newComment)
 
-    execute()
+    await execute()
 
     // TODO: после отправки отзыва - нужно перезапросить рецепт
     // Отрефакторить этот код
+	emit('submit')
 
 	closeReviewModal()
 }

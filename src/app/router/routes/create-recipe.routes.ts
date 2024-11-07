@@ -77,7 +77,7 @@ export default [
 		// тестовый роут
 		name: 'recipe-card',
 		component: () => import('pages/recipe/ui/RecipeCard/RecipeCard.vue'),
-		path: '/recipe/test',
+		path: '/recipe/:id/test',
 		meta: {
 			title: 'Recipe',
 			layout: NavigateLayout,
@@ -88,6 +88,17 @@ export default [
 		name: 'all-comment',
 		component: () => import('pages/create-recipe/AllComment.vue'),
 		path: '/all-comment/:id',
+		meta: {
+			title: 'All Comment',
+			layout: NavigateLayout,
+			backButton: true,
+		}
+	},
+	{
+		// TODO: тестовый путь, исправить
+		name: 'all-comment-new',
+		component: () => import('pages/comments/ui/AllComments/AllComments.vue'),
+		path: '/all-comment/:id/test',
 		meta: {
 			title: 'All Comment',
 			layout: NavigateLayout,

@@ -28,12 +28,12 @@
 		<InfoItem
 			v-if="props.recipe?.cooking_time !== undefined"
 			:title="t('cookingTime')"
-			:value="t('cookingTimeValue', { time: props.recipe.cooking_time })"
+			:value="t('cookingTimeValue', { count: props.recipe.cooking_time })"
 		/>
 		<InfoItem
 			v-if="props.recipe?.total_time !== undefined"
 			:title="t('readyIn')"
-			:value="t('readyInValue', { time: props.recipe.total_time })"
+			:value="t('readyInValue', { count: props.recipe.total_time })"
 		/>
 		<InfoItem
 			v-if="props.recipe?.spiciness !== undefined"

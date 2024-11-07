@@ -1,8 +1,28 @@
 {
     "ru": {
-        "leaveReview": "Оставить отзыв"
+        "leaveReview": "Оставить отзыв",
+        "opinion": "Ваше мнение о рецепте",
+        "review": "Отзыв о рецепте",
+        "attachPhoto": "Прикрепить фото",
+        "submitButton": "Оставить отзыв",
+        "rating_1": "Плохой рецепт",
+    	"rating_2":"Посредственный рецепт",
+		"rating_3": "Средний рецепт",
+		"rating_4": "Хороший рецепт",
+		"rating_5": "Отличный рецепт",
+        "error": "Пожалуйста, поставьте оценку и напишите отзыв"
     },
     "en": {
-        "leaveReview": "Leave a review"
+        "leaveReview": "Leave a review",
+        "opinion": "Your opinion about the recipe",
+        "review": "Recipe review",
+        "attachPhoto": "Attach photo",
+        "submitButton": "Leave a review",
+        "rating_1": "Bad recipe",
+    	"rating_2":"Mediocre recipe",
+		"rating_3": "Average recipe",
+		"rating_4": "Good recipe",
+		"rating_5": "Great recipe",
+        "error": "Please rate and write a review"
     }
 }

@@ -3,9 +3,10 @@
 		{{ t('ingredients') }}
 	</h3>
 	<IngredientList class="mb-4">
+		<!-- TODO: возможно ingredient.unit сделать через enum и добавить перевод -->
 		<IngredientItem
-			v-for="(ingredient, index) in props?.ingredients || []"
-			:key="index"
+			v-for="ingredient in props?.ingredients || []"
+			:key="ingredient.id"
 			:value="`${ingredient.amount} ${ingredient.unit}.`"
 			:title="ingredient.name"
 		/>
