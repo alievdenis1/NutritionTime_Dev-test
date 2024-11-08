@@ -1,1 +1,1 @@
-export { ToggleFavoriteButton } from './ui'
+export { ToggleFavoriteButton, ShortFavoriteButton } from './ui'

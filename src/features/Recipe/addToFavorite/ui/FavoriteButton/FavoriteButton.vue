@@ -18,38 +18,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, withDefaults } from 'vue'
+import { defineProps, withDefaults } from 'vue'
 import { IconHeart } from '@/shared/components/Icon'
 
-import { toggleFavorite } from '../../api'
+import { useAddToFavorite } from './addToFavorite'
 
 const props = withDefaults(defineProps<{
     bgColor?: string,
-    recipeId: string,
+    recipeId: number,
     likes: number,
 	isFavoriteInit: boolean,
 }>(), {
     bgColor: 'bg-white',
 })
 
-const isFavorite = ref(props.isFavoriteInit || false)
-const likesAmount = ref(props.likes || 0)
-
-const { data, execute } = toggleFavorite({ recipeId: props.recipeId })
-
-const handleClick = async () => {
-	if (isFavorite.value) {
-        likesAmount.value--
-    } else {
-        likesAmount.value++
-    }
-    isFavorite.value = !isFavorite.value
-
-    await execute()
-
-    // isFavorite.value = data.value.is_Liked
-    // likesAmount.value = data.value.likes_count
-}
+const { handleClick, isFavorite, likesAmount, } = useAddToFavorite({
+    isFavoriteInit: props.isFavoriteInit || false,
+    likes: props.likes || 0,
+    recipeId: props.recipeId,
+})
 </script>
 
 <style>

@@ -11,7 +11,7 @@
 					<ToggleFavoriteButton
 						:bg-color="isImageVisible ? 'bg-white' : 'bg-lightGray'"
 						:likes="recipe?.likes_count || 0"
-						:recipe-id="recipeId"
+						:recipe-id="Number(recipeId)"
 						:is-favorite-init="recipe?.is_favorited || false"
 					/>
 				</div>

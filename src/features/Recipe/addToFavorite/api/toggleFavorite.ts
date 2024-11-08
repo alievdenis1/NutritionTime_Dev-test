@@ -1,7 +1,7 @@
 import useApi from '@/shared/lib/api/use-api'
 
 type ToggleFavoriteParams = {
-    recipeId: string;
+    recipeId: number;
 }
 
 export function toggleFavorite(params: ToggleFavoriteParams) {

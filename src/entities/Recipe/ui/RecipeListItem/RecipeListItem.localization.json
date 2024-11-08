@@ -1,0 +1,10 @@
+{
+    "ru": {
+        "readyInValue": "{{count}} минут | {{count}} минута | {{count}} минуты | {{count}} минут",
+        "caloriesPer100gValue": "{{value}} ккал"
+    },
+    "en": {
+        "readyInValue": "{{count}} minutes | {{count}} minute | {{count}} minutes",
+        "caloriesPer100gValue": "{{value}} kcal"
+    }
+}

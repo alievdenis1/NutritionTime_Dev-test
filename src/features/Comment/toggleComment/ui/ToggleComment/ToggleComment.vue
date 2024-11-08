@@ -26,11 +26,8 @@ const isLiked = ref(props.isLikedInit || false)
 const likesAmount = ref(props.likes || 0)
 
 const handleToggleLike = async () => {
-    if (isLiked.value) {
-        likesAmount.value--
-    } else {
-        likesAmount.value++
-    }
+    const like = isLiked.value ? -1 : 1
+    likesAmount.value = likesAmount.value + like
     isLiked.value = !isLiked.value
 
     const { data, execute } = toggleComment({ commentId: props.commentId, recipeId: props.recipeId })
