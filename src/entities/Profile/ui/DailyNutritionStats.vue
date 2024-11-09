@@ -178,6 +178,8 @@
 		>
 			{{ t('noDataForDate') }}
 		</div>
+
+		<MealsList :day-stats="dayStats" />
 	</div>
 </template>
 
@@ -188,7 +190,7 @@
  import { VLoading } from '@/shared/components/Loading'
  import type { Profile, MealStats } from '../model'
  import localization from './ProfileStats.localization.json'
-
+ import { MealsList } from './index'
  interface Props {
   modelValue: string
   profile: Profile | null

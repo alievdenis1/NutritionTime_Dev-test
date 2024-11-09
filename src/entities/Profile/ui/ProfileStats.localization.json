@@ -13,7 +13,13 @@
     "noDataForDate": "Нет данных за выбранную дату",
     "mealsCount": "Приёмов пищи: {count}",
     "tryAgain": "Попробовать снова",
-    "out_of": "из"
+    "out_of": "из",
+    "meals": "Приемы пищи",
+    "noMealsForDate": "На выбранную дату нет приемов пищи",
+    "weight": "Вес",
+    "proteinsShort": "Б",
+    "fatsShort": "Ж",
+    "carbsShort": "У"
   },
   "en": {
     "dailyStats": "Статистика за день",
@@ -29,6 +35,12 @@
     "noDataForDate": "Нет данных за выбранную дату",
     "mealsCount": "Приёмов пищи: {count}",
     "tryAgain": "Попробовать снова",
-    "out_of": "из"
+    "out_of": "из",
+    "meals": "Приемы пищи",
+    "noMealsForDate": "На выбранную дату нет приемов пищи",
+    "weight": "Вес",
+    "proteinsShort": "Б",
+    "fatsShort": "Ж",
+    "carbsShort": "У"
   }
 }
