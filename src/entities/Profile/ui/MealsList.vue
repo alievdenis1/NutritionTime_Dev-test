@@ -4,10 +4,6 @@
 		v-if="dayStats"
 		class="mt-6 space-y-4"
 	>
-		<h4 class="text-lg font-medium mt-5">
-			{{ t('meals') }}:
-		</h4>
-
 		<div
 			v-if="dayStats.meals?.length"
 			class="space-y-3"

@@ -170,6 +170,14 @@
 					</div>
 				</div>
 			</div>
+
+			<VButton
+				:color="ButtonColors.Green"
+				class="mt-5"
+				@click="console.log('тык')"
+			>
+				Изменить цель
+			</VButton>
 		</div>
 
 		<div
@@ -191,6 +199,7 @@
  import type { Profile, MealStats } from '../model'
  import localization from './ProfileStats.localization.json'
  import { MealsList } from './index'
+ import { ButtonColors, VButton } from 'shared/components/Button'
  interface Props {
   modelValue: string
   profile: Profile | null

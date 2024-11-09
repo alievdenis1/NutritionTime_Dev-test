@@ -1,14 +1,32 @@
 <template>
 	<div class="profile-stats space-y-4 p-4">
-		<DailyNutritionStats
-			v-model="selectedDate"
-			:profile="profile"
-			:meal-stats="mealStats"
-			:loading="loading"
-			:error="error"
-			@set-goals="handleSetGoals"
-			@retry="fetchMealStats"
-		/>
+		<TabsMain
+			default-value="report"
+		>
+			<TabsList>
+				<TabsTrigger value="report">
+					Отчет
+				</TabsTrigger>
+				<TabsTrigger value="statistic">
+					Статистика
+				</TabsTrigger>
+			</TabsList>
+			<TabsContent value="report">
+				<DailyNutritionStats
+					v-model="selectedDate"
+					:profile="profile"
+					:meal-stats="mealStats"
+					:loading="loading"
+					:error="error"
+					class="mt-4"
+					@set-goals="handleSetGoals"
+					@retry="fetchMealStats"
+				/>
+			</TabsContent>
+			<TabsContent value="statistic">
+				В разработке
+			</TabsContent>
+		</TabsMain>
 	</div>
 </template>
 
@@ -16,6 +34,7 @@
  import { ref, computed, onMounted, watch } from 'vue'
  import { DailyNutritionStats } from './index'
  import { getProfile, getMealStats } from '../api'
+ import { TabsContent, TabsList, TabsMain, TabsTrigger } from 'shared/components/ui/tabs'
 
  // Состояние
  const selectedDate = ref(new Date().toISOString().split('T')[0])
