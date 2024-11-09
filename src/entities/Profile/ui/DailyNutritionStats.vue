@@ -93,7 +93,7 @@
 					</div>
 					<div>
 						<span class="text-gray-500">{{ t('calories') }}: </span>
-						<span>{{ formatNumber(dayStats.total_calories) }} / {{ formatNumber(profile?.target_calories) }} {{ t('kcal') }}</span>
+						<span>{{ formatNumber(dayStats.total_calories) }} {{ t('out_of') }} {{ formatNumber(profile?.target_calories) }} {{ t('kcal') }}</span>
 						<span
 							v-if="isExceeded(dayStats.total_calories, profile?.target_calories)"
 							class="font-bold"
@@ -128,14 +128,14 @@
 				</div>
 
 				<!-- Подписи БЖУ -->
-				<div class="space-y-3 w-full flex flex-col justify-center">
+				<div class="w-full flex flex-col justify-center">
 					<div class="flex items-center gap-2 m-auto">
 						<div
 							class="w-3 h-3 rounded-full"
 							style="background-color: #319A6E"
 						/>
 						<span class="text-gray-500">
-							{{ t('proteins') }}: {{ formatNumber(dayStats.total_proteins) }} / {{ formatNumber(profile?.macro_proteins) }} {{ t('gram') }}
+							{{ t('proteins') }}: {{ formatNumber(dayStats.total_proteins) }} {{ t('out_of') }} {{ formatNumber(profile?.macro_proteins) }} {{ t('gram') }}.
 							<span
 								class="font-semibold"
 								style="color: #319A6E"
@@ -148,7 +148,7 @@
 							style="background-color: #FDC755"
 						/>
 						<span class="text-gray-500">
-							{{ t('fats') }}: {{ formatNumber(dayStats.total_fats) }} / {{ formatNumber(profile?.macro_fats) }} {{ t('gram') }}
+							{{ t('fats') }}: {{ formatNumber(dayStats.total_fats) }} {{ t('out_of') }} {{ formatNumber(profile?.macro_fats) }} {{ t('gram') }}.
 							<span
 								class="font-semibold"
 								style="color: #FDC755"
@@ -161,7 +161,7 @@
 							style="background-color: #FFA767"
 						/>
 						<span class="text-gray-500">
-							{{ t('carbs') }}: {{ formatNumber(dayStats.total_carbs) }} / {{ formatNumber(profile?.macro_carbs) }} {{ t('gram') }}
+							{{ t('carbs') }}: {{ formatNumber(dayStats.total_carbs) }} {{ t('out_of') }} {{ formatNumber(profile?.macro_carbs) }} {{ t('gram') }}.
 							<span
 								class="font-semibold"
 								style="color: #FFA767"
