@@ -31,26 +31,49 @@
 			</div>
 
 			<!-- Календарь -->
-			<div class="relative">
-				<el-calendar
+			<Teleport to="body">
+				<div
 					v-if="showCalendar"
-					v-model="calendarDate"
-					class="absolute top-[calc(100%+8px)] right-0 z-50 shadow-lg rounded-lg"
-					@click.stop
+					class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
+					@click="closeCalendar"
 				>
-					<template #date-cell="{ data }">
-						<div
-							class="text-center"
-							:class="{
-								'text-gray-400': !isFilledDate(formatDate(data.day)),
-								'font-bold': isFilledDate(formatDate(data.day))
-							}"
-						>
-							{{ new Date(data.day).getDate() }}
+					<div
+						class="bg-white w-full max-w-lg rounded-lg mx-4"
+						@click.stop
+					>
+						<!-- Шапка календаря -->
+						<div class="flex items-center justify-between p-4 border-b">
+							<h4 class="text-lg font-medium">
+								Выберите дату
+							</h4>
+							<button
+								class="p-2 hover:bg-gray-100 rounded-full transition-colors"
+								@click="closeCalendar"
+							>
+								✕
+							</button>
 						</div>
-					</template>
-				</el-calendar>
-			</div>
+
+						<el-calendar
+							v-model="calendarDate"
+							class="custom-calendar"
+						>
+							<template #date-cell="{ data }">
+								<div
+									class="text-center cursor-pointer py-2"
+									:class="{
+										'text-gray-400': !isFilledDate(formatDate(data.day)),
+										'font-bold text-emerald-600': isFilledDate(formatDate(data.day)),
+										'bg-emerald-50': isCurrentDate(data.day)
+									}"
+								>
+									{{ new Date(data.day).getDate() }}
+								</div>
+							</template>
+						</el-calendar>
+					</div>
+				</div>
+			</Teleport>
 		</div>
 
 		<VLoading
@@ -301,6 +324,14 @@
   return props.mealStats?.filled_dates?.includes(date) ?? false
  }
 
+ const closeCalendar = () => {
+  showCalendar.value = false
+ }
+
+ const isCurrentDate = (date: string) => {
+  return formatDate(date) === props.modelValue
+ }
+
  const getProgressBarColor = () => {
   const percentage = calculatePercentage(
    dayStats.value?.total_calories,
@@ -340,3 +371,47 @@
   colors: ['#319A6E', '#FDC755', '#FFA767']
  })
 </script>
+
+<style>
+ /* Кастомные стили для календаря Element Plus */
+ .custom-calendar {
+  --el-color-primary: #059669 !important; /* emerald-600 */
+ }
+
+ .custom-calendar .el-calendar__header {
+  padding: 12px 20px;
+ }
+
+ .custom-calendar .el-button--primary {
+  --el-button-bg-color: #059669;
+  --el-button-border-color: #059669;
+  --el-button-hover-bg-color: #047857;
+  --el-button-hover-border-color: #047857;
+ }
+
+ .custom-calendar .el-button--primary.is-plain {
+  --el-button-bg-color: #f1f5f9;
+  --el-button-border-color: #e2e8f0;
+  --el-button-hover-bg-color: #059669;
+  --el-button-hover-border-color: #059669;
+  --el-button-hover-text-color: white;
+ }
+
+ .custom-calendar .el-calendar-table td.is-selected .text-center,
+ .custom-calendar .el-calendar-table td.is-selected
+ {
+  background-color: #059669;
+  color: white;
+ }
+
+ .custom-calendar .el-calendar-table th {
+  text-align: center;
+  padding: 8px;
+  color: #64748b;
+ }
+
+ .custom-calendar .el-calendar-table td {
+  padding: 4px;
+  text-align: center;
+ }
+</style>
