@@ -21,6 +21,7 @@
     "@townsquarelabs/ui-vue": "^2.0.10-beta.0",
     "@twa-dev/sdk": "^7.8.0",
     "@vueuse/core": "^10.11.0",
+    "apexcharts": "^4.0.0",
     "axios": "^1.7.7",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",
@@ -42,6 +43,7 @@
     "vue": "^3.2.47",
     "vue-i18n": "^9.11.0",
     "vue-router": "^4.2.0",
+    "vue3-apexcharts": "^1.7.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {

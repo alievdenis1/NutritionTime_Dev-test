@@ -29,76 +29,97 @@
 
 		<div
 			v-if="dayStats"
-			class="p-4 space-y-3"
+			class="p-6 bg-white rounded-lg shadow-sm"
 		>
-			<!-- Калории -->
-			<div class="stats-row">
-				<div class="flex items-center gap-2">
-					<span>{{ t('calories') }}</span>
-					<span
-						v-if="hasGoals"
-						class="text-xs text-gray-500"
-					>
-						({{ t('target') }}: {{ formatNumber(profile?.target_calories) }} {{ t('kcal') }})
-					</span>
-				</div>
-				<div class="flex items-center gap-2">
-					<span class="font-medium">
-						{{ formatNumber(dayStats.total_calories) }} {{ t('kcal') }}
-					</span>
-					<template v-if="hasGoals && profile?.target_calories">
-						<span
-							class="text-xs px-2 py-0.5 rounded"
-							:class="getProgressColorClass(
-								Number(dayStats.total_calories),
-								profile.target_calories
-							)"
-						>
-							{{ calculatePercentage(dayStats.total_calories, profile.target_calories) }}%
+			<!-- Калории и приемы пищи -->
+			<div class="mb-6">
+				<div class="flex flex-col items-center mb-2">
+					<div class="text-base text-gray-500 mb-1">
+						{{ t('mealsCount').replace('{count}', dayStats.meals_count.toString()) }}
+					</div>
+					<div>
+						<span class="text-base text-gray-500">{{ t('calories') }}: </span>
+						<span class="text-base">
+							{{ formatNumber(dayStats.total_calories) }} / {{ formatNumber(profile?.target_calories) }} {{ t('kcal') }}
+							<span
+								v-if="isExceeded(dayStats.total_calories, profile?.target_calories)"
+								class="font-bold"
+								style="color: #F04F4F"
+							>
+								(+{{ formatNumber(Number(dayStats.total_calories) - (Number(profile?.target_calories) || 0)) }})
+							</span>
 						</span>
-					</template>
+					</div>
+				</div>
+				<!-- Прогресс бар -->
+				<div class="relative w-full h-2 bg-beige rounded-full overflow-hidden">
+					<div
+						class="absolute top-0 left-0 h-full rounded-full transition-all duration-300"
+						:style="{
+							width: `${Math.min(calculatePercentage(dayStats.total_calories, profile?.target_calories), 100)}%`,
+							backgroundColor: getProgressBarColor()
+						}"
+					/>
 				</div>
 			</div>
 
-			<!-- Макронутриенты -->
-			<template
-				v-for="nutrient in nutrients"
-				:key="nutrient.key"
-			>
-				<div class="stats-row">
-					<div class="flex items-center gap-2">
-						<span>{{ t(nutrient.label) }}</span>
-						<span
-							v-if="hasGoals"
-							class="text-xs text-gray-500"
-						>
-							({{ t('target') }}: {{ formatNumber(profile?.[nutrient.targetKey]) }} {{ t('gram') }})
+			<!-- БЖУ -->
+			<div class="flex flex-col items-center">
+				<!-- График БЖУ -->
+				<div class="w-40 mb-4">
+					<apexchart
+						type="radialBar"
+						height="240"
+						:options="getMacrosChartOptions()"
+						:series="macrosPercentages"
+					/>
+				</div>
+
+				<!-- Подписи БЖУ -->
+				<div class="space-y-3 w-full flex flex-col justify-center">
+					<div class="flex items-center gap-2 m-auto">
+						<div
+							class="w-3 h-3 rounded-full"
+							style="background-color: #319A6E"
+						/>
+						<span class="text-gray-500">
+							{{ t('proteins') }}: {{ formatNumber(dayStats.total_proteins) }} / {{ formatNumber(profile?.macro_proteins) }} {{ t('gram') }}
+							<span
+								class="font-semibold"
+								style="color: #319A6E"
+							>({{ macrosPercentages[0] }}%)</span>
 						</span>
 					</div>
-					<div class="flex items-center gap-2">
-						<span class="font-medium">
-							{{ formatNumber(dayStats[nutrient.valueKey]) }} {{ t('gram') }}
-						</span>
-						<template v-if="hasGoals && profile?.[nutrient.targetKey]">
+					<div class="flex items-center gap-2 m-auto">
+						<div
+							class="w-3 h-3 rounded-full"
+							style="background-color: #FDC755"
+						/>
+						<span class="text-gray-500">
+							{{ t('fats') }}: {{ formatNumber(dayStats.total_fats) }} / {{ formatNumber(profile?.macro_fats) }} {{ t('gram') }}
 							<span
-								class="text-xs px-2 py-0.5 rounded"
-								:class="getProgressColorClass(
-									Number(dayStats[nutrient.valueKey]),
-									profile[nutrient.targetKey]
-								)"
-							>
-								{{ calculatePercentage(dayStats[nutrient.valueKey], profile[nutrient.targetKey]) }}%
-							</span>
-						</template>
+								class="font-semibold"
+								style="color: #FDC755"
+							>({{ macrosPercentages[1] }}%)</span>
+						</span>
+					</div>
+					<div class="flex items-center gap-2 m-auto">
+						<div
+							class="w-3 h-3 rounded-full"
+							style="background-color: #FFA767"
+						/>
+						<span class="text-gray-500">
+							{{ t('carbs') }}: {{ formatNumber(dayStats.total_carbs) }} / {{ formatNumber(profile?.macro_carbs) }} {{ t('gram') }}
+							<span
+								class="font-semibold"
+								style="color: #FFA767"
+							>({{ macrosPercentages[2] }}%)</span>
+						</span>
 					</div>
 				</div>
-			</template>
-
-			<!-- Количество приёмов пищи -->
-			<div class="text-sm text-gray-500 pt-2 border-t">
-				{{ t('mealsCount').replace('{count}', dayStats.meals_count) }}
 			</div>
 		</div>
+
 		<div
 			v-else
 			class="p-4 text-center text-gray-500"
@@ -113,7 +134,6 @@
  import { useTranslation } from '@/shared/lib/i18n'
  import { VInput } from '@/shared/components/Input'
  import { VButton } from '@/shared/components/Button'
- import { VAccordion } from '@/shared/components/Accordion'
  import { VLoading } from '@/shared/components/Loading'
  import type { Profile, MealStats } from '../model'
  import localization from './ProfileStats.localization.json'
@@ -146,27 +166,6 @@
  // Константы
  const today = new Date().toISOString().split('T')[0]
 
- const nutrients = [
-  {
-   key: 'proteins',
-   label: 'proteins',
-   valueKey: 'total_proteins' as const,
-   targetKey: 'macro_proteins' as const
-  },
-  {
-   key: 'fats',
-   label: 'fats',
-   valueKey: 'total_fats' as const,
-   targetKey: 'macro_fats' as const
-  },
-  {
-   key: 'carbs',
-   label: 'carbs',
-   valueKey: 'total_carbs' as const,
-   targetKey: 'macro_carbs' as const
-  }
- ] as const
-
  // v-model для даты
  const localDate = computed({
   get: () => props.modelValue,
@@ -190,27 +189,68 @@
   ) ?? null
  })
 
+ const macrosPercentages = computed(() => {
+  if (!dayStats.value || !props.profile) return [0, 0, 0]
+
+  return [
+   calculatePercentage(dayStats.value.total_proteins, props.profile.macro_proteins),
+   calculatePercentage(dayStats.value.total_fats, props.profile.macro_fats),
+   calculatePercentage(dayStats.value.total_carbs, props.profile.macro_carbs)
+  ]
+ })
+
  // Утилиты
  const formatNumber = (value: string | number | undefined | null): string => {
   if (value == null) return '0'
-  return Number(value).toFixed(1)
+  return Math.round(Number(value)).toString()
  }
 
- const calculatePercentage = (current: string | number, target: number): string => {
-  if (!target) return '0'
-  return Math.round((Number(current) / target) * 100).toString()
+ const calculatePercentage = (current: string | number | null | undefined, target: number | null | undefined): number => {
+  if (!current || !target) return 0
+  return Math.round((Number(current) / target) * 100)
  }
 
- const getProgressColorClass = (current: number, target: number): string => {
-  const percentage = (current / target) * 100
-  if (percentage > 100) return 'bg-red-100 text-red-800'
-  if (percentage >= 90) return 'bg-green-100 text-green-800'
-  return 'bg-yellow-100 text-yellow-800'
+ const isExceeded = (current: string | number | null | undefined, target: number | null | undefined): boolean => {
+  if (!current || !target) return false
+  return Number(current) > target
  }
+
+ const getProgressBarColor = () => {
+  const percentage = calculatePercentage(
+   dayStats.value?.total_calories,
+   props.profile?.target_calories
+  )
+
+  if (percentage > 100) return '#F04F4F' // Обновленный красный
+  if (percentage >= 90) return '#10B981' // green-500
+  return '#F59E0B' // yellow-500
+ }
+
+ const getMacrosChartOptions = () => ({
+  chart: {
+   fontFamily: 'inherit',
+   toolbar: { show: false }
+  },
+  plotOptions: {
+   radialBar: {
+    hollow: {
+     margin: 0,
+     size: '35%'
+    },
+    track: {
+     background: '#e5e7eb',
+     margin: 1,
+     strokeWidth: '12'
+    },
+    dataLabels: {
+     show: false
+    }
+   }
+  },
+  stroke: {
+   lineCap: 'round',
+   dashArray: 0
+  },
+  colors: ['#319A6E', '#FDC755', '#FFA767']
+ })
 </script>
-
-<style scoped>
- .stats-row {
-  @apply flex justify-between items-center py-2 border-b last:border-0;
- }
-</style>
