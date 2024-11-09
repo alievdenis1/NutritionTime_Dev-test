@@ -27,91 +27,84 @@
 			class="h-64"
 		/>
 
-		<!-- Основная статистика -->
-		<VAccordion
-			v-else
-			:title="t('dailyNutrition')"
-			is-open
+		<div
+			v-if="dayStats"
+			class="p-4 space-y-3"
 		>
-			<div
-				v-if="dayStats"
-				class="p-4 space-y-3"
+			<!-- Калории -->
+			<div class="stats-row">
+				<div class="flex items-center gap-2">
+					<span>{{ t('calories') }}</span>
+					<span
+						v-if="hasGoals"
+						class="text-xs text-gray-500"
+					>
+						({{ t('target') }}: {{ formatNumber(profile?.target_calories) }} {{ t('kcal') }})
+					</span>
+				</div>
+				<div class="flex items-center gap-2">
+					<span class="font-medium">
+						{{ formatNumber(dayStats.total_calories) }} {{ t('kcal') }}
+					</span>
+					<template v-if="hasGoals && profile?.target_calories">
+						<span
+							class="text-xs px-2 py-0.5 rounded"
+							:class="getProgressColorClass(
+								Number(dayStats.total_calories),
+								profile.target_calories
+							)"
+						>
+							{{ calculatePercentage(dayStats.total_calories, profile.target_calories) }}%
+						</span>
+					</template>
+				</div>
+			</div>
+
+			<!-- Макронутриенты -->
+			<template
+				v-for="nutrient in nutrients"
+				:key="nutrient.key"
 			>
-				<!-- Калории -->
 				<div class="stats-row">
 					<div class="flex items-center gap-2">
-						<span>{{ t('calories') }}</span>
+						<span>{{ t(nutrient.label) }}</span>
 						<span
 							v-if="hasGoals"
 							class="text-xs text-gray-500"
 						>
-							({{ t('target') }}: {{ formatNumber(profile?.target_calories) }} {{ t('kcal') }})
+							({{ t('target') }}: {{ formatNumber(profile?.[nutrient.targetKey]) }} {{ t('gram') }})
 						</span>
 					</div>
 					<div class="flex items-center gap-2">
 						<span class="font-medium">
-							{{ formatNumber(dayStats.total_calories) }} {{ t('kcal') }}
+							{{ formatNumber(dayStats[nutrient.valueKey]) }} {{ t('gram') }}
 						</span>
-						<template v-if="hasGoals && profile?.target_calories">
+						<template v-if="hasGoals && profile?.[nutrient.targetKey]">
 							<span
 								class="text-xs px-2 py-0.5 rounded"
 								:class="getProgressColorClass(
-									Number(dayStats.total_calories),
-									profile.target_calories
+									Number(dayStats[nutrient.valueKey]),
+									profile[nutrient.targetKey]
 								)"
 							>
-								{{ calculatePercentage(dayStats.total_calories, profile.target_calories) }}%
+								{{ calculatePercentage(dayStats[nutrient.valueKey], profile[nutrient.targetKey]) }}%
 							</span>
 						</template>
 					</div>
 				</div>
+			</template>
 
-				<!-- Макронутриенты -->
-				<template
-					v-for="nutrient in nutrients"
-					:key="nutrient.key"
-				>
-					<div class="stats-row">
-						<div class="flex items-center gap-2">
-							<span>{{ t(nutrient.label) }}</span>
-							<span
-								v-if="hasGoals"
-								class="text-xs text-gray-500"
-							>
-								({{ t('target') }}: {{ formatNumber(profile?.[nutrient.targetKey]) }} {{ t('gram') }})
-							</span>
-						</div>
-						<div class="flex items-center gap-2">
-							<span class="font-medium">
-								{{ formatNumber(dayStats[nutrient.valueKey]) }} {{ t('gram') }}
-							</span>
-							<template v-if="hasGoals && profile?.[nutrient.targetKey]">
-								<span
-									class="text-xs px-2 py-0.5 rounded"
-									:class="getProgressColorClass(
-										Number(dayStats[nutrient.valueKey]),
-										profile[nutrient.targetKey]
-									)"
-								>
-									{{ calculatePercentage(dayStats[nutrient.valueKey], profile[nutrient.targetKey]) }}%
-								</span>
-							</template>
-						</div>
-					</div>
-				</template>
-
-				<!-- Количество приёмов пищи -->
-				<div class="text-sm text-gray-500 pt-2 border-t">
-					{{ t('mealsCount').replace('{count}', dayStats.meals_count) }}
-				</div>
+			<!-- Количество приёмов пищи -->
+			<div class="text-sm text-gray-500 pt-2 border-t">
+				{{ t('mealsCount').replace('{count}', dayStats.meals_count) }}
 			</div>
-			<div
-				v-else
-				class="p-4 text-center text-gray-500"
-			>
-				{{ t('noDataForDate') }}
-			</div>
-		</VAccordion>
+		</div>
+		<div
+			v-else
+			class="p-4 text-center text-gray-500"
+		>
+			{{ t('noDataForDate') }}
+		</div>
 	</div>
 </template>
 
