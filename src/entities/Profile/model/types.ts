@@ -70,32 +70,34 @@ export interface MealsResponse {
  [date: string]: MealDay;
 }
 
-export interface MealStats {
- daily_averages: {
-  calories: number;
-  proteins: number;
-  fats: number;
-  carbs: number;
-  weight: number;
-  meals_count: number;
- };
- comparison_with_targets: {
-  calories_target_diff: number;
-  proteins_target_diff: number;
-  fats_target_diff: number;
-  carbs_target_diff: number;
- };
- daily_stats: Array<{
-  date: string;
-  total_calories: string;
-  total_proteins: string;
-  total_fats: string;
-  total_carbs: string;
-  total_weight: string;
-  meals_count: number;
- }>;
+export interface MealItem {
+ id: number
+ dish_name: string
+ weight: number
+ calories: number
+ proteins: number
+ fats: number
+ carbs: number
+ created_at: string
 }
 
+// Статистика за день
+export interface DayStats {
+ date: string
+ total_calories: string
+ total_proteins: string
+ total_fats: string
+ total_carbs: string
+ total_weight: string
+ meals_count: number
+ meals: MealItem[] // Добавляем список блюд
+}
+
+// Обновленный ответ API статистики
+export interface MealStats {
+ daily_stats: DayStats[]
+ filled_dates: string[]
+}
 export interface Payment {
  id: number;
  status: 'COMPLETED' | 'PENDING' | 'CANCELLED';

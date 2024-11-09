@@ -1,24 +1,55 @@
 <template>
 	<div class="space-y-4">
 		<!-- Заголовок с календарем -->
-		<div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-white rounded-lg shadow-sm">
-			<h3 class="text-lg font-medium">
-				{{ t('dailyStats') }}
-			</h3>
-			<div class="flex items-center gap-2 w-full sm:w-auto">
-				<VInput
-					v-model="localDate"
-					type="date"
-					:max="today"
-					class="w-full sm:w-auto"
-				/>
-				<VButton
-					v-if="!hasGoals"
-					class="whitespace-nowrap"
-					@click="$emit('setGoals')"
+		<div class="flex items-center justify-between p-4">
+			<div class="flex items-center justify-center w-full gap-2">
+				<!-- Стрелка влево -->
+				<button
+					class="p-2 hover:bg-gray-100 rounded-full transition-colors font-bold"
+					@click="handlePrevDay"
 				>
-					{{ t('setGoals') }}
-				</VButton>
+					{{ '<' }}
+				</button>
+
+				<!-- Заголовок -->
+				<h3
+					class="text-lg"
+					@click="toggleCalendar"
+				>
+					{{ headerTitle }}
+				</h3>
+
+				<!-- Стрелка вправо -->
+				<button
+					class="p-2 hover:bg-gray-100 rounded-full transition-colors font-bold"
+					:disabled="isToday"
+					:class="{ 'opacity-50 cursor-not-allowed': isToday }"
+					@click="handleNextDay"
+				>
+					{{ '>' }}
+				</button>
+			</div>
+
+			<!-- Календарь -->
+			<div class="relative">
+				<el-calendar
+					v-if="showCalendar"
+					v-model="calendarDate"
+					class="absolute top-[calc(100%+8px)] right-0 z-50 shadow-lg rounded-lg"
+					@click.stop
+				>
+					<template #date-cell="{ data }">
+						<div
+							class="text-center"
+							:class="{
+								'text-gray-400': !isFilledDate(formatDate(data.day)),
+								'font-bold': isFilledDate(formatDate(data.day))
+							}"
+						>
+							{{ new Date(data.day).getDate() }}
+						</div>
+					</template>
+				</el-calendar>
 			</div>
 		</div>
 
@@ -38,16 +69,14 @@
 						{{ t('mealsCount').replace('{count}', dayStats.meals_count.toString()) }}
 					</div>
 					<div>
-						<span class="text-base text-gray-500">{{ t('calories') }}: </span>
-						<span class="text-base">
-							{{ formatNumber(dayStats.total_calories) }} / {{ formatNumber(profile?.target_calories) }} {{ t('kcal') }}
-							<span
-								v-if="isExceeded(dayStats.total_calories, profile?.target_calories)"
-								class="font-bold"
-								style="color: #F04F4F"
-							>
-								(+{{ formatNumber(Number(dayStats.total_calories) - (Number(profile?.target_calories) || 0)) }})
-							</span>
+						<span class="text-gray-500">{{ t('calories') }}: </span>
+						<span>{{ formatNumber(dayStats.total_calories) }} / {{ formatNumber(profile?.target_calories) }} {{ t('kcal') }}</span>
+						<span
+							v-if="isExceeded(dayStats.total_calories, profile?.target_calories)"
+							class="font-bold"
+							style="color: #F04F4F"
+						>
+							(+{{ formatNumber(Number(dayStats.total_calories) - (Number(profile?.target_calories) || 0)) }})
 						</span>
 					</div>
 				</div>
@@ -130,10 +159,9 @@
 </template>
 
 <script setup lang="ts">
- import { computed } from 'vue'
+ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
  import { useTranslation } from '@/shared/lib/i18n'
- import { VInput } from '@/shared/components/Input'
- import { VButton } from '@/shared/components/Button'
+ import { ElCalendar } from 'element-plus'
  import { VLoading } from '@/shared/components/Loading'
  import type { Profile, MealStats } from '../model'
  import localization from './ProfileStats.localization.json'
@@ -163,23 +191,54 @@
  // Локализация
  const { t } = useTranslation(localization)
 
- // Константы
+ // Состояние
+ const showCalendar = ref(false)
  const today = new Date().toISOString().split('T')[0]
 
- // v-model для даты
- const localDate = computed({
-  get: () => props.modelValue,
-  set: (value: string) => emit('update:modelValue', value)
+ // Календарь
+ const calendarDate = computed({
+  get: () => new Date(props.modelValue),
+  set: (value: Date) => {
+   emit('update:modelValue', formatDate(value))
+   showCalendar.value = false
+  }
+ })
+
+ // Закрытие календаря при клике вне
+ const handleClickOutside = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+  if (!target.closest('.el-calendar') && showCalendar.value) {
+   showCalendar.value = false
+  }
+ }
+
+ onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+ })
+
+ onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
  })
 
  // Вычисляемые свойства
- const hasGoals = computed(() => {
-  return !!(
-   props.profile?.target_calories ||
-   props.profile?.macro_proteins ||
-   props.profile?.macro_fats ||
-   props.profile?.macro_carbs
-  )
+ const isToday = computed(() => props.modelValue === today)
+
+ const headerTitle = computed(() => {
+  const date = new Date(props.modelValue)
+  const currentDate = new Date()
+
+  currentDate.setHours(0, 0, 0, 0)
+  date.setHours(0, 0, 0, 0)
+
+  if (date.getTime() === currentDate.getTime()) {
+   return 'Статистика за сегодня'
+  }
+
+  if (date.getTime() === currentDate.getTime() - 86400000) {
+   return 'Статистика за вчера'
+  }
+
+  return `Статистика за ${date.toLocaleDateString('ru-RU')}`
  })
 
  const dayStats = computed(() => {
@@ -199,7 +258,12 @@
   ]
  })
 
- // Утилиты
+ // Методы
+ const formatDate = (date: Date | string): string => {
+  const d = new Date(date)
+  return d.toISOString().split('T')[0]
+ }
+
  const formatNumber = (value: string | number | undefined | null): string => {
   if (value == null) return '0'
   return Math.round(Number(value)).toString()
@@ -215,15 +279,37 @@
   return Number(current) > target
  }
 
+ const handlePrevDay = () => {
+  const date = new Date(props.modelValue)
+  date.setDate(date.getDate() - 1)
+  emit('update:modelValue', formatDate(date))
+ }
+
+ const handleNextDay = () => {
+  if (isToday.value) return
+  const date = new Date(props.modelValue)
+  date.setDate(date.getDate() + 1)
+  emit('update:modelValue', formatDate(date))
+ }
+
+ const toggleCalendar = (event: MouseEvent) => {
+  event.stopPropagation()
+  showCalendar.value = !showCalendar.value
+ }
+
+ const isFilledDate = (date: string) => {
+  return props.mealStats?.filled_dates?.includes(date) ?? false
+ }
+
  const getProgressBarColor = () => {
   const percentage = calculatePercentage(
    dayStats.value?.total_calories,
    props.profile?.target_calories
   )
 
-  if (percentage > 100) return '#F04F4F' // Обновленный красный
-  if (percentage >= 90) return '#10B981' // green-500
-  return '#F59E0B' // yellow-500
+  if (percentage > 100) return '#F04F4F'
+  if (percentage >= 90) return '#10B981'
+  return '#F59E0B'
  }
 
  const getMacrosChartOptions = () => ({
