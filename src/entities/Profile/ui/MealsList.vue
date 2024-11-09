@@ -4,8 +4,8 @@
 		v-if="dayStats"
 		class="mt-6 space-y-4"
 	>
-		<h4 class="text-lg font-medium">
-			{{ t('meals') }}
+		<h4 class="text-lg font-medium mt-5">
+			{{ t('meals') }}:
 		</h4>
 
 		<div
@@ -36,7 +36,7 @@
 								class="w-2 h-2 rounded-full"
 								style="background-color: #319A6E"
 							/>
-							<span class="text-gray-600">{{ t('proteinsShort') }}: {{ formatNumber(meal.proteins) }}{{ t('gram') }}.</span>
+							<span class="text-gray-600">{{ t('proteinsShort') }}: {{ formatNumber(meal.proteins) }} {{ t('gram') }}.</span>
 						</div>
 
 						<!-- Жиры -->
@@ -45,7 +45,7 @@
 								class="w-2 h-2 rounded-full"
 								style="background-color: #FDC755"
 							/>
-							<span class="text-gray-600">{{ t('fatsShort') }}: {{ formatNumber(meal.fats) }}{{ t('gram') }}.</span>
+							<span class="text-gray-600">{{ t('fatsShort') }}: {{ formatNumber(meal.fats) }} {{ t('gram') }}.</span>
 						</div>
 
 						<!-- Углеводы -->
@@ -54,18 +54,18 @@
 								class="w-2 h-2 rounded-full"
 								style="background-color: #FFA767"
 							/>
-							<span class="text-gray-600">{{ t('carbsShort') }}: {{ formatNumber(meal.carbs) }}{{ t('gram') }}.</span>
+							<span class="text-gray-600">{{ t('carbsShort') }}: {{ formatNumber(meal.carbs) }} {{ t('gram') }}.</span>
 						</div>
 					</div>
 					<div class="flex mt-3 text-slateGray">
 						<!-- Вес -->
 						<div class="col-span-2 sm:col-span-4 text-gray-500">
-							{{ t('weight') }}: {{ formatNumber(meal.weight) }}{{ t('gram') }}
+							{{ formatNumber(meal.weight) }} {{ t('gram') }}.
 						</div>
 						<!-- Калории -->
 						<div class="flex items-center gap-2">
 							<div class="w-2 h-2 rounded-full" />
-							<span class="text-gray-600">{{ formatNumber(meal.calories) }} {{ t('kcal') }}</span>
+							<span class="text-gray-600">{{ formatNumber(meal.calories) }} {{ t('kcal') }}.</span>
 						</div>
 					</div>
 				</div>
