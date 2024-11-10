@@ -1,5 +1,8 @@
 <template>
-	<div class="min-h-screen pt-5 bg-gradient-to-br from-green-800 to-green-900 flex flex-col relative overflow-hidden">
+	<div
+		class="min-h-screen pt-5 bg-gradient-to-br from-green-800 to-green-900
+	flex flex-col relative overflow-hidden"
+	>
 		<div class="absolute inset-0 cannabis-pattern opacity-20" />
 		<div class="absolute top-0 left-0 right-0 h-32 gradient-overlay" />
 		<div class="absolute inset-0 bg-gradient-radial from-transparent to-green-900 opacity-40" />
@@ -11,7 +14,9 @@
 			<!-- Order Information Card -->
 			<div
 				v-if="order"
-				class="bg-gray-800 bg-opacity-80 backdrop-filter backdrop-blur-xl rounded-2xl overflow-hidden shadow-2xl p-8 animate-fade-in transform hover:scale-[1.02] transition-all duration-300"
+				class="bg-gray-800 bg-opacity-80 backdrop-filter backdrop-blur-xl rounded-2xl
+				overflow-hidden shadow-2xl p-8 animate-fade-in transform hover:scale-[1.02]
+				transition-all duration-300"
 			>
 				<!-- Order Details -->
 				<div class="space-y-2">
@@ -99,7 +104,8 @@
 			<!-- Loading State -->
 			<div
 				v-else-if="loading"
-				class="bg-gray-800 bg-opacity-80 backdrop-filter backdrop-blur-xl rounded-2xl overflow-hidden shadow-2xl p-8 animate-pulse"
+				class="bg-gray-800 bg-opacity-80 backdrop-filter backdrop-blur-xl rounded-2xl
+				overflow-hidden shadow-2xl p-8 animate-pulse"
 			>
 				<p class="text-yellow-400 text-xl text-center">
 					<i class="fas fa-spinner fa-spin mr-2" />Loading order information...
@@ -125,10 +131,12 @@
  import { defineComponent, ref, onMounted, computed, watch } from 'vue'
  import { useRoute, useRouter } from 'vue-router'
 
- import { getOrder, updateOrder, cancelPayment, preparePayment, checkPaymentStatus } from '../api/order'
+ import { getOrder, updateOrder, cancelPayment, preparePayment, checkPaymentStatus }
+  from '../api/order'
  import type { Order, OrderStatus, PreparedPayment } from '../model/order'
 
- import { TonConnectButton, useTonAddress, useTonWallet, useTonConnectUI } from '@townsquarelabs/ui-vue'
+ import { TonConnectButton, useTonAddress, useTonWallet, useTonConnectUI }
+  from '@townsquarelabs/ui-vue'
  import type { SendTransactionResponse } from '@tonconnect/sdk'
  import { toNano } from '@ton/core'
 
@@ -354,7 +362,8 @@
       return
      }
 
-     const { data: statusData, error: statusError, execute: executeStatus } = checkPaymentStatus(orderId)
+     const { data: statusData, error: statusError, execute: executeStatus } =
+      checkPaymentStatus(orderId)
      await executeStatus()
 
      if (statusError.value) {
@@ -400,7 +409,8 @@
    }
 
    const updateOrderStatus = async (status: OrderStatus) => {
-    const { error: updateError, execute: executeUpdate } = updateOrder(order.value!.id, { status })
+    const { error: updateError, execute: executeUpdate } =
+     updateOrder(order.value!.id, { status })
     await executeUpdate()
 
     if (updateError.value) {
@@ -412,7 +422,8 @@
 
    const cancelPaymentProcess = async () => {
     if (paymentId.value) {
-     const { error: cancelError, execute: executeCancel } = cancelPayment(paymentId.value)
+     const { error: cancelError, execute: executeCancel } =
+      cancelPayment(paymentId.value)
      await executeCancel()
      if (cancelError.value) {
       console.error('Error cancelling payment:', cancelError.value)
