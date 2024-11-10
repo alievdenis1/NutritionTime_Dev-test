@@ -1,5 +1,10 @@
 <template>
 	<div class="profile-stats space-y-4 p-4">
+		Вы ведете дневник уже: 5 дней подряд! <br>
+		Осталось 7 дней подписки: <span
+			class="text-emerald-700 underline cursor-pointer"
+			@click="router.push(`/payment/1`)"
+		>продлить</span>
 		<TabsMain
 			default-value="report"
 		>
@@ -35,6 +40,8 @@
  import { DailyNutritionStats } from './index'
  import { getProfile, getMealStats } from '../api'
  import { TabsContent, TabsList, TabsMain, TabsTrigger } from 'shared/components/ui/tabs'
+ import { useRouter } from 'vue-router'
+ const router = useRouter()
 
  // Состояние
  const selectedDate = ref(new Date().toISOString().split('T')[0])

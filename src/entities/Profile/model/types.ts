@@ -1,5 +1,7 @@
 // entities/Profile/model/types.ts
 
+// import { PaymentStatus } from 'entities/Profile'
+
 export interface Profile {
  gender: string;
  age: number;
@@ -98,20 +100,19 @@ export interface MealStats {
  daily_stats: DayStats[]
  filled_dates: string[]
 }
-export interface Payment {
- id: number;
- status: 'COMPLETED' | 'PENDING' | 'CANCELLED';
- wallet_address: string;
- message_id: string | null;
- expires_at: string;
- completed_at: string | null;
- amount_ton: number;
- payment_comment: string;
- ton_transaction_hash: string | null;
- created_at: string;
- updated_at: string;
-}
-
+// export interface Payment {
+//  id: number;
+//  status: 'COMPLETED' | 'PENDING' | 'CANCELLED';
+//  wallet_address: string;
+//  message_id: string | null;
+//  expires_at: string;
+//  completed_at: string | null;
+//  amount_ton: number;
+//  payment_comment: string;
+//  ton_transaction_hash: string | null;
+//  created_at: string;
+//  updated_at: string;
+// }
 export interface Notification {
  id: number;
  type: string;

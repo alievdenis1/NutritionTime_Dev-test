@@ -10,6 +10,16 @@ export default [
 		meta: {
 			title: 'NutritionTime',
 			layout: MainLayout
+		},
+	},
+	{
+		path: '/payment/:orderId',
+		component: () => import('pages/payment/PaymentPage.vue'),
+		name: 'payment',
+		meta: {
+			title: 'NutritionTime',
+			layout: MainLayout,
+			requiresAuth: true
 		}
 	}
 ] as RouteRecordRaw[]
