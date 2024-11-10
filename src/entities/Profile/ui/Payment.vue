@@ -47,6 +47,21 @@
 					v-if="walletInfo"
 					class="space-y-4 animate-fade-in"
 				>
+					<PaymentMethodSelector
+						v-model="selectedPaymentMethod"
+					/>
+					<p class="text-yellow-400 font-bold">
+						Selected payment method:
+						<span class="text-gray-300">{{ selectedPaymentMethod.displayName }}</span>
+					</p>
+					<p
+						v-if="cryptoAmount"
+						class="text-yellow-400 font-bold"
+					>
+						Amount in {{ selectedPaymentMethod.symbol }}:
+						<span class="text-green-400">{{ cryptoAmount }} {{ selectedPaymentMethod.symbol }}</span>
+					</p>
+
 					<p class="text-yellow-400 font-bold">
 						Wallet connected: <span class="text-gray-300">{{ walletInfo.device.appName }}</span>
 					</p>
@@ -130,19 +145,20 @@
 <script lang="ts">
  import { defineComponent, ref, onMounted, computed, watch } from 'vue'
  import { useRoute, useRouter } from 'vue-router'
-
+ import { PaymentMethodSelector } from './index'
  import { getOrder, updateOrder, cancelPayment, preparePayment, checkPaymentStatus }
   from '../api/order'
- import type { Order, OrderStatus, PreparedPayment } from '../model/order'
+ import { type Order, type OrderStatus, type PreparedPayment, type PaymentMethod,
+  AVAILABLE_PAYMENT_METHODS } from '../model/order'
 
  import { TonConnectButton, useTonAddress, useTonWallet, useTonConnectUI }
   from '@townsquarelabs/ui-vue'
  import type { SendTransactionResponse } from '@tonconnect/sdk'
- import { toNano } from '@ton/core'
+ import { Address, beginCell, toNano } from '@ton/core'
 
  export default defineComponent({
   name: 'CryptoPayment',
-  components: { TonConnectButton },
+  components: { TonConnectButton, PaymentMethodSelector },
 
   setup() {
    // Route and Router
@@ -192,22 +208,6 @@
    })
 
    // Payment Transaction Creation
-   const createPaymentTransaction = (paymentInfo: PreparedPayment) => {
-    if (paymentInfo.payment_method.type === 'ton') {
-     return {
-      validUntil: Math.floor(Date.now() / 1000) + 600,
-      messages: [
-       {
-        address: paymentInfo.payment_address,
-        amount: toNano(paymentInfo.crypto_amount).toString(),
-        payload: createCommentPayload(paymentInfo.order_id)
-       }
-      ]
-     }
-    }
-    throw new Error('Unsupported payment method')
-   }
-
    const createCommentPayload = (orderId: number): string => {
     const comment = `ORDER:${orderId}`
     const textEncoder = new TextEncoder()
@@ -263,9 +263,26 @@
    }
 
    // Payment Processing
+   const validateAddress = (addressStr: string): boolean => {
+    try {
+     Address.parse(addressStr)
+     return true
+    } catch {
+     return false
+    }
+   }
+
    const payWithTon = async () => {
     if (!order.value || !walletInfo.value || !address.value) {
      error.value = 'Please connect your wallet and ensure order information is loaded.'
+     return
+    }
+
+    // Добавляем проверку адресов
+    if (selectedPaymentMethod.value.type === 'jetton' &&
+     (!validateAddress(selectedPaymentMethod.value.address!) ||
+      !validateAddress(address.value))) {
+     error.value = 'Invalid address format'
      return
     }
 
@@ -439,6 +456,101 @@
     fetchOrderDetails()
    })
 
+   const selectedPaymentMethod = ref<PaymentMethod>(AVAILABLE_PAYMENT_METHODS[0])
+
+   // функция создания транзакции
+   const createPaymentTransaction = (paymentInfo: PreparedPayment) => {
+    const method = selectedPaymentMethod.value
+
+    if (method.type === 'ton') {
+     return {
+      validUntil: Math.floor(Date.now() / 1000) + 600,
+      messages: [
+       {
+        address: paymentInfo.payment_address,
+        amount: toNano(paymentInfo.crypto_amount).toString(),
+        payload: createCommentPayload(paymentInfo.order_id)
+       }
+      ]
+     }
+    }
+
+    if (method.type === 'jetton') {
+     const jettonWalletAddress = Address.parse(method.address!)
+     const destinationAddress = Address.parse(paymentInfo.payment_address)
+     const userAddress = Address.parse(address.value!)
+
+     return {
+      validUntil: Math.floor(Date.now() / 1000) + 600,
+      messages: [
+       {
+        address: jettonWalletAddress.toString(),
+        amount: toNano('0.05').toString(),
+        stateInit: undefined,
+        payload: createJettonTransferPayload({
+         jettonAmount: paymentInfo.crypto_amount,
+         toAddress: destinationAddress.toString(),
+         responseAddress: userAddress.toString(),
+         forwardAmount: toNano('0.000000001').toString(),
+         forwardPayload: createCommentPayload(paymentInfo.order_id)
+        })
+       }
+      ]
+     }
+    }
+
+    throw new Error('Unsupported payment method')
+   }
+
+   // Добавим функцию создания payload для перевода жетонов
+   const createJettonTransferPayload = (
+    { jettonAmount,
+     toAddress,
+     responseAddress,
+     forwardAmount,
+     forwardPayload
+    }: {
+    jettonAmount: number,
+    toAddress: string,
+    responseAddress: string,
+    forwardAmount: string,
+    forwardPayload: string
+   }) => {
+    return beginCell()
+     .storeUint(0xf8a7ea5, 32) // transfer op code
+     .storeUint(0, 64) // query id
+     .storeCoins(toNano(jettonAmount)) // amount
+     .storeAddress(Address.parse(toAddress)) // destination
+     .storeAddress(Address.parse(responseAddress)) // response destination
+     .storeBit(false) // custom payload
+     .storeCoins(BigInt(forwardAmount)) // forward amount
+     .storeBit(true) // forward payload
+     .storeRef(
+      beginCell()
+       .storeBuffer(Buffer.from(forwardPayload, 'base64'))
+       .endCell()
+     )
+     .endCell()
+     .toBoc()
+     .toString('base64')
+   }
+
+   watch(selectedPaymentMethod, async (newMethod) => {
+    if (order.value) {
+     // Пересчитываем сумму при смене метода оплаты
+     const { data, error: initError, execute } = preparePayment(order.value.id, newMethod.symbol)
+     await execute()
+
+     if (initError.value) {
+      error.value = initError.value
+     } else if (data.value) {
+      cryptoAmount.value = data.value.crypto_amount
+      paymentAddress.value = data.value.payment_address
+      paymentId.value = data.value.payment_id
+     }
+    }
+   })
+
    watch(() => route.params.orderId, () => {
     fetchOrderDetails()
    })
@@ -472,7 +584,8 @@
 
     // Methods
     payWithTon,
-    cancelPaymentProcess
+    cancelPaymentProcess,
+    selectedPaymentMethod // Добавляем в return
    }
   }
  })

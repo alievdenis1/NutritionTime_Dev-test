@@ -22,6 +22,9 @@ export function checkPaymentStatus(orderId: number) {
  return useApi<{ status: PaymentStatus }>('get', `/payments/status/${orderId}`)
 }
 
-export function preparePayment(orderId: number) {
- return useApi<PreparedPayment>('post', '/payments/prepare', { order_id: orderId })
+export function preparePayment(orderId: number, paymentMethod = 'TON') {
+ return useApi<PreparedPayment>('post', '/payments/prepare', {
+  order_id: orderId,
+  payment_method: paymentMethod
+ })
 }
