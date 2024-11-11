@@ -198,7 +198,8 @@
  import { useSessionStore } from '@/entities/Session'
  import { storeToRefs } from 'pinia'
  import { TonConnectButton, useTonAddress, useTonWallet, useTonConnectUI } from '@townsquarelabs/ui-vue'
- import { PaymentMethodSelector, SubscriptionPeriodSelector } from './index'
+ import PaymentMethodSelector from './PaymentMethodSelector.vue'
+ import SubscriptionPeriodSelector from './SubscriptionPeriodSelector.vue'
  import type { SendTransactionResponse } from '@tonconnect/sdk'
  import { Address, beginCell, toNano } from '@ton/core'
  import {
