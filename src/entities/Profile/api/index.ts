@@ -1,2 +1,2 @@
 export * from './profile'
-export * from './order'
+export * from './payment.ts'
