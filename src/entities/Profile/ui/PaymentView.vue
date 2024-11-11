@@ -217,6 +217,7 @@
  function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleString()
  }
+ const MAX_COMMENT_LENGTH = 124
 
  export default defineComponent({
   name: 'PaymentView',
@@ -331,16 +332,30 @@
 
    const createPaymentTransaction = (paymentInfo: PreparedPayment) => {
     if (selectedPaymentMethod.value.type === 'ton') {
-     return {
+     const textEncoder = new TextEncoder()
+     const commentBytes = Buffer.from(textEncoder.encode(paymentInfo.payment_comment))
+
+     if (commentBytes.length > MAX_COMMENT_LENGTH) {
+      throw new Error('Comment is too long')
+     }
+
+     const transaction = {
       validUntil: Math.floor(Date.now() / 1000) + 600,
       messages: [
        {
         address: paymentInfo.wallet_address,
         amount: toNano(paymentInfo.amount_ton).toString(),
-        payload: createCommentPayload(paymentInfo.payment_comment)
+        payload: beginCell()
+         .storeUint(0, 32)
+         .storeBuffer(commentBytes)
+         .endCell()
+         .toBoc()
+         .toString('base64')
        }
       ]
      }
+
+     return transaction
     }
 
     if (selectedPaymentMethod.value.type === 'jetton') {
