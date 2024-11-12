@@ -103,7 +103,6 @@
 <script setup lang="ts">
  import { ref, computed, onMounted } from 'vue'
  import { storeToRefs } from 'pinia'
- import { openLink } from '@telegram-apps/sdk'
  import { useSessionStore } from '@/entities/Session'
  import { TabsContent, TabsList, TabsMain, TabsTrigger } from 'shared/components/ui/tabs'
  import { ButtonColors, VButton } from '@/shared/components/Button'
@@ -111,6 +110,7 @@
  import { SubscriptionPlan, PaymentMethod, PaymentsList } from './index.ts'
  import { createPayment, getUserPayments, calculateAmount } from '../api'
  import type { SubscriptionPayment } from '../model'
+ import WebApp from '@twa-dev/sdk'
 
  // Store и telegram_id
  const userStore = useSessionStore()
@@ -217,13 +217,8 @@
    if (!paymentApi.error.value && paymentApi.data.value?.paymentUrl) {
     const paymentUrl = paymentApi.data.value.paymentUrl
 
-    if (openLink.isAvailable()) {
-     openLink(paymentUrl, {
-      tryInstantView: true
-     })
-    } else {
-     window.open(paymentUrl, '_blank')
-    }
+    WebApp.openLink(paymentUrl)
+
     fetchUserPayments()
    }
   } catch (error) {
