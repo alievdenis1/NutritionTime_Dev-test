@@ -1,5 +1,7 @@
 // entities/Profile/model/types.ts
 
+// import { PaymentStatus } from 'entities/Profile'
+
 export interface Profile {
  gender: string;
  age: number;
@@ -70,46 +72,47 @@ export interface MealsResponse {
  [date: string]: MealDay;
 }
 
+export interface MealItem {
+ id: number
+ dish_name: string
+ weight: number
+ calories: number
+ proteins: number
+ fats: number
+ carbs: number
+ created_at: string
+}
+
+// Статистика за день
+export interface DayStats {
+ date: string
+ total_calories: string
+ total_proteins: string
+ total_fats: string
+ total_carbs: string
+ total_weight: string
+ meals_count: number
+ meals: MealItem[] // Добавляем список блюд
+}
+
+// Обновленный ответ API статистики
 export interface MealStats {
- daily_averages: {
-  calories: number;
-  proteins: number;
-  fats: number;
-  carbs: number;
-  weight: number;
-  meals_count: number;
- };
- comparison_with_targets: {
-  calories_target_diff: number;
-  proteins_target_diff: number;
-  fats_target_diff: number;
-  carbs_target_diff: number;
- };
- daily_stats: Array<{
-  date: string;
-  total_calories: string;
-  total_proteins: string;
-  total_fats: string;
-  total_carbs: string;
-  total_weight: string;
-  meals_count: number;
- }>;
+ daily_stats: DayStats[]
+ filled_dates: string[]
 }
-
-export interface Payment {
- id: number;
- status: 'COMPLETED' | 'PENDING' | 'CANCELLED';
- wallet_address: string;
- message_id: string | null;
- expires_at: string;
- completed_at: string | null;
- amount_ton: number;
- payment_comment: string;
- ton_transaction_hash: string | null;
- created_at: string;
- updated_at: string;
-}
-
+// export interface Payment {
+//  id: number;
+//  status: 'COMPLETED' | 'PENDING' | 'CANCELLED';
+//  wallet_address: string;
+//  message_id: string | null;
+//  expires_at: string;
+//  completed_at: string | null;
+//  amount_ton: number;
+//  payment_comment: string;
+//  ton_transaction_hash: string | null;
+//  created_at: string;
+//  updated_at: string;
+// }
 export interface Notification {
  id: number;
  type: string;
