@@ -3,7 +3,7 @@
 		Вы ведете дневник уже: 5 дней подряд! <br>
 		Осталось 7 дней подписки: <span
 			class="text-emerald-700 underline cursor-pointer"
-			@click="router.push(`/payment/1`)"
+			@click="router.push(`/payment/`)"
 		>продлить</span>
 		<TabsMain
 			default-value="report"

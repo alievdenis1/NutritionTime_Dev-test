@@ -1,23 +1,22 @@
 import useApi from '@/shared/lib/api/use-api'
-import type { PaymentStatus } from '../model'
-import { PreparedPayment, PaymentMethodType } from '../model'
+import type { SubscriptionPayment, CreatePaymentRequest, CreatePaymentResponse } from '../model'
 
-export function cancelPayment(paymentId: number) {
- return useApi<{ message: string }>('post', `/payments/${paymentId}/cancel`)
+interface CalculateAmountResponse {
+ amount: string;
+ currency: string;
 }
 
-export function checkPaymentStatus(orderId: number) {
- return useApi<{ status: PaymentStatus }>('get', `/payments/status/${orderId}`)
+export function calculateAmount(params: {
+ payment_type: string;
+ months: number;
+}) {
+ return useApi<CalculateAmountResponse>('get', '/payments/calculate', { params })
 }
 
-export function preparePayment(
- telegramId: number,
- paymentType: PaymentMethodType,
- months: 1 | 3
-) {
- return useApi<PreparedPayment>('post', '/payments/prepare', {
-  telegram_id: telegramId,
-  payment_type: paymentType,
-  months
- })
+export function createPayment(params: CreatePaymentRequest) {
+ return useApi<CreatePaymentResponse>('post', '/payments/prepare', { data: params })
+}
+
+export function getUserPayments() {
+ return useApi<SubscriptionPayment[]>('get', '/payments')
 }

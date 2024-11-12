@@ -13,7 +13,7 @@ export default [
 		},
 	},
 	{
-		path: '/payment/:orderId',
+		path: '/payment/',
 		component: () => import('pages/payment/PaymentPage.vue'),
 		name: 'payment',
 		meta: {
