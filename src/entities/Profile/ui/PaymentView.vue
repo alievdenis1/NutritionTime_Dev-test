@@ -33,17 +33,18 @@
 					v-else
 					class="p-4 space-y-6"
 				>
-					<div class="flex items-center justify-between">
-						<h3 class="text-xl font-semibold">
-							Подписка на {{ selectedPlan.months }} {{ monthDeclension }}
-						</h3>
+					<div>
 						<VButton
 							variant="outline"
-							size="sm"
+							size="small"
+							:color="ButtonColors.White"
 							@click="handleBack"
 						>
-							Назад к тарифам
+							← Назад к тарифам
 						</VButton>
+						<h3 class="text-xl font-semibold mt-5">
+							Подписка на {{ selectedPlan.months }} {{ monthDeclension }}
+						</h3>
 					</div>
 
 					<div class="space-y-4">
@@ -105,7 +106,7 @@
  import { openLink } from '@telegram-apps/sdk'
  import { useSessionStore } from '@/entities/Session'
  import { TabsContent, TabsList, TabsMain, TabsTrigger } from 'shared/components/ui/tabs'
- import { VButton } from '@/shared/components/Button'
+ import { ButtonColors, VButton } from '@/shared/components/Button'
  import { VLoading } from '@/shared/components/Loading'
  import { SubscriptionPlan, PaymentMethod, PaymentsList } from './index.ts'
  import { createPayment, getUserPayments, calculateAmount } from '../api'

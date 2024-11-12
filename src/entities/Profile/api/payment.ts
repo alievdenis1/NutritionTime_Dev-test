@@ -10,7 +10,13 @@ export function calculateAmount(params: {
  payment_type: string;
  months: number;
 }) {
- return useApi<CalculateAmountResponse>('get', '/payments/calculate', { params })
+ // Убираем обертку params
+ return useApi<CalculateAmountResponse>('get', '/payments/calculate', {
+  params: {
+   payment_type: params.payment_type,
+   months: params.months
+  }
+ })
 }
 
 export function createPayment(params: CreatePaymentRequest) {
