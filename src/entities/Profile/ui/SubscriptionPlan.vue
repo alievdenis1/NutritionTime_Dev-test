@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="p-6 rounded-lg border transition-all"
+		class="p-6 rounded-lg shadow-sm transition-all"
 		:class="[
 			selected
 				? 'border-green-500 bg-green-900/50'
@@ -13,7 +13,10 @@
 		<p class="text-2xl font-semibold mb-4">
 			{{ price }} ₽
 		</p>
-		<ul class="space-y-2">
+		<ul
+			v-if="features.length > 0"
+			class="space-y-2"
+		>
 			<li
 				v-for="feature in features"
 				:key="feature"

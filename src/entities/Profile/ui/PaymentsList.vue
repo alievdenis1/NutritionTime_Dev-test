@@ -1,3 +1,4 @@
+// PaymentsList.vue
 <template>
 	<div class="space-y-4">
 		<div
@@ -11,7 +12,7 @@
 			<div
 				v-for="payment in sortedPayments"
 				:key="payment.id"
-				class="p-4 rounded-lg border border-gray-700 bg-gray-800/50"
+				class="p-4 rounded-lg shadow-sm border border-gray-700 bg-gray-800/50"
 			>
 				<div class="flex justify-between items-start">
 					<div>
@@ -20,17 +21,41 @@
 						</p>
 						<div class="mt-1 text-sm text-gray-400 space-y-1">
 							<p>{{ formatDate(payment.created_at) }}</p>
-							<p>{{ formatAmount(payment) }}</p>
+							<p>Сумма: {{ payment.amount_rub }} ₽</p>
+							<p v-if="payment.payment_type === 'ton'">
+								({{ payment.amount_ton }} TON)
+							</p>
 						</div>
 					</div>
 
-					<div class="text-right">
+					<div class="text-right space-y-2">
 						<span
 							class="px-2 py-1 rounded text-sm font-medium"
 							:class="getStatusClasses(payment.status)"
 						>
 							{{ getStatusText(payment.status) }}
 						</span>
+
+						<!-- Действия для ожидающих платежей -->
+						<div
+							v-if="payment.status === 'PENDING'"
+							class="flex flex-col gap-2"
+						>
+							<VButton
+								v-if="payment.payment_url"
+								size="small"
+								@click="handlePaymentUrl(payment.payment_url)"
+							>
+								Оплатить
+							</VButton>
+
+							<div
+								class="text-red underline w-full text-center p-5"
+								@click="handleCancelPayment(payment.id)"
+							>
+								Отменить
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -46,19 +71,28 @@
 </template>
 
 <script setup lang="ts">
- import { computed } from 'vue'
+ import { ref, computed } from 'vue'
  import { VLoading } from '@/shared/components/Loading'
+ import { VButton } from '@/shared/components/Button'
+ import WebApp from '@twa-dev/sdk'
  import type { SubscriptionPayment } from '../model'
+ import { cancelPayment } from '../api'
 
- const { payments, loading } = defineProps<{
+ const props = defineProps<{
   payments: SubscriptionPayment[]
   loading: boolean
  }>()
 
+ const emit = defineEmits<{
+  (e: 'refresh'): void
+ }>()
+
+ const cancellingPaymentId = ref<number | null>(null)
+
  // Сортировка платежей по дате (новые сверху)
  const sortedPayments = computed(() => {
-  return [...payments].sort((a, b) =>
-   new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  return [...props.payments].sort(
+   (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   )
  })
 
@@ -73,40 +107,50 @@
   })
  }
 
- // Форматирование суммы платежа
- const formatAmount = (payment: SubscriptionPayment) => {
-  let amount = ''
-
-  if (payment.payment_type === 'ton') {
-   amount = `${payment.amount_ton} TON`
-  } else {
-   amount = `${payment.amount_rub} ₽`
-  }
-
-  return `Сумма: ${amount}`
- }
-
  // Получение текста статуса
  const getStatusText = (status: string) => {
   const statusMap: Record<string, string> = {
    'PENDING': 'Ожидает оплаты',
    'COMPLETED': 'Оплачен',
-   'CANCELLED': 'Отменён'
+   'CANCELED': 'Отменён',
+   'CANCELLED': 'Отменён',
+   'canceled': 'Отменён',
+   'FAILED': 'Ошибка оплаты'
   }
-
   return statusMap[status] || status
  }
 
  // Получение классов для статуса
  const getStatusClasses = (status: string) => {
   const baseClasses = 'inline-block'
-
   const statusClassMap: Record<string, string> = {
    'PENDING': 'bg-yellow-900/50 text-yellow-400',
    'COMPLETED': 'bg-green-900/50 text-green-400',
-   'CANCELLED': 'bg-red-900/50 text-red-400'
+   'CANCELED': 'bg-red-900/50 text-red-400',
+   'canceled': 'bg-red-900/50 text-red-400',
+   'CANCELLED': 'bg-red-900/50 text-red-400',
+   'FAILED': 'bg-red-900/50 text-red-400'
   }
-
   return `${baseClasses} ${statusClassMap[status] || 'bg-gray-900/50 text-gray-400'}`
+ }
+
+ // Обработчики действий
+ const handlePaymentUrl = (url: string) => {
+  WebApp.openLink(url)
+ }
+
+ const handleCancelPayment = async (paymentId: number) => {
+  try {
+   cancellingPaymentId.value = paymentId
+   const { execute } = cancelPayment(paymentId)
+   await execute()
+
+    emit('refresh')
+
+  } catch (error) {
+   console.error('Payment cancellation error:', error)
+  } finally {
+   cancellingPaymentId.value = null
+  }
  }
 </script>
