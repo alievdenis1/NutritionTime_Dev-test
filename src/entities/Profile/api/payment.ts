@@ -19,6 +19,10 @@ export function calculateAmount(params: {
  })
 }
 
+export function cancelPayment(paymentId: number) {
+ return useApi<{ message: string }>('post', `/payments/${paymentId}/cancel`)
+}
+
 export function createPayment(params: CreatePaymentRequest) {
  return useApi<CreatePaymentResponse>('post', '/payments/prepare', { data: params })
 }

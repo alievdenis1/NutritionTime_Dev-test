@@ -1,5 +1,9 @@
+// PaymentView.vue
 <template>
-	<div class="min-h-screen pt-5 bg-gradient-to-br from-green-800 to-green-900 flex flex-col relative overflow-hidden">
+	<div
+		class="min-h-screen pt-5 bg-gradient-to-br from-green-800
+	to-green-900 flex flex-col relative overflow-hidden p-4"
+	>
 		<TabsMain :default-value="activeTab">
 			<TabsList>
 				<TabsTrigger value="plans">
@@ -88,11 +92,16 @@
 			</TabsContent>
 
 			<!-- Платежи -->
-			<TabsContent value="payments">
-				<div class="p-4">
+			<TabsContent
+				value="payments"
+				class="mb-4"
+			>
+				<div>
 					<PaymentsList
+						class="pt-4"
 						:payments="userPayments"
 						:loading="paymentsLoading"
+						@refresh="fetchUserPayments"
 					/>
 				</div>
 			</TabsContent>
@@ -143,21 +152,9 @@
 
  // Данные тарифных планов
  const subscriptionPlans = [
-  {
-   months: 1,
-   price: 490,
-   features: ['Базовый функционал', 'Поддержка 24/7']
-  },
-  {
-   months: 3,
-   price: 1290,
-   features: ['Все с базового тарифа', 'Скидка 12%', 'Расширенная статистика']
-  },
-  {
-   months: 12,
-   price: 4490,
-   features: ['Все с квартального тарифа', 'Скидка 24%', 'Премиум поддержка']
-  }
+  { months: 1, price: 490, features: [] },
+  { months: 3, price: 1290, features: [] },
+  { months: 12, price: 4490, features: [] }
  ]
 
  // Методы оплаты
