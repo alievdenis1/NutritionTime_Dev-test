@@ -22,8 +22,8 @@
 						<div class="mt-1 text-sm text-gray-400 space-y-1">
 							<p>{{ formatDate(payment.created_at) }}</p>
 							<p>Сумма: {{ payment.amount_rub }} ₽</p>
-							<p v-if="payment.payment_type === 'ton'">
-								({{ payment.amount_ton }} TON)
+							<p v-if="payment.crypto_amount">
+								({{ payment.crypto_amount }} {{ payment.crypto_currency }})
 							</p>
 						</div>
 					</div>
@@ -132,6 +132,21 @@
    'FAILED': 'bg-red-900/50 text-red-400'
   }
   return `${baseClasses} ${statusClassMap[status] || 'bg-gray-900/50 text-gray-400'}`
+ }
+
+ const getCryptoAmount = (payment: SubscriptionPayment): string | null => {
+  switch (payment.payment_type) {
+   case 'ton':
+    return payment.amount_ton ? `${payment.amount_ton} TON` : null
+   case 'usdt':
+    return payment.amount_usdt ? `${payment.amount_usdt} USDT` : null
+   case 'gram':
+    return payment.amount_gram ? `${payment.amount_gram} GRAM` : null
+   case 'yummy':
+    return payment.amount_yummy ? `${payment.amount_yummy} YUMMY` : null
+   default:
+    return null
+  }
  }
 
  // Обработчики действий

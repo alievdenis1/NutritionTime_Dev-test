@@ -159,11 +159,27 @@
 
  // Методы оплаты
  const paymentMethods = [
-  { type: 'ton' as const, title: 'TON' },
-  { type: 'yummy' as const, title: 'Yummy' },
-  { type: 'gram' as const, title: 'Gram' }
+  {
+   type: 'ton' as const,
+   title: 'TON',
+   description: 'The Open Network'
+  },
+  {
+   type: 'usdt' as const,
+   title: 'USDT',
+   description: 'Tether USD'
+  },
+  {
+   type: 'yummy' as const,
+   title: 'YUMMY',
+   description: 'Yummy Token'
+  },
+  {
+   type: 'gram' as const,
+   title: 'GRAM',
+   description: 'Gram Token'
+  }
  ]
-
  // Методы
  const selectPlan = (plan: typeof subscriptionPlans[0]) => {
   selectedPlan.value = plan
