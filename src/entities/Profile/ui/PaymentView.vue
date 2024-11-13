@@ -55,7 +55,7 @@
 						<p class="text-lg">
 							Выберите способ оплаты:
 						</p>
-						<div class="grid grid-cols-3 gap-4">
+						<div class="grid grid-cols-2 gap-4">
 							<PaymentMethod
 								v-for="method in paymentMethods"
 								:key="method.type"
