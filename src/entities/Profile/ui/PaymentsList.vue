@@ -134,21 +134,6 @@
   return `${baseClasses} ${statusClassMap[status] || 'bg-gray-900/50 text-gray-400'}`
  }
 
- const getCryptoAmount = (payment: SubscriptionPayment): string | null => {
-  switch (payment.payment_type) {
-   case 'ton':
-    return payment.amount_ton ? `${payment.amount_ton} TON` : null
-   case 'usdt':
-    return payment.amount_usdt ? `${payment.amount_usdt} USDT` : null
-   case 'gram':
-    return payment.amount_gram ? `${payment.amount_gram} GRAM` : null
-   case 'yummy':
-    return payment.amount_yummy ? `${payment.amount_yummy} YUMMY` : null
-   default:
-    return null
-  }
- }
-
  // Обработчики действий
  const handlePaymentUrl = (url: string) => {
   WebApp.openLink(url)
