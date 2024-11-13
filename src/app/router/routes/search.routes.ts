@@ -20,5 +20,25 @@ export default [
 			layout: DefaultLayout,
 			backButton: true,
 		}
+	},
+	{
+		// TODO: не забыть удалить старые роуты
+		name: 'searchTest',
+		component: () => import('pages/search/ui/SearchRecipes/SearchRecipes.vue'),
+		path: '/search/test',
+		meta: {
+			title: 'Search',
+			layout: MainLayout
+		}
+	},
+	{
+		name: 'filterTest',
+		component: () => import('pages/search/ui/RecipeFilters/RecipeFilters.vue'),
+		path: '/filter/test',
+		meta: {
+			title: 'Filter',
+			layout: DefaultLayout,
+			backButton: true,
+		}
 	}
 ] as RouteRecordRaw[]

@@ -3,8 +3,12 @@ import { PaginationData } from '@/shared/lib/types/pagination-data'
 
 import { Recipe } from '../model'
 
-type RecipeListParams = {
+export type RecipeListParams = {
     search?: string;
+    category_id?: number;
+    tags?: number[];
+    cuisine_id?: number;
+    diet_type_id?: number;
 }
 
 export function getRecipeList(params: RecipeListParams) {

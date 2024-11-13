@@ -1,0 +1,12 @@
+{
+    "en": {
+        "tags": "Tags",
+        "SearchByTag": "Search by tag",
+        "addSelectedTag": "{{count}} recipes | {{count}} recipe | {{count}} recipes"
+    },
+    "ru": {
+        "tags": "Теги",
+        "SearchByTag": "Поиск по тегу",
+        "addSelectedTag": "{{count}} рецептов | {{count}} рецепт | {{count}} рецепта | {{count}} рецептов"
+    }
+}

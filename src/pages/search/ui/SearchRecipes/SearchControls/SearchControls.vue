@@ -1,41 +1,38 @@
 <template>
-	<div class="p-[16px]">
-		<div ref="searchBarRef" />
-		<div
-			:class="[
-				' duration-300 z-10 bg-white w-full',
-				{ 'fixed top-0 left-0 right-0 px-[16px]': isSearchBarFixed }
-			]"
-		>
-			<SearchBar />
-			<QuickSearchTag v-if="showQuickSearchTag" />
+	<div ref="searchBarRef" />
+	<div
+		:class="[
+			'duration-300 z-10 w-full pt-[20px] bg-transparent',
+			{ 'fixed top-0 left-0 right-0 px-[16px]': isSearchBarFixed }
+		]"
+	>
+		<div class="flex gap-[12px] items-center w-full mb-[12px]">
+			<SearchField />
+			<FilterButton />
 		</div>
 		<div
-			v-if="isSearchBarFixed"
-			class="h-[44px]"
-		/>
-		<div class="scrollable">
-			<RecipePreviewSearch
-				v-if="!store.isLoading"
-				:recipes="store.recipes"
-			/>
-			<div v-else>
-				<VSkeletonCard
-					v-for="recipe in 3"
-					:key="recipe"
-					class="recipe-card"
-				/>
-			</div>
+			v-if="showQuickSearchTag"
+			class="flex flex-row gap-[12px]"
+		>
+			<TagsButton />
+			<div class="w-[2px] h-[40px] bg-lightGray" />
+			<CategoriesFilter />
 		</div>
 	</div>
+	<div
+		v-if="isSearchBarFixed"
+		class="h-[44px]"
+	/>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
-import { SearchBar, QuickSearchTag, RecipePreviewSearch, useSearchStore } from 'entities/Recipe/Search'
-import { VSkeletonCard } from 'shared/components/ui/skeleton'
-
-const store = useSearchStore()
+// TODO: потом удалить эти компоненты и всё, что с ними связано
+// import { SearchBar, QuickSearchTag } from '@/entities/Recipe/Search'
+import { SearchField } from './SearchField'
+import { FilterButton } from './FilterButton'
+import { CategoriesFilter } from './CategoriesFilter'
+import { TagsButton } from './TagsButton'
 
 const searchBarRef = ref<HTMLElement | null>(null)
 const isSearchBarFixed = ref(false)
@@ -72,7 +69,7 @@ onMounted(async () => {
     if (mainElement) {
         mainElement.addEventListener('scroll', handleScroll)
     }
-    // document.addEventListener('scroll', handleScroll)
+
     if (searchBarRef.value) {
         searchBarHeight.value = searchBarRef.value.offsetHeight
         observer = new IntersectionObserver(handleIntersection, {

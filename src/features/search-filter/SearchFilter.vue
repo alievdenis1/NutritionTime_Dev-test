@@ -92,9 +92,10 @@ import { SearchSlider, SearchIngredients, SearchNutritional } from 'features/sea
 import { useTranslation } from '@/shared/lib/i18n'
 import localization from './SearchFilter.localization.json'
 import Simplebar from 'simplebar-vue'
-import 'simplebar/dist/simplebar.min.css'
-import SimpleBar from 'simplebar'
-import 'simplebar/dist/simplebar.css'
+import 'simplebar-vue/dist/simplebar.min.css'
+// import 'simplebar/dist/simplebar.min.css'
+// import SimpleBar from 'simplebar'
+// import 'simplebar/dist/simplebar.css'
 
 import { useSearchStore } from 'entities/Recipe/Search'
 const store = useSearchStore()
@@ -157,15 +158,17 @@ const updateFilters = () => {
     // Здесь можно добавить логику обновления фильтров
 }
 
-onMounted(() => {
-	setTimeout(() => {
-		const simplebarElement = document.querySelector('.simplebar-content-wrapper')
-		if (simplebarElement) {
-			const simplebarInstance = new SimpleBar(simplebarElement as HTMLElement)
-			simplebarInstance.recalculate()
-		}
-	}, 100)
-})
+// onMounted(() => {
+// 	setTimeout(() => {
+// 		const simplebarElement = document.querySelectorAll('.simplebar-content-wrapper')
+// 		if (simplebarElement.length) {
+//             for (let elem of simplebarElement) {
+//                 const simplebarInstance = new SimpleBar(elem as HTMLElement)
+//                 simplebarInstance.recalculate()
+//             }
+// 		}
+// 	}, 100)
+// })
 
 </script>
 

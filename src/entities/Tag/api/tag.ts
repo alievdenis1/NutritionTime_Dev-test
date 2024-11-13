@@ -14,6 +14,6 @@ type TagListParams = {
     category?: string;
 }
 
-export function getTagList(params: TagListParams) {
-    return useApi<PaginationData<TagList>>('get', '/public/tags', params)
+export function getTagList(params?: TagListParams) {
+    return useApi<PaginationData<TagDto>>('get', '/public/tags', params)
 }

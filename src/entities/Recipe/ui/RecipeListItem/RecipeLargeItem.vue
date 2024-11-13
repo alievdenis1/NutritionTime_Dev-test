@@ -9,9 +9,10 @@
 				>
 				<span class="text-sm text-gray-600">{{ props.recipe.author.name }}</span>
 			</div>
+			<!-- TODO: убрать /test тут и в других местах -->
 			<div
 				class="relative"
-				@click="router.push(`/recipe/${props.recipe.id}`)"
+				@click="router.push(`/recipe/${props.recipe.id}/test`)"
 			>
 				<img
 					class="w-full h-[343px] object-cover rounded-[12px]"

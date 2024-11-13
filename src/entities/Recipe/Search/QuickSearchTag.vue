@@ -182,4 +182,4 @@ onMounted(async () => {
     display: none;
 }
 
-</style>@/entities/Recipe/Search
+</style>
