@@ -1,5 +1,5 @@
 import useApi from '@/shared/lib/api/use-api'
-import type { ProfileResponse, MealStats, Payment, Notification } from '../model'
+import type { ProfileResponse, MealStats, Notification } from '../model'
 
 interface GetMealsParams {
  start_date?: string;
@@ -14,10 +14,10 @@ export function getMealStats(params?: GetMealsParams) {
  return useApi<MealStats>('get', '/meals/stats', params)
 }
 
-export function getPayments() {
- return useApi<Payment[]>('get', '/payments')
-}
-
 export function getNotifications() {
  return useApi<Notification[]>('get', '/notifications')
+}
+
+export function deleteMeal(mealId: number) {
+ return useApi<{ message: string }>('delete', `/meals/${mealId}`)
 }

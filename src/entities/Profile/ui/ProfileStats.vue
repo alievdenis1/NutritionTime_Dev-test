@@ -26,6 +26,7 @@
 					class="mt-4"
 					@set-goals="handleSetGoals"
 					@retry="fetchMealStats"
+					@meal-deleted="fetchMealStats"
 				/>
 			</TabsContent>
 			<TabsContent value="statistic">
@@ -37,7 +38,7 @@
 
 <script setup lang="ts">
  import { ref, computed, onMounted, watch } from 'vue'
- import { DailyNutritionStats } from './index'
+ import { DailyNutritionStats, MealsList } from './index'
  import { getProfile, getMealStats } from '../api'
  import { TabsContent, TabsList, TabsMain, TabsTrigger } from 'shared/components/ui/tabs'
  import { useRouter } from 'vue-router'

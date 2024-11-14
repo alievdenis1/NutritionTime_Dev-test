@@ -187,7 +187,10 @@
 			{{ t('noDataForDate') }}
 		</div>
 
-		<MealsList :day-stats="dayStats" />
+		<MealsList
+			:day-stats="dayStats"
+			@meal-deleted="handleMealDeleted"
+		/>
 	</div>
 </template>
 
@@ -220,7 +223,12 @@
   (e: 'update:modelValue', date: string): void
   (e: 'setGoals'): void
   (e: 'retry'): void
+  (e: 'meal-deleted'): void
  }>()
+
+ const handleMealDeleted = () => {
+  emit('meal-deleted')
+ }
 
  // Локализация
  const { t } = useTranslation(localization)
