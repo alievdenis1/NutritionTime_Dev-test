@@ -7,10 +7,10 @@
 		<TabsMain :default-value="activeTab">
 			<TabsList>
 				<TabsTrigger value="plans">
-					Тарифы
+					{{ t('plans') }}
 				</TabsTrigger>
 				<TabsTrigger value="payments">
-					Платежи
+					{{ t('payments') }}
 				</TabsTrigger>
 			</TabsList>
 
@@ -19,7 +19,7 @@
 				<!-- Выбор плана -->
 				<div
 					v-if="!selectedPlan"
-					class="grid md:grid-cols-3 gap-6 p-4"
+					class="grid md:grid-cols-3 gap-6 pt-4"
 				>
 					<SubscriptionPlan
 						v-for="plan in subscriptionPlans"
@@ -44,17 +44,15 @@
 							:color="ButtonColors.White"
 							@click="handleBack"
 						>
-							← Назад к тарифам
+							{{ t('backToPlans') }}
 						</VButton>
 						<h3 class="text-xl font-semibold mt-5">
-							Подписка на {{ selectedPlan.months }} {{ monthDeclension }}
+							{{ t('subscriptionFor').replace('{months}', selectedPlan?.months?.toString() || '').replace('{monthForm}', monthDeclension) }}
 						</h3>
 					</div>
 
 					<div class="space-y-4">
-						<p class="text-lg">
-							Выберите способ оплаты:
-						</p>
+						<p class="text-lg" /><p>{{ t('selectPaymentMethod') }}</p>
 						<div class="grid grid-cols-2 gap-4">
 							<PaymentMethod
 								v-for="method in paymentMethods"
@@ -71,7 +69,9 @@
 						v-if="calculatedAmount"
 						class="text-center text-lg"
 					>
-						К оплате: {{ calculatedAmount.amount }} {{ calculatedAmount.currency }}
+						<div>
+							{{ t('totalAmount').replace('{amount}', calculatedAmount.amount).replace('{currency}', calculatedAmount.currency) }}
+						</div>
 					</div>
 
 					<!-- Кнопка оплаты -->
@@ -85,7 +85,7 @@
 								v-if="isProcessing"
 								class="mr-2"
 							/>
-							<span>{{ isProcessing ? 'Обработка...' : 'Оплатить' }}</span>
+							<span>{{ isProcessing ? t('processing') : t('pay') }}</span>
 						</div>
 					</VButton>
 				</div>
@@ -120,22 +120,28 @@
  import { createPayment, getUserPayments, calculateAmount } from '../api'
  import type { SubscriptionPayment } from '../model'
  import WebApp from '@twa-dev/sdk'
+ import localization from './ProfileStats.localization.json'
+ import { useTranslation } from '@/shared/lib/i18n'
+
+ const { t } = useTranslation(localization)
 
  // Store и telegram_id
  const userStore = useSessionStore()
  const { userInfo } = storeToRefs(userStore)
  const telegramId = ref(~~(userInfo.value?.telegram_id ?? ''))
 
- // Состояние
- const activeTab = ref('plans')
- const selectedPlan = ref<{
+ type SubscriptionPlanType = {
   months: number
   price: number
   features: string[]
- } | null>(null)
+ }
+ // Состояние
+ const activeTab = ref('plans')
+ const selectedPlan = ref<SubscriptionPlanType | null>(null)
  const selectedPaymentMethod = ref<{
-  type: 'ton' | 'yummy' | 'gram'
+  type: 'ton' | 'usdt' | 'yummy' | 'gram'
   title: string
+  description: string
  } | null>(null)
  const isProcessing = ref(false)
  const userPayments = ref<SubscriptionPayment[]>([])
@@ -143,11 +149,23 @@
  const calculatedAmount = ref<{ amount: string; currency: string } | null>(null)
 
  // Вычисляемые свойства
+ // Функция для склонения месяцев
  const monthDeclension = computed(() => {
-  const months = selectedPlan.value?.months || 0
-  if (months === 1) return 'месяц'
-  if (months > 1 && months < 5) return 'месяца'
-  return 'месяцев'
+  if (!selectedPlan.value?.months) return ''
+  const months = selectedPlan.value.months
+  const lastDigit = months % 10
+  const lastTwoDigits = months % 100
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+   return t('monthPlural')
+  }
+  if (lastDigit === 1) {
+   return t('monthSingular')
+  }
+  if (lastDigit >= 2 && lastDigit <= 4) {
+   return t('monthFew')
+  }
+  return t('monthPlural')
  })
 
  // Данные тарифных планов
