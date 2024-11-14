@@ -289,14 +289,14 @@
   date.setHours(0, 0, 0, 0)
 
   if (date.getTime() === currentDate.getTime()) {
-   return 'Отчет за сегодня'
+   return t('reportToday')
   }
 
   if (date.getTime() === currentDate.getTime() - 86400000) {
-   return 'Отчет за вчера'
+   return t('reportYesterday')
   }
 
-  return `Отчет за ${date.toLocaleDateString('ru-RU')}`
+  return t('reportForDate').replace('{date}', date.toLocaleDateString('ru-RU'))
  })
 
  const dayStats = computed(() => {

@@ -1,23 +1,25 @@
 <template>
 	<div class="profile-stats space-y-4 p-4">
 		<div class="bg-emerald-100 p-5 rounded-2xl text-green text-center">
-			Вы ведете дневник уже: {{ user?.diary_streak }} дней подряд! <br>
-			Осталось {{ user?.subscription_days_left }} дней подписки: <span
+			{{ t('diaryStreakPrefix') }}: {{ getPluralForm(user?.diary_streak, 'diaryStreak') }}! <br>
+			{{ getPluralForm(user?.subscription_days_left, user?.is_trial ? 'trialDaysLeft' : 'subscriptionDaysLeft') }}:
+			<span
 				class="text-amber-600 underline cursor-pointer"
 				@click="router.push(`/payment/`)"
-			>продлить</span>
+			>{{ t('extend') }}</span>
 		</div>
 		<TabsMain
 			default-value="report"
 		>
 			<TabsList>
 				<TabsTrigger value="report">
-					Отчет
+					{{ t('report') }}
 				</TabsTrigger>
 				<TabsTrigger value="statistic">
-					Статистика
+					{{ t('statistics') }}
 				</TabsTrigger>
-			</TabsList>
+			</tabslist>
+
 			<TabsContent value="report">
 				<DailyNutritionStats
 					v-model="selectedDate"
@@ -32,7 +34,7 @@
 				/>
 			</TabsContent>
 			<TabsContent value="statistic">
-				В разработке
+				{{ t('inDevelopment') }}
 			</TabsContent>
 		</TabsMain>
 	</div>
@@ -44,6 +46,29 @@
  import { getProfile, getMealStats } from '../api'
  import { TabsContent, TabsList, TabsMain, TabsTrigger } from 'shared/components/ui/tabs'
  import { useRouter } from 'vue-router'
+ import localization from './ProfileStats.localization.json'
+ import { useTranslation } from '@/shared/lib/i18n'
+
+ const { t } = useTranslation(localization)
+
+ const getPluralForm = (count: number | undefined, baseKey: string): string => {
+  if (count === undefined) return ''
+
+  const lastDigit = count % 10
+  const lastTwoDigits = count % 100
+  let form = 'Many'
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+   form = 'Many'
+  } else if (lastDigit === 1) {
+   form = 'One'
+  } else if (lastDigit >= 2 && lastDigit <= 4) {
+   form = 'Few'
+  }
+
+  return t(`${baseKey}${form}`).replace('{count}', count.toString())
+ }
+
  const router = useRouter()
 
  // Состояние
