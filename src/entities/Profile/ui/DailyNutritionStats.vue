@@ -101,7 +101,7 @@
 										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?profile=true')"
 									>{{ t('fillProfile') }}</span>
 								</template>
-								<template v-else-if="isCurrentDate(modelValue)">
+								<template v-else-if="isToday">
 									<span
 										class="text-green underline transition-colors"
 										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?add_meal=true')"
