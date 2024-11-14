@@ -94,18 +94,16 @@
 						</template>
 						<template v-else>
 							<div>
-								{{ t('noDataForDate') }}
+								{{ t('noDataForDate') }}:
 								<template v-if="!profile">
 									<span
-										class="text-[#FFA767] hover:text-[#ff9142] transition-colors ml-1"
+										class="text-green hover:text-[#ff9142] transition-colors"
 										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?profile=true')"
-									>
-										{{ t('fillProfile') }}
-									</span>
+									>{{ t('fillProfile') }}</span>
 								</template>
 								<template v-else-if="isCurrentDate(modelValue)">
 									<span
-										class="text-[#FFA767] hover:text-[#ff9142] transition-colors ml-1"
+										class="text-green underline transition-colors"
 										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?add_meal=true')"
 									>
 										{{ t('addMeal') }}
@@ -197,7 +195,7 @@
 			<VButton
 				:color="ButtonColors.Green"
 				class="mt-5"
-				@click="WebApp.openTelegramLink('t.me/nutritiontime_bot?profile=true')"
+				@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?profile=true')"
 			>
 				{{ t('editProfile') }}
 			</VButton>
