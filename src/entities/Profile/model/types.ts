@@ -33,6 +33,9 @@ export interface User {
  wallet_address: string;
  balance: string;
  created_at: string;
+ diary_streak: number;
+ is_trial: boolean;
+ subscription_days_left: number;
 }
 
 export interface ProfileResponse {

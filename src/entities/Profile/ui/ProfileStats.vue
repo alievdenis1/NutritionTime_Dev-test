@@ -1,10 +1,12 @@
 <template>
 	<div class="profile-stats space-y-4 p-4">
-		Вы ведете дневник уже: 5 дней подряд! <br>
-		Осталось 7 дней подписки: <span
-			class="text-emerald-700 underline cursor-pointer"
-			@click="router.push(`/payment/`)"
-		>продлить</span>
+		<div class="bg-emerald-100 p-5 rounded-2xl text-green text-center">
+			Вы ведете дневник уже: {{ user?.diary_streak }} дней подряд! <br>
+			Осталось {{ user?.subscription_days_left }} дней подписки: <span
+				class="text-amber-600 underline cursor-pointer"
+				@click="router.push(`/payment/`)"
+			>продлить</span>
+		</div>
 		<TabsMain
 			default-value="report"
 		>
@@ -62,6 +64,7 @@
   return null
  })
  const profile = computed(() => profileApi.data.value?.profile ?? null)
+ const user = computed(() => profileApi.data.value?.user ?? null)
  const mealStats = computed(() => mealStatsApi.data.value)
 
  // Методы
