@@ -1,4 +1,3 @@
-// PaymentsList.vue
 <template>
 	<div class="space-y-4">
 		<div
@@ -18,13 +17,15 @@
 					<div class="flex justify-between items-start">
 						<div>
 							<p class="font-medium">
-								Подписка на {{ payment.months ?? 1 }} мес.
+								{{ t('subscriptionFor').replace('{months}', (payment.months ?? 1).toString()).replace('{monthForm}', getMonthForm(payment.months ?? 1)) }}
 							</p>
 							<div class="mt-1 text-sm text-gray-400 space-y-1">
 								<p>{{ formatDate(payment.created_at) }}</p>
-								<p>Сумма: {{ payment.amount_rub }} ₽</p>
+								<p>{{ t('amount').replace('{amount}', payment.amount_rub) }}</p>
 								<p v-if="payment.crypto_amount">
-									({{ payment.crypto_amount }} {{ payment.crypto_currency }})
+									{{ t('cryptoAmount')
+										.replace('{amount}', payment.crypto_amount)
+										.replace('{currency}', payment.crypto_currency) }}
 								</p>
 							</div>
 						</div>
@@ -48,14 +49,14 @@
 							class="text-red underline w-full text-center p-5"
 							@click="handleCancelPayment(payment.id)"
 						>
-							Отменить
+							{{ t('cancel') }}
 						</div>
 						<VButton
 							v-if="payment.payment_url"
 							size="small"
 							@click="handlePaymentUrl(payment.payment_url)"
 						>
-							Оплатить
+							{{ t('pay') }}
 						</VButton>
 					</div>
 				</div>
@@ -65,7 +66,7 @@
 				v-if="!payments.length"
 				class="text-center text-gray-400 py-8"
 			>
-				История платежей пуста
+				{{ t('emptyHistory') }}
 			</div>
 		</template>
 	</div>
@@ -78,6 +79,11 @@
  import WebApp from '@twa-dev/sdk'
  import type { SubscriptionPayment } from '../model'
  import { cancelPayment } from '../api'
+ import localization from './ProfileStats.localization.json'
+ import { useTranslation, useLocaleStore } from '@/shared/lib/i18n'
+
+ const { t } = useTranslation(localization)
+ const localStore = useLocaleStore()
 
  const props = defineProps<{
   payments: SubscriptionPayment[]
@@ -99,7 +105,8 @@
 
  // Форматирование даты
  const formatDate = (date: string) => {
-  return new Date(date).toLocaleString('ru-RU', {
+  const isRu = localStore.currentLocale === 'ru'
+  return new Date(date).toLocaleString(isRu ? 'ru-RU' : 'en-US', {
    year: 'numeric',
    month: 'long',
    day: 'numeric',
@@ -110,15 +117,7 @@
 
  // Получение текста статуса
  const getStatusText = (status: string) => {
-  const statusMap: Record<string, string> = {
-   'PENDING': 'Ожидает оплаты',
-   'COMPLETED': 'Оплачен',
-   'CANCELED': 'Отменён',
-   'CANCELLED': 'Отменён',
-   'canceled': 'Отменён',
-   'FAILED': 'Ошибка оплаты'
-  }
-  return statusMap[status] || status
+  return t(status.toLowerCase()) || status
  }
 
  // Получение классов для статуса
@@ -153,5 +152,20 @@
   } finally {
    cancellingPaymentId.value = null
   }
+ }
+
+ const getMonthForm = (months: number) => {
+  const monthKey = getMonthDeclension(months)
+  return t(monthKey)
+ }
+
+ const getMonthDeclension = (months: number) => {
+  const lastDigit = months % 10
+  const lastTwoDigits = months % 100
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) return 'monthPlural'
+  if (lastDigit === 1) return 'monthSingular'
+  if (lastDigit >= 2 && lastDigit <= 4) return 'monthFew'
+  return 'monthPlural'
  }
 </script>

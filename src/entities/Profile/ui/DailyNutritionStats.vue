@@ -98,13 +98,13 @@
 								<template v-if="!profile">
 									<span
 										class="text-green hover:text-[#ff9142] transition-colors"
-										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?profile=true')"
+										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?command=profile')"
 									>{{ t('fillProfile') }}</span>
 								</template>
 								<template v-else-if="isToday">
 									<span
 										class="text-green underline transition-colors"
-										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?add_meal=true')"
+										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?command=add_meal')"
 									>
 										{{ t('addMeal') }}
 									</span>
@@ -195,7 +195,7 @@
 			<VButton
 				:color="ButtonColors.Green"
 				class="mt-5"
-				@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?profile=true')"
+				@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?command=profile')"
 			>
 				{{ t('editProfile') }}
 			</VButton>
@@ -289,14 +289,14 @@
   date.setHours(0, 0, 0, 0)
 
   if (date.getTime() === currentDate.getTime()) {
-   return 'Отчет за сегодня'
+   return t('reportToday')
   }
 
   if (date.getTime() === currentDate.getTime() - 86400000) {
-   return 'Отчет за вчера'
+   return t('reportYesterday')
   }
 
-  return `Отчет за ${date.toLocaleDateString('ru-RU')}`
+  return t('reportForDate').replace('{date}', date.toLocaleDateString('ru-RU'))
  })
 
  const dayStats = computed(() => {

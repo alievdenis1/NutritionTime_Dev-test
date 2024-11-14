@@ -9,10 +9,10 @@
 	>
 		<div class="flex justify-between">
 			<h3 class="text-xl font-bold mb-2">
-				{{ months }} месяц{{ declension }}
+				{{ months }} {{ getMonthForm(months) }}
 			</h3>
 			<p class="text-xl mb-4">
-				{{ price }} ₽
+				{{ t('price').replace('%{amount}', price.toString()) }}
 			</p>
 		</div>
 
@@ -46,26 +46,39 @@
 			:class="{ 'bg-green-700': selected }"
 			@click="$emit('select')"
 		>
-			{{ selected ? 'Выбрано' : 'Выбрать' }}
+			{{ selected ? t('selected') : t('select') }}
 		</VButton>
 	</div>
 </template>
 
 <script setup lang="ts">
- import { computed } from 'vue'
  import { VButton } from '@/shared/components/Button'
+ import localization from './ProfileStats.localization.json'
+ import { useTranslation } from '@/shared/lib/i18n'
 
- const props = defineProps<{
+ const { t } = useTranslation(localization)
+
+defineProps<{
   months: number
   price: number
   features: string[]
   selected: boolean
  }>()
 
- const declension = computed(() => {
-  if (props.months === 1) return ''
-  return props.months < 5 ? 'а' : 'ев'
- })
+ const getMonthDeclension = (months: number) => {
+  const lastDigit = months % 10
+  const lastTwoDigits = months % 100
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) return 'monthPlural'
+  if (lastDigit === 1) return 'monthSingular'
+  if (lastDigit >= 2 && lastDigit <= 4) return 'monthFew'
+  return 'monthPlural'
+ }
+
+ const getMonthForm = (months: number) => {
+  const monthKey = getMonthDeclension(months)
+  return t(monthKey)
+ }
 
  defineEmits<{
   (e: 'select'): void
