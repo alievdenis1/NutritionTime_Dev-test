@@ -82,24 +82,47 @@
 		/>
 
 		<div
-			v-if="dayStats"
+			v-if="dayStats || !dayStats?.meals?.length"
 			class="p-6 bg-white rounded-lg shadow-sm"
 		>
 			<!-- Калории и приемы пищи -->
 			<div class="mb-6">
 				<div class="flex flex-col items-center mb-2">
 					<div class="text-base text-gray-500 mb-1">
-						{{ t('mealsCount').replace('{count}', dayStats.meals_count.toString()) }}
+						<template v-if="dayStats?.meals?.length">
+							{{ t('mealsCount').replace('{count}', dayStats.meals_count.toString()) }}
+						</template>
+						<template v-else>
+							<div>
+								{{ t('noDataForDate') }}
+								<template v-if="!profile">
+									<span
+										class="text-[#FFA767] hover:text-[#ff9142] transition-colors ml-1"
+										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?profile=true')"
+									>
+										{{ t('fillProfile') }}
+									</span>
+								</template>
+								<template v-else-if="isCurrentDate(modelValue)">
+									<span
+										class="text-[#FFA767] hover:text-[#ff9142] transition-colors ml-1"
+										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?add_meal=true')"
+									>
+										{{ t('addMeal') }}
+									</span>
+								</template>
+							</div>
+						</template>
 					</div>
 					<div>
 						<span class="text-gray-500">{{ t('calories') }}: </span>
-						<span>{{ formatNumber(dayStats.total_calories) }} {{ t('out_of') }} {{ formatNumber(profile?.target_calories) }} {{ t('kcal') }}</span>
+						<span>{{ formatNumber(dayStats?.total_calories || 0) }} {{ t('out_of') }} {{ formatNumber(profile?.target_calories) }} {{ t('kcal') }}</span>
 						<span
-							v-if="isExceeded(dayStats.total_calories, profile?.target_calories)"
+							v-if="isExceeded(dayStats?.total_calories, profile?.target_calories)"
 							class="font-bold"
 							style="color: #F04F4F"
 						>
-							(+{{ formatNumber(Number(dayStats.total_calories) - (Number(profile?.target_calories) || 0)) }})
+							(+{{ formatNumber(Number(dayStats?.total_calories || 0) - (Number(profile?.target_calories) || 0)) }})
 						</span>
 					</div>
 				</div>
@@ -108,7 +131,7 @@
 					<div
 						class="absolute top-0 left-0 h-full rounded-full transition-all duration-300"
 						:style="{
-							width: `${Math.min(calculatePercentage(dayStats.total_calories, profile?.target_calories), 100)}%`,
+							width: `${Math.min(calculatePercentage(dayStats?.total_calories, profile?.target_calories), 100)}%`,
 							backgroundColor: getProgressBarColor()
 						}"
 					/>
@@ -135,7 +158,7 @@
 							style="background-color: #319A6E"
 						/>
 						<span class="text-gray-500">
-							{{ t('proteins') }}: {{ formatNumber(dayStats.total_proteins) }} {{ t('out_of') }} {{ formatNumber(profile?.macro_proteins) }} {{ t('gram') }}.
+							{{ t('proteins') }}: {{ formatNumber(dayStats?.total_proteins || 0) }} {{ t('out_of') }} {{ formatNumber(profile?.macro_proteins) }} {{ t('gram') }}.
 							<span
 								class="font-semibold"
 								style="color: #319A6E"
@@ -148,7 +171,7 @@
 							style="background-color: #FDC755"
 						/>
 						<span class="text-gray-500">
-							{{ t('fats') }}: {{ formatNumber(dayStats.total_fats) }} {{ t('out_of') }} {{ formatNumber(profile?.macro_fats) }} {{ t('gram') }}.
+							{{ t('fats') }}: {{ formatNumber(dayStats?.total_fats || 0) }} {{ t('out_of') }} {{ formatNumber(profile?.macro_fats) }} {{ t('gram') }}.
 							<span
 								class="font-semibold"
 								style="color: #FDC755"
@@ -161,7 +184,7 @@
 							style="background-color: #FFA767"
 						/>
 						<span class="text-gray-500">
-							{{ t('carbs') }}: {{ formatNumber(dayStats.total_carbs) }} {{ t('out_of') }} {{ formatNumber(profile?.macro_carbs) }} {{ t('gram') }}.
+							{{ t('carbs') }}: {{ formatNumber(dayStats?.total_carbs || 0) }} {{ t('out_of') }} {{ formatNumber(profile?.macro_carbs) }} {{ t('gram') }}.
 							<span
 								class="font-semibold"
 								style="color: #FFA767"
@@ -174,20 +197,16 @@
 			<VButton
 				:color="ButtonColors.Green"
 				class="mt-5"
-				@click="console.log('тык')"
+				@click="WebApp.openTelegramLink('t.me/nutritiontime_bot?profile=true')"
 			>
-				Изменить цель
+				{{ t('editProfile') }}
 			</VButton>
 		</div>
 
-		<div
-			v-else
-			class="p-4 text-center text-gray-500"
-		>
-			{{ t('noDataForDate') }}
-		</div>
-
-		<MealsList :day-stats="dayStats" />
+		<MealsList
+			:day-stats="dayStats"
+			@meal-deleted="handleMealDeleted"
+		/>
 	</div>
 </template>
 
@@ -200,6 +219,8 @@
  import localization from './ProfileStats.localization.json'
  import { MealsList } from './index'
  import { ButtonColors, VButton } from 'shared/components/Button'
+ import WebApp from '@twa-dev/sdk'
+
  interface Props {
   modelValue: string
   profile: Profile | null
@@ -220,7 +241,12 @@
   (e: 'update:modelValue', date: string): void
   (e: 'setGoals'): void
   (e: 'retry'): void
+  (e: 'meal-deleted'): void
  }>()
+
+ const handleMealDeleted = () => {
+  emit('meal-deleted')
+ }
 
  // Локализация
  const { t } = useTranslation(localization)

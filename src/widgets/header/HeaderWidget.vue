@@ -4,13 +4,15 @@
 		class="grid"
 	>
 		<header class="flex bg-mainBg items-center gap-5 w-full justify-between pt-[16px] pr-[16px] pl-[16px]">
-			<img
-				alt="Logo"
-				height="34"
-				src="/image/logo/logo-small.svg"
-				width="178"
-				class="logo-image"
-			>
+			<a href="/">
+				<img
+					alt="Logo"
+					height="34"
+					src="/image/logo/logo-small.png"
+					width="178"
+					class="logo-image"
+				>
+			</a>
 
 			<div class="flex items-center gap-[8px]">
 				<button

@@ -26,6 +26,7 @@
 					class="mt-4"
 					@set-goals="handleSetGoals"
 					@retry="fetchMealStats"
+					@meal-deleted="fetchMealStats"
 				/>
 			</TabsContent>
 			<TabsContent value="statistic">

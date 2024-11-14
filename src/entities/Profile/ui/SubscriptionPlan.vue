@@ -7,12 +7,15 @@
 				: 'border-gray-700 hover:border-green-500/50'
 		]"
 	>
-		<h3 class="text-xl font-bold mb-2">
-			{{ months }} месяц{{ declension }}
-		</h3>
-		<p class="text-2xl font-semibold mb-4">
-			{{ price }} ₽
-		</p>
+		<div class="flex justify-between">
+			<h3 class="text-xl font-bold mb-2">
+				{{ months }} месяц{{ declension }}
+			</h3>
+			<p class="text-xl mb-4">
+				{{ price }} ₽
+			</p>
+		</div>
+
 		<ul
 			v-if="features.length > 0"
 			class="space-y-2"

@@ -14,48 +14,49 @@
 				:key="payment.id"
 				class="p-4 rounded-lg shadow-sm border border-gray-700 bg-gray-800/50"
 			>
-				<div class="flex justify-between items-start">
-					<div>
-						<p class="font-medium">
-							Подписка на {{ payment.months ?? 1 }} мес.
-						</p>
-						<div class="mt-1 text-sm text-gray-400 space-y-1">
-							<p>{{ formatDate(payment.created_at) }}</p>
-							<p>Сумма: {{ payment.amount_rub }} ₽</p>
-							<p v-if="payment.crypto_amount">
-								({{ payment.crypto_amount }} {{ payment.crypto_currency }})
+				<div>
+					<div class="flex justify-between items-start">
+						<div>
+							<p class="font-medium">
+								Подписка на {{ payment.months ?? 1 }} мес.
 							</p>
+							<div class="mt-1 text-sm text-gray-400 space-y-1">
+								<p>{{ formatDate(payment.created_at) }}</p>
+								<p>Сумма: {{ payment.amount_rub }} ₽</p>
+								<p v-if="payment.crypto_amount">
+									({{ payment.crypto_amount }} {{ payment.crypto_currency }})
+								</p>
+							</div>
+						</div>
+
+						<div class="text-right space-y-2">
+							<span
+								class="px-2 py-1 rounded text-sm font-medium"
+								:class="getStatusClasses(payment.status)"
+							>
+								{{ getStatusText(payment.status) }}
+							</span>
 						</div>
 					</div>
 
-					<div class="text-right space-y-2">
-						<span
-							class="px-2 py-1 rounded text-sm font-medium"
-							:class="getStatusClasses(payment.status)"
-						>
-							{{ getStatusText(payment.status) }}
-						</span>
-
-						<!-- Действия для ожидающих платежей -->
+					<!-- Действия для ожидающих платежей -->
+					<div
+						v-if="payment.status === 'PENDING'"
+						class="flex flex-row justify-between mt-5"
+					>
 						<div
-							v-if="payment.status === 'PENDING'"
-							class="flex flex-col gap-2"
+							class="text-red underline w-full text-center p-5"
+							@click="handleCancelPayment(payment.id)"
 						>
-							<VButton
-								v-if="payment.payment_url"
-								size="small"
-								@click="handlePaymentUrl(payment.payment_url)"
-							>
-								Оплатить
-							</VButton>
-
-							<div
-								class="text-red underline w-full text-center p-5"
-								@click="handleCancelPayment(payment.id)"
-							>
-								Отменить
-							</div>
+							Отменить
 						</div>
+						<VButton
+							v-if="payment.payment_url"
+							size="small"
+							@click="handlePaymentUrl(payment.payment_url)"
+						>
+							Оплатить
+						</VButton>
 					</div>
 				</div>
 			</div>
@@ -132,21 +133,6 @@
    'FAILED': 'bg-red-900/50 text-red-400'
   }
   return `${baseClasses} ${statusClassMap[status] || 'bg-gray-900/50 text-gray-400'}`
- }
-
- const getCryptoAmount = (payment: SubscriptionPayment): string | null => {
-  switch (payment.payment_type) {
-   case 'ton':
-    return payment.amount_ton ? `${payment.amount_ton} TON` : null
-   case 'usdt':
-    return payment.amount_usdt ? `${payment.amount_usdt} USDT` : null
-   case 'gram':
-    return payment.amount_gram ? `${payment.amount_gram} GRAM` : null
-   case 'yummy':
-    return payment.amount_yummy ? `${payment.amount_yummy} YUMMY` : null
-   default:
-    return null
-  }
  }
 
  // Обработчики действий
