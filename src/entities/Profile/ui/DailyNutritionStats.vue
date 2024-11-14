@@ -98,13 +98,13 @@
 								<template v-if="!profile">
 									<span
 										class="text-green hover:text-[#ff9142] transition-colors"
-										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?profile=true')"
+										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?command=profile')"
 									>{{ t('fillProfile') }}</span>
 								</template>
 								<template v-else-if="isToday">
 									<span
 										class="text-green underline transition-colors"
-										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?add_meal=true')"
+										@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?command=add_meal')"
 									>
 										{{ t('addMeal') }}
 									</span>
@@ -195,7 +195,7 @@
 			<VButton
 				:color="ButtonColors.Green"
 				class="mt-5"
-				@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?profile=true')"
+				@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?command=profile')"
 			>
 				{{ t('editProfile') }}
 			</VButton>
