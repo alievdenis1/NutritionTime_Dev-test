@@ -23,7 +23,10 @@
     "deleteMealTitle": "Удаление приема пищи",
     "deleteMealDescription": "Вы действительно хотите удалить этот прием пищи?",
     "confirmDelete": "Удалить",
-    "cancelDelete": "Отмена"
+    "cancelDelete": "Отмена",
+    "fillProfile": "заполнить профиль",
+    "addMeal": "добавить прием пищи",
+    "editProfile": "изменить профиль"
   },
   "en": {
     "dailyStats": "Daily Statistics",
@@ -49,6 +52,9 @@
     "deleteMealTitle": "Delete meal",
     "deleteMealDescription": "Are you sure you want to delete this meal?",
     "confirmDelete": "Delete",
-    "cancelDelete": "Cancel"
+    "cancelDelete": "Cancel",
+    "fillProfile": "заполнить профиль",
+    "addMeal": "добавить прием пищи",
+    "editProfile": "изменить профиль"
   }
 }

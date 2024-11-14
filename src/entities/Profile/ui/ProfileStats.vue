@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
  import { ref, computed, onMounted, watch } from 'vue'
- import { DailyNutritionStats, MealsList } from './index'
+ import { DailyNutritionStats } from './index'
  import { getProfile, getMealStats } from '../api'
  import { TabsContent, TabsList, TabsMain, TabsTrigger } from 'shared/components/ui/tabs'
  import { useRouter } from 'vue-router'
