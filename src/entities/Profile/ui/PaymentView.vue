@@ -9,7 +9,10 @@
 				<TabsTrigger value="plans">
 					{{ t('plans') }}
 				</TabsTrigger>
-				<TabsTrigger value="payments">
+				<TabsTrigger
+					value="payments"
+					@click="fetchUserPayments()"
+				>
 					{{ t('payments') }}
 				</TabsTrigger>
 			</TabsList>
