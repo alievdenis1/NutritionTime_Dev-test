@@ -1,6 +1,6 @@
 <template>
 	<div
-		v-if="profile"
+		v-if="false"
 		class="profile-stats space-y-4 p-4"
 	>
 		<div class="bg-emerald-100 p-5 rounded-2xl text-green text-center">
@@ -41,7 +41,11 @@
 			</TabsContent>
 		</TabsMain>
 	</div>
-	<div v-else>
+	<div
+		v-else
+		class="p-5 text-center"
+	>
+		{{ t('needFeelProfile') }}
 		<VButton
 			:color="ButtonColors.Green"
 			class="mt-5"
