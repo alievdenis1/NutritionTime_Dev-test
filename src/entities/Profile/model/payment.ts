@@ -1,7 +1,7 @@
 // model/payment.ts
 
 // Обновляем типы платежей
-export type PaymentType = 'ton' | 'usdt' | 'yummy' | 'gram';
+export type PaymentType = 'ton' | 'usdt' | 'yummy' | 'gram' | 'upay';
 
 // Обновляем интерфейс SubscriptionPayment
 export interface SubscriptionPayment {

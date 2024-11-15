@@ -74,7 +74,8 @@
    ton: `${import.meta.env.BASE_URL}image/ton_logo.png`,
    usdt: `${import.meta.env.BASE_URL}image/usdt_logo.png`,
    gram: `${import.meta.env.BASE_URL}image/gram_logo.png`,
-   yummy: `${import.meta.env.BASE_URL}image/yummy_logo.png`
+   yummy: `${import.meta.env.BASE_URL}image/yummy_logo.png`,
+   upay: `${import.meta.env.BASE_URL}image/upay_logo.png`,
   }
 
   return icons[props.type]
