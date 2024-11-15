@@ -71,10 +71,10 @@
 
  const getIcon = computed(() => {
   const icons = {
-   ton: '/image/ton_logo.png',
-   usdt: '/image/usdt_logo.png',
-   gram: '/image/gram_logo.png',
-   yummy: '/image/yummy_logo.png'
+   ton: `${import.meta.env.BASE_URL}image/ton_logo.png`,
+   usdt: `${import.meta.env.BASE_URL}image/usdt_logo.png`,
+   gram: `${import.meta.env.BASE_URL}image/gram_logo.png`,
+   yummy: `${import.meta.env.BASE_URL}image/yummy_logo.png`
   }
 
   return icons[props.type]

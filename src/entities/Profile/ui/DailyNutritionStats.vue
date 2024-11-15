@@ -93,8 +93,8 @@
 							{{ t('mealsCount').replace('{count}', dayStats.meals_count.toString()) }}
 						</template>
 						<template v-else>
-							<div>
-								{{ t('noDataForDate') }}:
+							<div class="text-center">
+								{{ t('noDataForDate') }}:<br>
 								<template v-if="!profile">
 									<span
 										class="text-green hover:text-[#ff9142] transition-colors"
