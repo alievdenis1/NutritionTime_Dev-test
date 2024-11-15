@@ -26,6 +26,7 @@ import { useAuthorization } from '@/features/Auth/log-in'
 import { useSessionStore } from '@/entities/Session'
 import { VConfirm } from '@/shared/components/Confirm'
 import { TonConnectUIProvider } from '@townsquarelabs/ui-vue'
+import WebApp from '@twa-dev/sdk'
 
 const route = useRoute()
 const router = useRouter()
@@ -48,13 +49,17 @@ const options = {
 }
 
 const handlePaymentRedirect = () => {
- const months = route.query.months
+ const startParam = WebApp.initDataUnsafe.start_param
 
- if (months && !Array.isArray(months) && ['1', '3', '12'].includes(months)) {
-  router.push({
-   name: 'payment',
-   query: { months }
-  })
+ if (startParam && startParam.startsWith('payment_')) {
+  const months = startParam.replace('payment_', '')
+
+  if (['1', '3', '12'].includes(months)) {
+   router.push({
+    name: 'payment',
+    query: { months }
+   })
+  }
  }
 }
 
