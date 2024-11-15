@@ -1,5 +1,8 @@
 <template>
-	<div class="profile-stats space-y-4 p-4">
+	<div
+		v-if="profile"
+		class="profile-stats space-y-4 p-4"
+	>
 		<div class="bg-emerald-100 p-5 rounded-2xl text-green text-center">
 			{{ t('diaryStreakPrefix') }}: {{ getPluralForm(user?.diary_streak, 'diaryStreak') }}! <br>
 			{{ getPluralForm(user?.subscription_days_left, user?.is_trial ? 'trialDaysLeft' : 'subscriptionDaysLeft') }}:
@@ -38,6 +41,15 @@
 			</TabsContent>
 		</TabsMain>
 	</div>
+	<div v-else>
+		<VButton
+			:color="ButtonColors.Green"
+			class="mt-5"
+			@click="WebApp.openTelegramLink('https://t.me/nutritiontime_bot?command=profile')"
+		>
+			{{ t('fillProfile') }}
+		</VButton>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -48,6 +60,8 @@
  import { useRouter } from 'vue-router'
  import localization from './ProfileStats.localization.json'
  import { useTranslation } from '@/shared/lib/i18n'
+ import { ButtonColors, VButton } from 'shared/components/Button'
+ import WebApp from '@twa-dev/sdk'
 
  const { t } = useTranslation(localization)
 
