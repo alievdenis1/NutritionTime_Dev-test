@@ -4,15 +4,14 @@
 		class="grid"
 	>
 		<header class="flex bg-mainBg items-center gap-5 w-full justify-between pt-[16px] pr-[16px] pl-[16px]">
-			<a href="/">
-				<img
-					alt="Logo"
-					height="34"
-					src="/image/logo/logo-small.png"
-					width="178"
-					class="logo-image"
-				>
-			</a>
+			<img
+				alt="Logo"
+				height="34"
+				src="/image/logo/logo-small.png"
+				width="178"
+				class="logo-image"
+				@click="navigateToMain"
+			>
 
 			<div class="flex items-center gap-[8px]">
 				<button
@@ -80,6 +79,10 @@ const isActiveLocale = computed(() => (locale: string) => localeStore.currentLoc
 
 const navigateToWallet = () => {
 	router.push('/wallet')
+}
+
+const navigateToMain = () => {
+ router.push('/')
 }
 </script>
 
