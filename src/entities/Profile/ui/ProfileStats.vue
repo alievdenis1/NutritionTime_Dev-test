@@ -53,6 +53,13 @@
 		>
 			{{ t('fillProfile') }}
 		</VButton>
+		<VButton
+			:color="ButtonColors.Green"
+			class="mt-5"
+			@click="router.push(`/payment/`)"
+		>
+			{{ t('to_subscribe') }}
+		</VButton>
 	</div>
 </template>
 
