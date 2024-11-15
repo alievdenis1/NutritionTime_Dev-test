@@ -274,7 +274,7 @@
    isProcessing.value = true
 
    if (selectedPaymentMethod.value.type === 'upay') {
-    WebApp.openTelegramLink('https://t.me/nutritiontime_bot?command=payment')
+    WebApp.sendData('/payment')
     return
    }
 
