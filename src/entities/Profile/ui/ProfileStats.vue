@@ -1,6 +1,6 @@
 <template>
 	<div
-		v-if="false"
+		v-if="profile"
 		class="profile-stats space-y-4 p-4"
 	>
 		<div class="bg-emerald-100 p-5 rounded-2xl text-green text-center">
