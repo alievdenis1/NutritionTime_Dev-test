@@ -66,7 +66,8 @@
     "failed": "Ошибка оплаты",
     "price": "%{amount} ₽",
     "selected": "Выбрано",
-    "select": "Выбрать"
+    "select": "Выбрать",
+    "needFeelProfile": "Чтобы начать вести дневник, нужно заполнить профиль"
   },
   "en": {
     "dailyStats": "Daily Statistics",
@@ -135,6 +136,7 @@
     "failed": "Payment Failed",
     "price": "%{amount} ₽",
     "selected": "Selected",
-    "select": "Select"
+    "select": "Select",
+    "needFeelProfile": "To start keeping a diary, you need to fill out a profile"
   }
 }
