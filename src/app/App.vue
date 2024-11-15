@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, watch, type Component } from 'vue'
+import { shallowRef, watch, type Component, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { DefaultLayout } from './layouts'
 import { twa } from '@/shared/lib/api/twa'
@@ -47,6 +47,17 @@ const options = {
  language: sessionStore.lang
 }
 
+const handlePaymentRedirect = () => {
+ const months = route.query.months
+
+ if (months && !Array.isArray(months) && ['1', '3', '12'].includes(months)) {
+  router.push({
+   name: 'payment',
+   query: { months }
+  })
+ }
+}
+
 if (twa) {
   twa.ready()
   twa.enableClosingConfirmation()
@@ -60,6 +71,12 @@ if (twa) {
 }
 
 authUser()
+
+onMounted(() => {
+ authUser().then(() => {
+  handlePaymentRedirect()
+ })
+})
 
 watch(() => route?.path, () => {
 	authUser()

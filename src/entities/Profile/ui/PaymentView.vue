@@ -63,6 +63,15 @@
 								@select="selectPaymentMethod(method)"
 							/>
 						</div>
+						<div class="mt-4">
+							<PaymentMethod
+								:type="rubPaymentMethod.type"
+								:title="rubPaymentMethod.title"
+								:description="rubPaymentMethod.description"
+								:selected="selectedPaymentMethod?.type === rubPaymentMethod.type"
+								@select="selectPaymentMethod(rubPaymentMethod)"
+							/>
+						</div>
 					</div>
 
 					<div
@@ -122,6 +131,9 @@
  import WebApp from '@twa-dev/sdk'
  import localization from './ProfileStats.localization.json'
  import { useTranslation } from '@/shared/lib/i18n'
+ import { useRoute } from 'vue-router'
+
+ const route = useRoute()
 
  const { t } = useTranslation(localization)
 
@@ -138,11 +150,15 @@
  // Состояние
  const activeTab = ref('plans')
  const selectedPlan = ref<SubscriptionPlanType | null>(null)
- const selectedPaymentMethod = ref<{
-  type: 'ton' | 'usdt' | 'yummy' | 'gram'
+ type BasePaymentMethod = {
+  type: 'ton' | 'usdt' | 'yummy' | 'gram' | 'upay'
   title: string
   description: string
- } | null>(null)
+ }
+
+ // Component state
+ const selectedPaymentMethod = ref<BasePaymentMethod | null>(null)
+
  const isProcessing = ref(false)
  const userPayments = ref<SubscriptionPayment[]>([])
  const paymentsLoading = ref(false)
@@ -198,6 +214,13 @@
    description: 'Gram Token'
   }
  ]
+
+ const rubPaymentMethod = {
+  type: 'upay' as const,
+  title: 'RUB',
+  description: 'UPay'
+ }
+
  // Методы
  const selectPlan = (plan: typeof subscriptionPlans[0]) => {
   selectedPlan.value = plan
@@ -211,32 +234,47 @@
   calculatedAmount.value = null
  }
 
- const selectPaymentMethod = async (method: typeof paymentMethods[0]) => {
+ const selectPaymentMethod = async (method: BasePaymentMethod) => {
   selectedPaymentMethod.value = method
 
-  if (selectedPlan.value) {
-   try {
-    const calculateApi = calculateAmount({
-     payment_type: method.type,
-     months: selectedPlan.value.months
-    })
+  if (!selectedPlan.value) return
 
-    await calculateApi.execute()
-
-    if (!calculateApi.error.value && calculateApi.data.value) {
-     calculatedAmount.value = calculateApi.data.value
-    }
-   } catch (error) {
-    console.error('Calculate amount error:', error)
+  if (method.type === 'upay') {
+   calculatedAmount.value = {
+    amount: selectedPlan.value.price.toString(),
+    currency: '₽'
    }
+   return
+  }
+
+  try {
+   const calculateApi = calculateAmount({
+    payment_type: method.type,
+    months: selectedPlan.value.months
+   })
+
+   await calculateApi.execute()
+
+   if (!calculateApi.error.value && calculateApi.data.value) {
+    calculatedAmount.value = calculateApi.data.value
+   }
+  } catch (error) {
+   console.error('Calculate amount error:', error)
   }
  }
 
+ // Updated handlePayment function
  const handlePayment = async () => {
   if (!selectedPlan.value || !selectedPaymentMethod.value) return
 
   try {
    isProcessing.value = true
+
+   if (selectedPaymentMethod.value.type === 'upay') {
+    WebApp.openTelegramLink('https://t.me/nutritiontime_bot?command=payment')
+    return
+   }
+
    const paymentApi = createPayment({
     telegram_id: telegramId.value,
     payment_type: selectedPaymentMethod.value.type,
@@ -247,9 +285,7 @@
 
    if (!paymentApi.error.value && paymentApi.data.value?.paymentUrl) {
     const paymentUrl = paymentApi.data.value.paymentUrl
-
     WebApp.openLink(paymentUrl)
-
     fetchUserPayments()
    }
   } catch (error) {
@@ -277,6 +313,18 @@
 
  // Инициализация
  onMounted(() => {
+  const selectedMonths = route.query.months
+
+  if (selectedMonths && !Array.isArray(selectedMonths)) {
+   const months = parseInt(selectedMonths)
+   if (!isNaN(months)) {
+    const plan = subscriptionPlans.find(plan => plan.months === months)
+    if (plan) {
+     selectPlan(plan)
+    }
+   }
+  }
+
   fetchUserPayments()
  })
 </script>
