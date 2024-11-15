@@ -131,6 +131,9 @@
  import WebApp from '@twa-dev/sdk'
  import localization from './ProfileStats.localization.json'
  import { useTranslation } from '@/shared/lib/i18n'
+ import { useRoute } from 'vue-router'
+
+ const route = useRoute()
 
  const { t } = useTranslation(localization)
 
@@ -310,6 +313,18 @@
 
  // Инициализация
  onMounted(() => {
+  const selectedMonths = route.query.months
+
+  if (selectedMonths && !Array.isArray(selectedMonths)) {
+   const months = parseInt(selectedMonths)
+   if (!isNaN(months)) {
+    const plan = subscriptionPlans.find(plan => plan.months === months)
+    if (plan) {
+     selectPlan(plan)
+    }
+   }
+  }
+
   fetchUserPayments()
  })
 </script>
