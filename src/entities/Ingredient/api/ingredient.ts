@@ -13,5 +13,5 @@ type IngredientListParams = {
 }
 
 export function getIngredientList(params: IngredientListParams) {
-    return useApi<PaginationData<IngredientList>>('get', '/public/ingredients', params)
+    return useApi<PaginationData<IngredientDto>>('get', '/public/ingredients', params)
 }

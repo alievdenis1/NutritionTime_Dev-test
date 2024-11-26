@@ -4,6 +4,7 @@
 			<h2 class="col-start-2 col-end-3 text-center text-lg text-darkGray">
 				{{ t('filters') }}
 			</h2>
+			<!-- TODO: добавить кнопку сброса -->
 			<!-- <div class="col-start-3 col-end-4 text-end">
 				<div
 					v-if="showResetButton"
@@ -16,6 +17,8 @@
 		</div>
 
 		<MainParams />
+		<IngredientsParams />
+		<NutritionalParams />
 		<!-- TODO: доработать -->
 		<!-- <SearchIngredients />
 		<SearchNutritional /> -->
@@ -40,6 +43,8 @@ import { useTranslation } from '@/shared/lib/i18n'
 import localization from './RecipeFilters.localization.json'
 
 import { MainParams } from './MainParams'
+import { IngredientsParams } from './IngredientsParams'
+import { NutritionalParams } from './NutritionalParams'
 
 const { t } = useTranslation(localization)
 const router = useRouter()

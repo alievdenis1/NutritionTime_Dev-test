@@ -39,17 +39,50 @@
 			</Simplebar>
 		</div>
 		<!-- TODO: доработать -->
-		<SearchSlider />
+		<!-- <SearchSlider /> -->
+
+		<!-- TODO: добавть на бэке фильтры по недостающим полям -->
+		<!-- Как фильтровать по полю "вРЕМЯ ПРИГОТОВЛЕНИЯ"?? -->
+		<VRange
+			class="mb-[20px]"
+			:title="t('spiciness')"
+			:max="5"
+			:min="1"
+			:step="1"
+			:value="spiciness"
+			:max-length="1"
+			@on-change="handleChangeSpiciness"
+		/>
+		<VRange
+			class="mb-[20px]"
+			:title="t('cookingDifficulty')"
+			:max="5"
+			:min="1"
+			:step="1"
+			:value="cookingTime"
+			:max-length="1"
+			@on-change="handleChangeCookingTime"
+		/>
+		<VRange
+			:title="t('dishRating')"
+			:max="5"
+			:min="1"
+			:step="1"
+			:value="cookingTime"
+			:max-length="1"
+			@on-change="handleChangeCookingTime"
+		/>
 	</VAccordion>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 
 import { VAccordion } from '@/shared/components/Accordion'
+import { VRange } from '@/shared/components/Range'
 import { useTranslation } from '@/shared/lib/i18n'
 
-import { SearchSlider } from '@/features/search-filter'
+// import { SearchSlider } from '@/features/search-filter'
 
 import { useFilterStore, useFilterCatalogsStore } from '@/features/Search/filter'
 
@@ -64,6 +97,13 @@ const filterCatalogsStore = useFilterCatalogsStore()
 
 const { t } = useTranslation(localization)
 
+const spiciness = computed<[number, number]>(
+	() => [filterStore.filter.min_spiciness || 1, filterStore.filter.max_spiciness || 5]
+)
+const cookingTime = computed<[number, number]>(
+	() => [filterStore.filter.min_cooking_time || 1, filterStore.filter.max_cooking_time || 5]
+)
+
 const toggleCheckbox = (id: number, field: 'cuisine_id' | 'diet_type_id') => {
     // TODO: дать возможность выбирать несколько элементов, так как это checkbox
     // Поправить API
@@ -71,6 +111,20 @@ const toggleCheckbox = (id: number, field: 'cuisine_id' | 'diet_type_id') => {
 
     filterStore.updateFilterAndFetchRecipeList({
         [field]: value
+    })
+}
+
+const handleChangeSpiciness = (spiciness: [number, number]) => {
+	filterStore.updateFilterAndFetchRecipeList({
+        min_spiciness: spiciness[0],
+		max_spiciness: spiciness[1],
+    })
+}
+
+const handleChangeCookingTime = (cookingTime: [number, number]) => {
+	filterStore.updateFilterAndFetchRecipeList({
+        min_cooking_time: cookingTime[0],
+		max_cooking_time: cookingTime[1],
     })
 }
 

@@ -15,6 +15,7 @@
 		<div
 			ref="content"
 			class="accordion-content"
+			:class="{ 'overflow-hidden': !isOpen }"
 			:style="contentStyle"
 		>
 			<slot />
@@ -81,7 +82,6 @@ watch(isOpen, (newVal) => {
 }
 
 .accordion-content {
-	overflow: hidden;
 	transition: max-height 0.3s ease;
 }
 

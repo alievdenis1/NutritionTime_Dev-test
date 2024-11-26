@@ -1,0 +1,20 @@
+{
+    "ru": {
+        "nutritionalValue": "Пищевая ценность",
+        "caloriesPer100g": "Калорийность на 100 г.",
+        "proteinPer100g": "Белки на 100 г.",
+        "fatPer100g": "Жиры на 100 г.",
+        "carbsPer100g": "Углеводы на 100 г.",
+        "gramUnit": "г.",
+        "caloriesUnit": "ккал"
+    },
+    "en": {
+        "nutritionalValue": "Nutritional Value",
+        "caloriesPer100g": "Calories per 100g",
+        "proteinPer100g": "Protein per 100g",
+        "fatPer100g": "Fat per 100g",
+        "carbsPer100g": "Carbohydrates per 100g",
+        "gramUnit": "g",
+        "caloriesUnit": "kcal"
+    }
+}

@@ -9,6 +9,12 @@ export type RecipeListParams = {
     tags?: number[];
     cuisine_id?: number;
     diet_type_id?: number;
+    min_spiciness?: number;
+    max_spiciness?: number;
+    min_cooking_time?: number;
+    max_cooking_time?: number;
+    required_ingredients?: number[];
+    excluded_ingredients?: number[]
 }
 
 export function getRecipeList(params: RecipeListParams) {

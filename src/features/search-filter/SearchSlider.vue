@@ -14,6 +14,7 @@
 						type="number"
 						min="1"
 						max="5"
+						step="1"
 						class="h-[56px] px-[12px] pt-[26px] pb-[12px] text-slateGray rounded text-sm w-full"
 						@input="validateSpicyInput"
 					>
@@ -27,6 +28,7 @@
 						type="number"
 						min="1"
 						max="5"
+						step="1"
 						class="h-[56px] px-[12px] pt-[26px] pb-[12px] text-slateGray rounded text-sm w-full"
 						@input="validateSpicyInput"
 					>

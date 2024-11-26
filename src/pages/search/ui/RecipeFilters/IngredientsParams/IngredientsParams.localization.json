@@ -1,0 +1,12 @@
+{
+    "ru": {
+        "ingredients": "Ингредиенты",
+        "excludeIngredients": "Исключить ингредиенты",
+        "requiredIngredients": "Обязательные ингредиенты"
+    },
+    "en": {
+        "ingredients": "Ingredients",
+        "excludeIngredients": "Exclude ingredients",
+        "requiredIngredients": "Required ingredients"
+    }
+}

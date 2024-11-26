@@ -4,12 +4,14 @@ import { getCategoryList, CategoryList } from '@/entities/Category'
 import { getTagList, TagList } from '@/entities/Tag'
 import { getCuisineList, CuisineList } from '@/entities/Cuisine'
 import { getDietTypeList, DietList } from '@/entities/DietType'
+import { getIngredientList, IngredientList } from '@/entities/Ingredient'
 
 type State = {
 	categoryList: CategoryList | null,
     tagList: TagList | null,
     cuisineList: CuisineList | null,
     dietTypeList: DietList | null,
+    ingredientList: IngredientList | null,
 };
 
 export type TagsByCategory = Record<string, TagList>
@@ -21,6 +23,7 @@ export const useFilterCatalogsStore = defineStore({
         tagList: null,
         cuisineList: null,
         dietTypeList: null,
+        ingredientList: null,
 	}),
 	getters: {
         tagsByCategories(): TagsByCategory {
@@ -75,6 +78,14 @@ export const useFilterCatalogsStore = defineStore({
 
             if (data.value) {
                 this.updateStore('dietTypeList', data.value)
+            }
+        },
+        async fetchIngredientList() {
+            const { execute, data } = getIngredientList({})
+            await execute()
+
+            if (data.value?.data) {
+                this.updateStore('ingredientList', data.value.data)
             }
         },
 	}
