@@ -13,6 +13,16 @@ export default [
 		}
 	},
 	{
+		name: 'create-recipe-test',
+		component: () => import('pages/create-recipe/ui/CreateRecipe/CreateRecipe.vue'),
+		path: '/create-recipe/test',
+		meta: {
+			title: 'Create Recipe',
+			layout: NavigateLayout,
+			backButton: true,
+		}
+	},
+	{
 		name: 'check-recipe',
 		component: () => import('pages/create-recipe/CheckRecipe.vue'),
 		path: '/check-recipe',

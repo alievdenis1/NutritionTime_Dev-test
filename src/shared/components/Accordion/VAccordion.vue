@@ -15,7 +15,6 @@
 		<div
 			ref="content"
 			class="accordion-content"
-			:class="{ 'overflow-hidden': !isOpen }"
 			:style="contentStyle"
 		>
 			<slot />
@@ -47,8 +46,18 @@ const toggle = () => {
 }
 
 const updateHeight = () => {
-	if (isOpen.value && content.value) {
+	if (!content.value) return
+
+	if (isOpen.value) {
 		content.value.style.maxHeight = `${content.value.scrollHeight}px`
+
+		setTimeout(() => {
+			if (content.value) {
+				content.value.style.overflow = 'unset'
+			}
+		}, 300)
+	} else {
+		content.value.style.overflow = 'hidden'
 	}
 }
 

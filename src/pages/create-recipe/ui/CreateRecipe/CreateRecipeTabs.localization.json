@@ -1,0 +1,19 @@
+{
+    "ru": {
+        "createRecipe": "Добавить рецепт",
+        "manualCreation": "Самостоятельно",
+        "addRecipe": "Добавить рецепт",
+        "aiCreation": "С помощью AI",
+        "aiDescription": "У меня есть идея рецепта, но я ещё не знаю его детали",
+        "further" : "Далее",
+        "development": "Данная секция находится в разработке"
+    },
+    "en": {
+        "createRecipe": "Add a recipe",
+        "manualCreation": "Manual Creation",
+        "aiCreation": "With AI",
+        "aiDescription": "I have an idea for a recipe, but I don't know the details yet",
+        "further" : "Further",
+        "development": "This section is under development"
+    }
+}

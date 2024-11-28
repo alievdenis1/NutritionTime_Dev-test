@@ -1,7 +1,7 @@
 <template>
 	<TabsMain
 		v-model="activeTab"
-		:default-value="store.defaultValueTabs"
+		default-value="ownRecipe"
 		class="p-[16px]"
 	>
 		<div class="flex justify-center items-center mb-[16px] min-h-[44px]">
@@ -11,41 +11,38 @@
 		</div>
 		<TabsList>
 			<TabsTrigger
-				value="ownRecepie"
+				value="ownRecipe"
 			>
 				{{ t('manualCreation') }}
 			</TabsTrigger>
 			<TabsTrigger
-				value="aiRecepie"
+				value="aiRecipe"
 				class="flex gap-[8px] items-center"
 			>
 				{{ t('aiCreation') }}
-				<IconAi :icon-color="activeTab === 'aiRecepie' ? '#319A6E' : '#E1E1E1'" />
+				<IconAi :icon-color="activeTab === 'aiRecipe' ? '#319A6E' : '#E1E1E1'" />
 			</TabsTrigger>
 		</TabsList>
-		<CreateOwn v-show="activeTab === 'ownRecepie'" />
-		<CreateAi v-show="activeTab === 'aiRecepie'" />
+		<EditRecipe v-show="activeTab === 'ownRecipe'" />
+		<!-- <CreateAi v-show="activeTab === 'aiRecipe'" /> -->
+		<div v-show="activeTab === 'aiRecipe'">
+			{{ t('development') }}
+		</div>
 	</TabsMain>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { CreateOwn, CreateAi } from 'features/create-recipe'
-import { TabsMain, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
-import { useModalCreateStore } from 'entities/Recipe/CreateRecipe/modal-create/model/model-store'
+import { ref } from 'vue'
+// import { CreateOwn, CreateAi } from 'features/create-recipe'
+import { TabsMain, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { useTranslation } from '@/shared/lib/i18n'
 import localizations from './CreateRecipeTabs.localization.json'
 import { IconAi } from 'shared/components/Icon'
+import { EditRecipe } from '@/widgets/edit-recipe'
 
-const store = useModalCreateStore()
 const { t } = useTranslation(localizations)
 
-const activeTab = computed({
-	get: () => store.defaultValueTabs,
-	set: (value) => {
-		store.defaultValueTabs = value
-	}
-})
+const activeTab = ref<'ownRecipe' | 'aiRecipe'>('ownRecipe')
 </script>
 
 <style scoped></style>
